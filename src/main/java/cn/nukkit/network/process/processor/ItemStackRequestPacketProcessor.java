@@ -37,6 +37,8 @@ public class ItemStackRequestPacketProcessor extends DataPacketProcessor<ItemSta
         PROCESSORS.put(ItemStackRequestActionType.PLACE, new PlaceActionProcessor());
         PROCESSORS.put(ItemStackRequestActionType.SWAP, new SwapActionProcessor());
         PROCESSORS.put(ItemStackRequestActionType.TAKE, new TakeActionProcessor());
+        PROCESSORS.put(ItemStackRequestActionType.CRAFT_RECIPE_OPTIONAL, new CraftRecipeOptionalProcessor());
+        PROCESSORS.put(ItemStackRequestActionType.CRAFT_REPAIR_AND_DISENCHANT, new CraftGrindstoneActionProcessor());
     }
 
     @Override

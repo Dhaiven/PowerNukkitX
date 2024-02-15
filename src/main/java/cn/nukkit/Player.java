@@ -293,6 +293,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     private int hash;
     private int exp = 0;
     private int expLevel = 0;
+    private int enchSeed;
     private final int loaderId;
     private BlockVector3 lastBreakPosition = new BlockVector3();
     private boolean hasSeenCredits;
@@ -1205,6 +1206,13 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         if (this.isSpectator()) {
             this.onGround = false;
+        }
+
+        if (this.namedTag.contains("enchSeed")) {
+            this.enchSeed = this.namedTag.getInt("enchSeed");
+        } else {
+            this.regenerateEnchantmentSeed();
+            this.namedTag.putInt("enchSeed", this.enchSeed);
         }
 
         if (!this.namedTag.contains("TimeSinceRest")) {
@@ -3018,8 +3026,19 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 // nothing to log here!
             }
         }
-
         return entity;
+    }
+
+    public int getEnchantmentSeed() {
+        return this.enchSeed;
+    }
+
+    public void setEnchantmentSeed(int seed) {
+        this.enchSeed = seed;
+    }
+
+    public void regenerateEnchantmentSeed() {
+        this.enchSeed = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
     }
 
     public void checkNetwork() {
@@ -3108,6 +3127,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         for (String msg : message.split("\n")) {
             if (!msg.trim().isEmpty() && msg.length() <= 512 && this.messageLimitCounter-- > 0) {
                 PlayerChatEvent chatEvent = new PlayerChatEvent(this, msg);
+                System.out.println(getPing());
                 this.server.getPluginManager().callEvent(chatEvent);
                 if (!chatEvent.isCancelled()) {
                     this.server.broadcastMessage(this.getServer().getLanguage().tr(chatEvent.getFormat(), new String[]{chatEvent.getPlayer().getDisplayName(), chatEvent.getMessage()}), chatEvent.getRecipients());
@@ -3624,7 +3644,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
             this.connected = false;
             PlayerQuitEvent ev = null;
-            if (this.name != null && !this.getName().isEmpty()) {
+            if (this.username != null && !this.getName().isEmpty()) {
                 this.server.getPluginManager().callEvent(ev = new PlayerQuitEvent(this, message, true, reason));
                 if (this.fishing != null) {
                     this.stopFishing(false);
@@ -3764,17 +3784,14 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             }
 
             this.namedTag.putCompound("Achievements", achievements);
-
             this.namedTag.putInt("playerGameType", this.gamemode);
             this.namedTag.putLong("lastPlayed", System.currentTimeMillis() / 1000);
-
             this.namedTag.putString("lastIP", this.getAddress());
-
             this.namedTag.putInt("EXP", this.getExperience());
             this.namedTag.putInt("expLevel", this.getExperienceLevel());
-
             this.namedTag.putInt("foodLevel", this.getFoodData().getFood());
             this.namedTag.putFloat("foodSaturationLevel", this.getFoodData().getSaturation());
+            this.namedTag.putInt("enchSeed", this.enchSeed);
 
             var fogIdentifiers = new ListTag<StringTag>();
             var userProvidedFogIds = new ListTag<StringTag>();
@@ -5057,11 +5074,11 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
 
         if (near) {
             Inventory inventory = this.inventory;
-            if (entity instanceof EntityArrow && ((EntityArrow) entity).hadCollision) {
+            if (entity instanceof EntityArrow entityArrow && entityArrow.hadCollision) {
                 ItemArrow item = new ItemArrow();
                 if (!this.isCreative()) {
                     // Should only collect to the offhand slot if the item matches what is already there
-                    if (this.offhandInventory.getItem(0).getId() == item.getId() && this.offhandInventory.canAddItem(item)) {
+                    if (Objects.equals(this.offhandInventory.getItem(0).getId(), item.getId()) && this.offhandInventory.canAddItem(item)) {
                         inventory = this.offhandInventory;
                     } else if (!inventory.canAddItem(item)) {
                         return false;
@@ -5139,9 +5156,9 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                 }
                 entity.close();
                 return true;
-            } else if (entity instanceof EntityItem) {
-                if (((EntityItem) entity).getPickupDelay() <= 0) {
-                    Item item = ((EntityItem) entity).getItem();
+            } else if (entity instanceof EntityItem entityItem) {
+                if (entityItem.getPickupDelay() <= 0) {
+                    Item item = entityItem.getItem();
 
                     if (item != null) {
                         if (!this.isCreative() && !this.inventory.canAddItem(item)) {
@@ -5149,7 +5166,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
                         }
 
                         InventoryPickupItemEvent ev;
-                        this.server.getPluginManager().callEvent(ev = new InventoryPickupItemEvent(inventory, (EntityItem) entity));
+                        this.server.getPluginManager().callEvent(ev = new InventoryPickupItemEvent(inventory, entityItem));
                         if (ev.isCancelled()) {
                             return false;
                         }
@@ -5444,23 +5461,6 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             log.trace("Immediate Outbound {}: {}", this.getName(), packet);
         }
         this.getNetworkSession().sendPacketImmediately(packet);
-        return true;
-    }
-
-
-    public boolean dataResourcePacket(DataPacket packet) {
-        if (!this.connected) {
-            return false;
-        }
-        DataPacketSendEvent ev = new DataPacketSendEvent(this, packet);
-        this.server.getPluginManager().callEvent(ev);
-        if (ev.isCancelled()) {
-            return false;
-        }
-        if (log.isTraceEnabled() && !server.isIgnoredPacket(packet.getClass())) {
-            log.trace("Resource Outbound {}: {}", this.getName(), packet);
-        }
-        this.dataPacket(packet);
         return true;
     }
 

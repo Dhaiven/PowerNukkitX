@@ -3,26 +3,38 @@ package cn.nukkit.inventory;
 import cn.nukkit.Player;
 import cn.nukkit.block.BlockGrindstone;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemID;
-import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.math.NukkitMath;
-import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.types.itemstack.ContainerSlotType;
+import com.google.common.collect.BiMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
+import java.util.Map;
 
 
-public class GrindstoneInventory extends ContainerInventory implements CraftTypeInventory{
+public class GrindstoneInventory extends ContainerInventory implements CraftTypeInventory {
     private static final int SLOT_FIRST_ITEM = 0;
     private static final int SLOT_SECOND_ITEM = 1;
     private static final int SLOT_RESULT = 2;
-    private int resultExperience;
-
 
     public GrindstoneInventory(BlockGrindstone blockGrindstone) {
         super(blockGrindstone, InventoryType.GRINDSTONE, 3);
+    }
+
+    @Override
+    public BiMap<Integer, Integer> networkSlotMap() {
+        BiMap<Integer, Integer> map = super.networkSlotMap();
+        map.put(0, 16);//INPUT
+        map.put(1, 17);//ADDITIONAL
+        map.put(2, 18);//RESULT
+        return map;
+    }
+
+    @Override
+    public Map<Integer, ContainerSlotType> slotTypeMap() {
+        Map<Integer, ContainerSlotType> map = super.slotTypeMap();
+        map.put(0, ContainerSlotType.GRINDSTONE_INPUT);
+        map.put(1, ContainerSlotType.GRINDSTONE_ADDITIONAL);
+        map.put(2, ContainerSlotType.GRINDSTONE_RESULT);
+        return map;
     }
 
     @Override
@@ -92,117 +104,12 @@ public class GrindstoneInventory extends ContainerInventory implements CraftType
         return setResult(item, true);
     }
 
-    @Override
-    public void onSlotChange(int index, Item before, boolean send) {
-        try {
-            if (index > 1) {
-                return;
-            }
-            updateResult(send);
-        } finally {
-            super.onSlotChange(index, before, send);
-        }
-    }
-
-
-    public boolean updateResult(boolean send) {
-        Item firstItem = getFirstItem();
-        Item secondItem = getSecondItem();
-        if (!firstItem.isNull() && !secondItem.isNull() && firstItem.getId() != secondItem.getId()) {
-            setResult(Item.AIR, send);
-            setResultExperience(0);
-            return false;
-        }
-
-        if (firstItem.isNull()) {
-            Item air = firstItem;
-            firstItem = secondItem;
-            secondItem = air;
-        }
-
-        if (firstItem.isNull()) {
-            setResult(Item.AIR, send);
-            setResultExperience(0);
-            return false;
-        }
-
-        if (firstItem.getId() == ItemID.ENCHANTED_BOOK) {
-            if (secondItem.isNull()) {
-                setResult(Item.get(ItemID.BOOK, 0, firstItem.getCount()), send);
-                recalculateResultExperience();
-            } else {
-                setResultExperience(0);
-                setResult(Item.AIR, send);
-            }
-            return false;
-        }
-
-        Item result = firstItem.clone();
-        CompoundTag tag = result.getNamedTag();
-        if (tag == null) tag = new CompoundTag();
-        tag.remove("ench");
-
-        result.setCompoundTag(tag);
-        if (!secondItem.isNull() && firstItem.getMaxDurability() > 0) {
-            int first = firstItem.getMaxDurability() - firstItem.getDamage();
-            int second = secondItem.getMaxDurability() - secondItem.getDamage();
-            int reduction = first + second + firstItem.getMaxDurability() * 5 / 100;
-            int resultingDamage = Math.max(firstItem.getMaxDurability() - reduction + 1, 0);
-            result.setDamage(resultingDamage);
-        }
-        setResult(result, send);
-        recalculateResultExperience();
-        return true;
-    }
-
-
-    public void recalculateResultExperience() {
-        if (getResult().isNull()) {
-            setResultExperience(0);
-            return;
-        }
-
-        Item firstItem = getFirstItem();
-        Item secondItem = getSecondItem();
-        if (!firstItem.hasEnchantments() && !secondItem.hasEnchantments()) {
-            setResultExperience(0);
-            return;
-        }
-
-        int resultExperience = Stream.of(firstItem, secondItem)
-                .flatMap(item -> {
-                    // Support stacks of enchanted items and skips invalid stacks (e.g. negative stacks, enchanted air)
-                    if (item.isNull()) {
-                        return Stream.empty();
-                    } else if (item.getCount() == 1) {
-                        return Arrays.stream(item.getEnchantments());
-                    } else {
-                        Enchantment[][] enchantments = new Enchantment[item.getCount()][];
-                        Arrays.fill(enchantments, item.getEnchantments());
-                        return Arrays.stream(enchantments).flatMap(Arrays::stream);
-                    }
-                })
-                .mapToInt(enchantment -> enchantment.getMinEnchantAbility(enchantment.getLevel()))
-                .sum();
-
-        resultExperience = ThreadLocalRandom.current().nextInt(
-                NukkitMath.ceilDouble((double) resultExperience / 2),
-                resultExperience + 1
-        );
-
-        setResultExperience(resultExperience);
-    }
-
     @NotNull
     @Override
     public Item getItem(int index) {
         if (index < 0 || index > 3) {
             return Item.AIR;
         }
-        if (index == 2) {
-            index = SLOT_RESULT;
-        }
-
         return super.getItem(index);
     }
 
@@ -212,10 +119,6 @@ public class GrindstoneInventory extends ContainerInventory implements CraftType
         if (index < 0 || index > 3) {
             return Item.AIR;
         }
-        if (index == 2) {
-            index = SLOT_RESULT;
-        }
-
         return super.getUnclonedItem(index);
     }
 
@@ -224,21 +127,6 @@ public class GrindstoneInventory extends ContainerInventory implements CraftType
         if (index < 0 || index > 3) {
             return false;
         }
-
-        if (index == 2) {
-            index = SLOT_RESULT;
-        }
-
         return super.setItem(index, item, send);
-    }
-
-
-    public int getResultExperience() {
-        return resultExperience;
-    }
-
-
-    public void setResultExperience(int returnLevels) {
-        this.resultExperience = returnLevels;
     }
 }
