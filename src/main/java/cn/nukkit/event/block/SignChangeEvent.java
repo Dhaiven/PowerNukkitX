@@ -2,6 +2,7 @@ package cn.nukkit.event.block;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockSignBase;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.Getter;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public class SignChangeEvent extends BlockEvent implements Cancellable {
+public class SignChangeEvent extends BlockEvent<BlockSignBase> implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {
@@ -20,7 +21,7 @@ public class SignChangeEvent extends BlockEvent implements Cancellable {
 
     private String[] lines = new String[4];
 
-    public SignChangeEvent(Block block, Player player, String[] lines) {
+    public SignChangeEvent(BlockSignBase block, Player player, String[] lines) {
         super(block);
         this.player = player;
         this.lines = lines;

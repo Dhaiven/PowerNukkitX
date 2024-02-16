@@ -2,6 +2,7 @@ package cn.nukkit.blockentity;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockSignBase;
 import cn.nukkit.block.BlockStandingSign;
 import cn.nukkit.event.block.SignChangeEvent;
 import cn.nukkit.level.format.IChunk;
@@ -242,7 +243,7 @@ public class BlockEntitySign extends BlockEntitySpawnable {
 
         sanitizeText(lines);
 
-        SignChangeEvent signChangeEvent = new SignChangeEvent(this.getBlock(), player, lines);
+        SignChangeEvent signChangeEvent = new SignChangeEvent((BlockSignBase) this.getBlock(), player, lines);
 
         if (!this.namedTag.contains(TAG_LOCKED_FOR_EDITING_BY) || !Objects.equals(player.getId(), this.getEditorEntityRuntimeId())) {
             signChangeEvent.setCancelled();

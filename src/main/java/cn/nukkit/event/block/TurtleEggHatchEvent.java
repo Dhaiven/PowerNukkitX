@@ -9,7 +9,7 @@ import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class TurtleEggHatchEvent extends BlockEvent implements Cancellable {
+public class TurtleEggHatchEvent extends BlockEvent<BlockTurtleEgg> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -46,11 +46,6 @@ public class TurtleEggHatchEvent extends BlockEvent implements Cancellable {
 
     public void setNewState(Block newState) {
         this.newState = newState;
-    }
-
-    @Override
-    public BlockTurtleEgg getBlock() {
-        return (BlockTurtleEgg) super.getBlock();
     }
 
     public int getEggsHatching() {

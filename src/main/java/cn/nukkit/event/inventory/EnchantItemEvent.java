@@ -8,7 +8,7 @@ import cn.nukkit.item.Item;
 import lombok.Getter;
 
 
-public class EnchantItemEvent extends InventoryEvent implements Cancellable {
+public class EnchantItemEvent extends InventoryEvent<EnchantInventory> implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {

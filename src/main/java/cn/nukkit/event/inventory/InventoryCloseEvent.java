@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * @author Box (Nukkit Project)
  */
-public class InventoryCloseEvent extends InventoryEvent {
+public class InventoryCloseEvent extends InventoryEvent<Inventory> {
 
     private static final HandlerList handlers = new HandlerList();
 

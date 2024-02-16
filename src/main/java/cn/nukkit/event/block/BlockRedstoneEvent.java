@@ -8,7 +8,7 @@ import lombok.Getter;
  * @author CreeperFace
  * @since 12.5.2017
  */
-public class BlockRedstoneEvent extends BlockEvent {
+public class BlockRedstoneEvent extends BlockEvent<Block> {
 
     private static final HandlerList handlers = new HandlerList();
 

@@ -1,5 +1,6 @@
 package cn.nukkit.event.inventory;
 
+import cn.nukkit.block.BlockCampfire;
 import cn.nukkit.blockentity.BlockEntityCampfire;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
@@ -11,7 +12,7 @@ import lombok.Getter;
  * @author MagicDroidX (Nukkit Project)
  */
 
-public class CampfireSmeltEvent extends BlockEvent implements Cancellable {
+public class CampfireSmeltEvent extends BlockEvent<BlockCampfire> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -25,7 +26,7 @@ public class CampfireSmeltEvent extends BlockEvent implements Cancellable {
     private boolean keepItem;
 
     public CampfireSmeltEvent(BlockEntityCampfire campfire, Item source, Item result) {
-        super(campfire.getBlock());
+        super((BlockCampfire) campfire.getBlock());
         this.source = source.clone();
         this.source.setCount(1);
         this.result = result;

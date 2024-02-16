@@ -305,7 +305,7 @@ public class BlockEntityCommandBlock extends BlockEntitySpawnable implements ICo
                         this.successCount = 1;
                     } else {
                         this.lastOutput = null;
-                        CommandBlockExecuteEvent event = new CommandBlockExecuteEvent(this.getLevelBlock(), cmd);
+                        CommandBlockExecuteEvent event = new CommandBlockExecuteEvent((BlockCommandBlock) this.getLevelBlock(), cmd);
                         Server.getInstance().getPluginManager().callEvent(event);
                         if (event.isCancelled()) {
                             return false;

@@ -1,12 +1,12 @@
 package cn.nukkit.event.block;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockSignBase;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
-public class SignGlowEvent extends BlockEvent implements Cancellable {
+public class SignGlowEvent extends BlockEvent<BlockSignBase> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -17,7 +17,7 @@ public class SignGlowEvent extends BlockEvent implements Cancellable {
     private final Player player;
     private final boolean glowing;
 
-    public SignGlowEvent(Block block, Player player, boolean glowing) {
+    public SignGlowEvent(BlockSignBase block, Player player, boolean glowing) {
         super(block);
         this.player = player;
         this.glowing = glowing;

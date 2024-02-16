@@ -7,7 +7,7 @@ import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class WaterFrostEvent extends BlockEvent implements Cancellable {
+public class WaterFrostEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

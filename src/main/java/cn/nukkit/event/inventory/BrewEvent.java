@@ -3,13 +3,14 @@ package cn.nukkit.event.inventory;
 import cn.nukkit.blockentity.BlockEntityBrewingStand;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
+import cn.nukkit.inventory.BrewingInventory;
 import cn.nukkit.item.Item;
 import lombok.Getter;
 
 /**
  * @author CreeperFace
  */
-public class BrewEvent extends InventoryEvent implements Cancellable {
+public class BrewEvent extends InventoryEvent<BrewingInventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

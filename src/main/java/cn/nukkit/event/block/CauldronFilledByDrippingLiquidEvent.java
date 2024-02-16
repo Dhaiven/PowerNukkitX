@@ -1,13 +1,13 @@
 package cn.nukkit.event.block;
 
-import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockCauldron;
 import cn.nukkit.block.property.enums.CauldronLiquid;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class CauldronFilledByDrippingLiquidEvent extends BlockEvent implements Cancellable {
+public class CauldronFilledByDrippingLiquidEvent extends BlockEvent<BlockCauldron> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -19,7 +19,7 @@ public class CauldronFilledByDrippingLiquidEvent extends BlockEvent implements C
 
     private int liquidLevelIncrement;
 
-    public CauldronFilledByDrippingLiquidEvent(Block cauldron, CauldronLiquid liquid, int liquidLevelIncrement) {
+    public CauldronFilledByDrippingLiquidEvent(BlockCauldron cauldron, CauldronLiquid liquid, int liquidLevelIncrement) {
         super(cauldron);
         this.liquid = liquid;
         this.liquidLevelIncrement = liquidLevelIncrement;

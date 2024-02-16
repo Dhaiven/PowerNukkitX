@@ -1,11 +1,11 @@
 package cn.nukkit.event.block;
 
-import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockConduit;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class ConduitActivateEvent extends BlockEvent {
+public class ConduitActivateEvent extends BlockEvent<BlockConduit> {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -13,8 +13,7 @@ public class ConduitActivateEvent extends BlockEvent {
         return handlers;
     }
 
-    public ConduitActivateEvent(Block block) {
+    public ConduitActivateEvent(BlockConduit block) {
         super(block);
     }
-
 }

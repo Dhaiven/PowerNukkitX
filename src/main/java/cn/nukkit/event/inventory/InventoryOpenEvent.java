@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * @author Box (Nukkit Project)
  */
-public class InventoryOpenEvent extends InventoryEvent implements Cancellable {
+public class InventoryOpenEvent extends InventoryEvent<Inventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

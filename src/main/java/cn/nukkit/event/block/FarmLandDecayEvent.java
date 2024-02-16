@@ -9,7 +9,7 @@ import lombok.Getter;
 import javax.annotation.Nullable;
 
 
-public class FarmLandDecayEvent extends BlockEvent implements Cancellable {
+public class FarmLandDecayEvent extends BlockEvent<Block> implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {

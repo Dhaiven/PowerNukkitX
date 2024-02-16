@@ -1,5 +1,7 @@
 package cn.nukkit.event.inventory;
 
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockLitFurnace;
 import cn.nukkit.blockentity.BlockEntityFurnace;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
@@ -10,7 +12,7 @@ import lombok.Getter;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public class FurnaceSmeltEvent extends BlockEvent implements Cancellable {
+public class FurnaceSmeltEvent extends BlockEvent<BlockLitFurnace> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -24,7 +26,7 @@ public class FurnaceSmeltEvent extends BlockEvent implements Cancellable {
     private float xp;
 
     public FurnaceSmeltEvent(BlockEntityFurnace furnace, Item source, Item result, float xp) {
-        super(furnace.getBlock());
+        super((BlockLitFurnace) furnace.getBlock());
         this.source = source.clone();
         this.source.setCount(1);
         this.result = result;

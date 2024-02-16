@@ -1,6 +1,7 @@
 package cn.nukkit.blockentity;
 
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockConduit;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.effect.Effect;
@@ -97,10 +98,10 @@ public class BlockEntityConduit extends BlockEntitySpawnable {
             this.spawnToAll();
             if (activeBeforeUpdate && !active) {
                 level.addSound(add(0, 0.5, 0), Sound.CONDUIT_DEACTIVATE);
-                level.getServer().getPluginManager().callEvent(new ConduitDeactivateEvent(getBlock()));
+                level.getServer().getPluginManager().callEvent(new ConduitDeactivateEvent((BlockConduit) getBlock()));
             } else if (!activeBeforeUpdate && active) {
                 level.addSound(add(0, 0.5, 0), Sound.CONDUIT_ACTIVATE);
-                level.getServer().getPluginManager().callEvent(new ConduitActivateEvent(getBlock()));
+                level.getServer().getPluginManager().callEvent(new ConduitActivateEvent((BlockConduit) getBlock()));
             }
         }
 

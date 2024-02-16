@@ -7,7 +7,7 @@ import cn.nukkit.inventory.Inventory;
 import lombok.Getter;
 
 
-public class InventoryPickupTridentEvent extends InventoryEvent implements Cancellable {
+public class InventoryPickupTridentEvent extends InventoryEvent<Inventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

@@ -1,12 +1,12 @@
 package cn.nukkit.event.block;
 
-import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockFallable;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class BlockFallEvent extends BlockEvent implements Cancellable {
+public class BlockFallEvent extends BlockEvent<BlockFallable> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -14,7 +14,7 @@ public class BlockFallEvent extends BlockEvent implements Cancellable {
         return handlers;
     }
 
-    public BlockFallEvent(Block block) {
+    public BlockFallEvent(BlockFallable block) {
         super(block);
     }
 }

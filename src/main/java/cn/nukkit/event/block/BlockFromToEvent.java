@@ -5,7 +5,7 @@ import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
-public class BlockFromToEvent extends BlockEvent implements Cancellable {
+public class BlockFromToEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

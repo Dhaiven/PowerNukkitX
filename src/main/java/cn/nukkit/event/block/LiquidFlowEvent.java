@@ -6,7 +6,7 @@ import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
-public class LiquidFlowEvent extends BlockEvent implements Cancellable {
+public class LiquidFlowEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

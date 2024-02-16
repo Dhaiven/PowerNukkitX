@@ -7,7 +7,7 @@ import cn.nukkit.item.Item;
 import lombok.Getter;
 
 
-public class BlockHarvestEvent extends BlockEvent implements Cancellable {
+public class BlockHarvestEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

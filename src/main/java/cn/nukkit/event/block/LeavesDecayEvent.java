@@ -1,6 +1,6 @@
 package cn.nukkit.event.block;
 
-import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockLeaves;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public class LeavesDecayEvent extends BlockEvent implements Cancellable {
+public class LeavesDecayEvent extends BlockEvent<BlockLeaves> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -16,8 +16,7 @@ public class LeavesDecayEvent extends BlockEvent implements Cancellable {
         return handlers;
     }
 
-    public LeavesDecayEvent(Block block) {
+    public LeavesDecayEvent(BlockLeaves block) {
         super(block);
     }
-
 }

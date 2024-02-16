@@ -32,7 +32,7 @@ import java.util.Set;
  */
 
 
-public class BlockExplodeEvent extends BlockEvent implements Cancellable {
+public class BlockExplodeEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

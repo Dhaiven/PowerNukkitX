@@ -2,6 +2,7 @@ package cn.nukkit.event.block;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockFrame;
 import cn.nukkit.blockentity.BlockEntityItemFrame;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
@@ -19,7 +20,7 @@ import javax.annotation.Nullable;
  */
 
 
-public class ItemFrameUseEvent extends BlockEvent implements Cancellable {
+public class ItemFrameUseEvent extends BlockEvent<BlockFrame> implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {
@@ -31,7 +32,7 @@ public class ItemFrameUseEvent extends BlockEvent implements Cancellable {
     protected final BlockEntityItemFrame itemFrame;
     protected final Action action;
 
-    public ItemFrameUseEvent(@Nullable Player player, @NotNull Block block, @NotNull BlockEntityItemFrame itemFrame, @Nullable Item item, Action action) {
+    public ItemFrameUseEvent(@Nullable Player player, @NotNull BlockFrame block, @NotNull BlockEntityItemFrame itemFrame, @Nullable Item item, Action action) {
         super(block);
         this.player = player;
         this.itemFrame = itemFrame;

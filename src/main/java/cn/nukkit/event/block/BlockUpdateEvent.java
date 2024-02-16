@@ -8,7 +8,7 @@ import lombok.Getter;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public class BlockUpdateEvent extends BlockEvent implements Cancellable {
+public class BlockUpdateEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

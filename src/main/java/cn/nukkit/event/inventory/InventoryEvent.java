@@ -8,24 +8,24 @@ import cn.nukkit.inventory.Inventory;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public abstract class InventoryEvent extends Event {
+public abstract class InventoryEvent<E extends Inventory> extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {
         return handlers;
     }
-    protected final Inventory inventory;
 
-    public InventoryEvent(Inventory inventory) {
+    protected final E inventory;
+
+    public InventoryEvent(E inventory) {
         this.inventory = inventory;
     }
 
-    public Inventory getInventory() {
+    public E getInventory() {
         return inventory;
     }
 
     public Player[] getViewers() {
         return this.inventory.getViewers().toArray(Player.EMPTY_ARRAY);
     }
-
 }

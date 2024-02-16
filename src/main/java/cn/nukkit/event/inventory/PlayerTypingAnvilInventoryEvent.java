@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 
 
 @ToString
-public class PlayerTypingAnvilInventoryEvent extends InventoryEvent {
+public class PlayerTypingAnvilInventoryEvent extends InventoryEvent<AnvilInventory> {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {
@@ -52,11 +52,6 @@ public class PlayerTypingAnvilInventoryEvent extends InventoryEvent {
         this.player = player;
         this.previousName = previousName;
         this.typedName = typedName;
-    }
-
-    @Override
-    @NotNull public AnvilInventory getInventory() {
-        return (AnvilInventory) super.getInventory();
     }
 
     @NotNull public Player getPlayer() {

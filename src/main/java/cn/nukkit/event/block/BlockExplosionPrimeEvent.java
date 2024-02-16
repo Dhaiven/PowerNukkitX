@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  */
 
 
-public class BlockExplosionPrimeEvent extends BlockEvent implements Cancellable {
+public class BlockExplosionPrimeEvent extends BlockEvent<Block> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

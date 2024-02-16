@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 
-public class GrindstoneEvent extends InventoryEvent implements Cancellable {
+public class GrindstoneEvent extends InventoryEvent<GrindstoneInventory> implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlers() {

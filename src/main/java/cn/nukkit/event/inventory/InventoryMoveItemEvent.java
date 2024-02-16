@@ -12,7 +12,7 @@ import lombok.Getter;
  * <p>
  * Called when inventory transaction is not caused by a player
  */
-public class InventoryMoveItemEvent extends InventoryEvent implements Cancellable {
+public class InventoryMoveItemEvent extends InventoryEvent<Inventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

@@ -8,7 +8,7 @@ import cn.nukkit.item.Item;
 import lombok.Getter;
 
 
-public class RepairItemEvent extends InventoryEvent implements Cancellable {
+public class RepairItemEvent extends InventoryEvent<AnvilInventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public class InventoryPickupItemEvent extends InventoryEvent implements Cancellable {
+public class InventoryPickupItemEvent extends InventoryEvent<Inventory> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 

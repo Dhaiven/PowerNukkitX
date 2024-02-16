@@ -7,7 +7,7 @@ import cn.nukkit.event.HandlerList;
 import lombok.Getter;
 
 
-public class BellRingEvent extends BlockEvent implements Cancellable {
+public class BellRingEvent extends BlockEvent<BlockBell> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -22,11 +22,6 @@ public class BellRingEvent extends BlockEvent implements Cancellable {
         super(bell);
         this.cause = cause;
         this.entity = entity;
-    }
-
-    @Override
-    public BlockBell getBlock() {
-        return (BlockBell) super.getBlock();
     }
 
     public Entity getEntity() {

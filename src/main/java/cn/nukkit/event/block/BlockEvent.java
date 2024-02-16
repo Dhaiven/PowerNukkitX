@@ -6,15 +6,15 @@ import cn.nukkit.event.Event;
 /**
  * @author MagicDroidX (Nukkit Project)
  */
-public abstract class BlockEvent extends Event {
+public abstract class BlockEvent<T extends Block> extends Event {
 
-    protected final Block block;
+    protected final T block;
 
-    public BlockEvent(Block block) {
+    public BlockEvent(T block) {
         this.block = block;
     }
 
-    public Block getBlock() {
+    public T getBlock() {
         return block;
     }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BlockPistonEvent extends BlockEvent implements Cancellable {
+public class BlockPistonEvent extends BlockEvent<BlockPistonBase> implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -46,10 +46,5 @@ public class BlockPistonEvent extends BlockEvent implements Cancellable {
 
     public boolean isExtending() {
         return extending;
-    }
-
-    @Override
-    public BlockPistonBase getBlock() {
-        return (BlockPistonBase) super.getBlock();
     }
 }
