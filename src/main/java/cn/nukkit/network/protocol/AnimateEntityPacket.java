@@ -14,9 +14,6 @@ import java.util.List;
 @NoArgsConstructor(onConstructor = @__())
 public class AnimateEntityPacket extends DataPacket {
 
-
-    public static final int NETWORK_ID = ProtocolInfo.ANIMATE_ENTITY_PACKET;
-
     private String animation;
     private String nextState;
     private String stopExpression;
@@ -57,7 +54,7 @@ public class AnimateEntityPacket extends DataPacket {
     
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ANIMATE_ENTITY_PACKET;
     }
 
     public String getAnimation() {

@@ -8,7 +8,6 @@ import lombok.ToString;
  */
 @ToString(exclude = "namedTag")
 public class BlockEntityDataPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.BLOCK_ENTITY_DATA_PACKET;
 
     public int x;
     public int y;
@@ -17,7 +16,7 @@ public class BlockEntityDataPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.BLOCK_ENTITY_DATA_PACKET;
     }
 
     @Override

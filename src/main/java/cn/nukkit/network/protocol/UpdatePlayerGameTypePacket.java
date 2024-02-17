@@ -6,13 +6,13 @@ import lombok.ToString;
 
 @ToString
 public class UpdatePlayerGameTypePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.UPDATE_PLAYER_GAME_TYPE_PACKET;
+
     public GameType gameType;
     public long entityId;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return  ProtocolInfo.UPDATE_PLAYER_GAME_TYPE_PACKET;
     }
 
     @Override

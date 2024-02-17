@@ -22,7 +22,6 @@ import java.util.*;
 @ToString
 public class LoginPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.LOGIN_PACKET;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public String username;
@@ -34,7 +33,7 @@ public class LoginPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LOGIN_PACKET;
     }
 
     @Override

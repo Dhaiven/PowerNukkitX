@@ -7,13 +7,12 @@ import lombok.ToString;
  */
 @ToString
 public class ShowProfilePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SHOW_PROFILE_PACKET;
 
     public String xuid;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SHOW_PROFILE_PACKET;
     }
 
     @Override

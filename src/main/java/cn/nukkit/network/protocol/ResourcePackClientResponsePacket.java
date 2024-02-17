@@ -7,8 +7,6 @@ import java.util.UUID;
 @ToString
 public class ResourcePackClientResponsePacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RESOURCE_PACK_CLIENT_RESPONSE_PACKET;
-
     public static final byte STATUS_REFUSED = 1;
     public static final byte STATUS_SEND_PACKS = 2;
     public static final byte STATUS_HAVE_ALL_PACKS = 3;
@@ -39,7 +37,7 @@ public class ResourcePackClientResponsePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESOURCE_PACK_CLIENT_RESPONSE_PACKET;
     }
 
     @ToString

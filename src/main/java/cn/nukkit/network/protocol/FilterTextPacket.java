@@ -27,7 +27,7 @@ import lombok.ToString;
 
 @ToString
 public class FilterTextPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.FILTER_TEXT_PACKET;
+
     public String text;
     public boolean fromServer;
 
@@ -41,7 +41,7 @@ public class FilterTextPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.FILTER_TEXT_PACKET;
     }
 
     @Override

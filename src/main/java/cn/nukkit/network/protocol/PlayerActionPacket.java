@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class PlayerActionPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.PLAYER_ACTION_PACKET;
-
     public static final int ACTION_START_BREAK = 0;
     public static final int ACTION_ABORT_BREAK = 1;
     public static final int ACTION_STOP_BREAK = 2;
@@ -77,7 +75,7 @@ public class PlayerActionPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAYER_ACTION_PACKET;
     }
 
 }

@@ -13,7 +13,6 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class CraftingEventPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.CRAFTING_EVENT_PACKET;
 
 
     public static final int TYPE_INVENTORY = 0;
@@ -53,7 +52,6 @@ public class CraftingEventPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CRAFTING_EVENT_PACKET;
     }
-
 }

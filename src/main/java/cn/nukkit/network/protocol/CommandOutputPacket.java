@@ -10,7 +10,6 @@ import java.util.List;
 
 @ToString
 public class CommandOutputPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.COMMAND_OUTPUT_PACKET;
 
     public final List<CommandOutputMessage> messages = new ObjectArrayList<>();
     public CommandOriginData commandOriginData;
@@ -21,7 +20,7 @@ public class CommandOutputPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.COMMAND_OUTPUT_PACKET;
     }
 
     @Override

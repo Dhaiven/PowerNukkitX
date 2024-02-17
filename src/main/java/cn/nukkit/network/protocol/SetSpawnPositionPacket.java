@@ -8,8 +8,6 @@ import lombok.ToString;
 @ToString
 public class SetSpawnPositionPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.SET_SPAWN_POSITION_PACKET;
-
     public static final int TYPE_PLAYER_SPAWN = 0;
     public static final int TYPE_WORLD_SPAWN = 1;
 
@@ -37,7 +35,7 @@ public class SetSpawnPositionPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_SPAWN_POSITION_PACKET;
     }
 
 }

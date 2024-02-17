@@ -11,9 +11,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(onConstructor = @__())
 public class PositionTrackingDBClientRequestPacket extends DataPacket {
-
-
-    public static final int NETWORK_ID = ProtocolInfo.POS_TRACKING_CLIENT_REQUEST_PACKET;
     
     private static final Action[] ACTIONS = Action.values();
     
@@ -45,7 +42,7 @@ public class PositionTrackingDBClientRequestPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.POS_TRACKING_CLIENT_REQUEST_PACKET;
     }
 
     public enum Action {

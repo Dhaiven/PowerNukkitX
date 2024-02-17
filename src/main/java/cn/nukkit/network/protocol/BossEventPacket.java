@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class BossEventPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.BOSS_EVENT_PACKET;
-
     /* S2C: Shows the bossbar to the player. */
     public static final int TYPE_SHOW = 0;
     /* C2S: Registers a player to a boss fight. */
@@ -43,7 +41,7 @@ public class BossEventPacket extends DataPacket {
     
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.BOSS_EVENT_PACKET;
     }
 
     @Override

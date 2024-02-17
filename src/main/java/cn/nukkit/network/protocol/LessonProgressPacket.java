@@ -6,7 +6,6 @@ import lombok.ToString;
 
 @ToString
 public class LessonProgressPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.LESSON_PROGRESS_PACKET;
 
     public LessonAction action;
     public int score;
@@ -14,7 +13,7 @@ public class LessonProgressPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LESSON_PROGRESS_PACKET;
     }
 
     @Override

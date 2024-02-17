@@ -10,8 +10,6 @@ import java.nio.ByteOrder;
 @ToString
 public class UpdateTradePacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.UPDATE_TRADE_PACKET;
-
     public byte containerId;
     public byte containerType = 15; //trading id
     public int size = 0; // hardcoded to 0
@@ -26,7 +24,7 @@ public class UpdateTradePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.UPDATE_TRADE_PACKET;
     }
 
     @Override

@@ -28,9 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class SimulationTypePacket extends DataPacket {
 
-
-    public static final int NETWORK_ID = ProtocolInfo.NPC_DIALOGUE_PACKET;
-
     private static final SimulationType[] TYPES = SimulationType.values();
 
     private SimulationType type;
@@ -42,7 +39,7 @@ public class SimulationTypePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.NPC_DIALOGUE_PACKET;
     }
 
     @Override

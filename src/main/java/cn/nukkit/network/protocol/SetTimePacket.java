@@ -7,13 +7,12 @@ import lombok.ToString;
  */
 @ToString
 public class SetTimePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SET_TIME_PACKET;
 
     public int time;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_TIME_PACKET;
     }
 
     @Override

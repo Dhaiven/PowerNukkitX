@@ -7,7 +7,6 @@ import java.util.Optional;
 
 @ToString
 public class SpawnParticleEffectPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SPAWN_PARTICLE_EFFECT_PACKET;
 
     public int dimensionId;
     public long uniqueEntityId = -1;
@@ -20,7 +19,7 @@ public class SpawnParticleEffectPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SPAWN_PARTICLE_EFFECT_PACKET;
     }
 
     @Override

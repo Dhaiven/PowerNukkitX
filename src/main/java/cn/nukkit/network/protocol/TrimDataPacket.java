@@ -14,12 +14,12 @@ import java.util.List;
 @EqualsAndHashCode(doNotUseGetters = true, callSuper = false)
 @ToString(doNotUseGetters = true)
 public class TrimDataPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.TRIM_DATA;
+
     private final List<TrimPattern> patterns = new ObjectArrayList<>();
     private final List<TrimMaterial> materials = new ObjectArrayList<>();
 
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TRIM_DATA;
     }
 
     @Override

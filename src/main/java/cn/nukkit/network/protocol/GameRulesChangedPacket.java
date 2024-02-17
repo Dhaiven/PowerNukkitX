@@ -8,11 +8,10 @@ import lombok.ToString;
  */
 @ToString
 public class GameRulesChangedPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.GAME_RULES_CHANGED_PACKET;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.GAME_RULES_CHANGED_PACKET;
     }
 
     public GameRules gameRules;

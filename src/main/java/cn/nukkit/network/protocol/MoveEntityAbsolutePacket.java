@@ -8,7 +8,7 @@ import lombok.ToString;
  */
 @ToString
 public class MoveEntityAbsolutePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.MOVE_ENTITY_ABSOLUTE_PACKET;
+
     public static final byte FLAG_GROUND = 0x01;
     public static final byte FLAG_TELEPORT = 0x02;
     public static final byte FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04;
@@ -26,7 +26,7 @@ public class MoveEntityAbsolutePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.MOVE_ENTITY_ABSOLUTE_PACKET;
     }
 
     @Override

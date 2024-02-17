@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class RespawnPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RESPAWN_PACKET;
-
     public static final int STATE_SEARCHING_FOR_SPAWN = 0;
     public static final int STATE_READY_TO_SPAWN = 1;
     public static final int STATE_CLIENT_READY_TO_SPAWN = 2;
@@ -41,7 +39,7 @@ public class RespawnPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESPAWN_PACKET;
     }
 
 }

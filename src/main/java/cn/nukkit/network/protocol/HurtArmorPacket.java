@@ -8,8 +8,6 @@ import lombok.ToString;
 @ToString
 public class HurtArmorPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.HURT_ARMOR_PACKET;
-
 
     public int cause;
 
@@ -36,7 +34,6 @@ public class HurtArmorPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.HURT_ARMOR_PACKET;;
     }
-
 }

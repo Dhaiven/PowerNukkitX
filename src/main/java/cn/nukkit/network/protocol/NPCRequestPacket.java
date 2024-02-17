@@ -6,9 +6,6 @@ import lombok.ToString;
 public class NPCRequestPacket extends DataPacket {
 
 
-    public static final int NETWORK_ID = ProtocolInfo.NPC_REQUEST_PACKET;
-
-
     public long entityRuntimeId;
 
 

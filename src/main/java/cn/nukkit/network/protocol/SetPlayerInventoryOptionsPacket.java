@@ -6,8 +6,6 @@ import cn.nukkit.network.protocol.types.inventory.InventoryTabRight;
 
 public class SetPlayerInventoryOptionsPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.SET_PLAYER_INVENTORY_OPTIONS_PACKET;
-
     public InventoryTabLeft leftTab;
     public InventoryTabRight rightTab;
     public boolean filtering;
@@ -16,7 +14,7 @@ public class SetPlayerInventoryOptionsPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return (byte) NETWORK_ID;
+        return (byte) ProtocolInfo.SET_PLAYER_INVENTORY_OPTIONS_PACKET;
     }
 
     @Override

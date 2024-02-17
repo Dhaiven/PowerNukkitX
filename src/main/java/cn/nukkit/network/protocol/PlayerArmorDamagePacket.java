@@ -8,13 +8,13 @@ import java.util.Set;
 
 @ToString
 public class PlayerArmorDamagePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.PLAYER_ARMOR_DAMAGE_PACKET;
+
     public final Set<PlayerArmorDamageFlag> flags = EnumSet.noneOf(PlayerArmorDamageFlag.class);
     public final int[] damage = new int[4];
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAYER_ARMOR_DAMAGE_PACKET;
     }
 
     @Override

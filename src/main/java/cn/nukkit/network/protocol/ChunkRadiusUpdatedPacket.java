@@ -8,8 +8,6 @@ import lombok.ToString;
 @ToString
 public class ChunkRadiusUpdatedPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.CHUNK_RADIUS_UPDATED_PACKET;
-
     public int radius;
 
     @Override
@@ -25,7 +23,6 @@ public class ChunkRadiusUpdatedPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CHUNK_RADIUS_UPDATED_PACKET;
     }
-
 }

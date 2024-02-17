@@ -9,8 +9,6 @@ import java.util.UUID;
 
 public class ResourcePackDataInfoPacket extends AbstractResourcePackDataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RESOURCE_PACK_DATA_INFO_PACKET;
-
     public static final int TYPE_INVALID = 0;
     public static final int TYPE_ADDON = 1;
     public static final int TYPE_CACHED = 2;
@@ -56,7 +54,7 @@ public class ResourcePackDataInfoPacket extends AbstractResourcePackDataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESOURCE_PACK_DATA_INFO_PACKET;
     }
 
     @Override
