@@ -23,6 +23,6 @@ public class EntityFallPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.ENTITY_FALL_PACKET;;
+        return ProtocolInfo.ENTITY_FALL_PACKET;
     }
 }

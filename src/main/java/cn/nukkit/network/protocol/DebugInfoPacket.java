@@ -11,7 +11,7 @@ public class DebugInfoPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.DEBUG_INFO_PACKET;;
+        return ProtocolInfo.DEBUG_INFO_PACKET;
     }
 
     @Override

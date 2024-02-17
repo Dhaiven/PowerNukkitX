@@ -15,7 +15,7 @@ public class DisconnectPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.DISCONNECT_PACKET;;
+        return ProtocolInfo.DISCONNECT_PACKET;
     }
 
     @Override

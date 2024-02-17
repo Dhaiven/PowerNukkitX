@@ -15,7 +15,7 @@ public class EmoteListPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.EMOTE_LIST_PACKET;;
+        return ProtocolInfo.EMOTE_LIST_PACKET;
     }
 
     @Override

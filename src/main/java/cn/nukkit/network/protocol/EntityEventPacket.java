@@ -99,7 +99,7 @@ public class EntityEventPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.ENTITY_EVENT_PACKET;;
+        return ProtocolInfo.ENTITY_EVENT_PACKET;
     }
 
     public long eid;

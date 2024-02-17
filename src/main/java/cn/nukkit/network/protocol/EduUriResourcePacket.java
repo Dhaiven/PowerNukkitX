@@ -12,7 +12,7 @@ public class EduUriResourcePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return  ProtocolInfo.EDU_URI_RESOURCE_PACKET;;
+        return  ProtocolInfo.EDU_URI_RESOURCE_PACKET;
     }
 
     @Override
