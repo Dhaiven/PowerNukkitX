@@ -36,5 +36,4 @@ public class AddPaintingPacket extends DataPacket {
     public int pid() {
         return ProtocolInfo.ADD_PAINTING_PACKET;
     }
-
 }

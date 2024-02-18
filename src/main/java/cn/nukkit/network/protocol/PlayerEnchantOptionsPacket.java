@@ -19,7 +19,7 @@ public class PlayerEnchantOptionsPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.PLAYER_ENCHANT_OPTIONS_PACKET;;
+        return ProtocolInfo.PLAYER_ENCHANT_OPTIONS_PACKET;
     }
 
     @Override

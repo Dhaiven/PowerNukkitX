@@ -184,6 +184,6 @@ public class CraftingDataPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.CRAFTING_DATA_PACKET;;
+        return ProtocolInfo.CRAFTING_DATA_PACKET;
     }
 }

@@ -34,6 +34,6 @@ public class HurtArmorPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return ProtocolInfo.HURT_ARMOR_PACKET;;
+        return ProtocolInfo.HURT_ARMOR_PACKET;
     }
 }
