@@ -11,9 +11,9 @@ import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.network.connection.util.PrepareEncryptionTask;
 import cn.nukkit.network.process.DataPacketProcessor;
 import cn.nukkit.network.protocol.LoginPacket;
-import cn.nukkit.network.protocol.PlayStatusPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.ServerToClientHandshakePacket;
+import cn.nukkit.network.protocol.Status;
 import cn.nukkit.plugin.InternalPlugin;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.Binary;
@@ -46,7 +46,7 @@ public class LoginProcessor extends DataPacketProcessor<LoginPacket> {
         //check the player login time
         if (pk.issueUnixTime != -1 && Server.getInstance().checkLoginTime && System.currentTimeMillis() - pk.issueUnixTime > 20000) {
             var message = "disconnectionScreen.noReason";
-            playerHandle.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_SERVER, true);
+            playerHandle.sendPlayStatus(Status.LOGIN_FAILED_SERVER, true);
             playerHandle.player.close("", message, false);
             return;
         }

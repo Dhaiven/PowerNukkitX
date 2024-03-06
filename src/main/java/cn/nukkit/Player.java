@@ -113,6 +113,7 @@ import cn.nukkit.network.protocol.types.CommandOriginData;
 import cn.nukkit.network.protocol.types.CommandOutputType;
 import cn.nukkit.network.protocol.types.GameType;
 import cn.nukkit.network.protocol.types.PlayerBlockActionData;
+import cn.nukkit.network.protocol.types.UsingItem;
 import cn.nukkit.permission.PermissibleBase;
 import cn.nukkit.permission.Permission;
 import cn.nukkit.permission.PermissionAttachment;
@@ -641,7 +642,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         setTimePacket.time = this.level.getTime();
         this.dataPacket(setTimePacket);
 
-        this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+        this.sendPlayStatus(Status.PLAYER_SPAWN);
 
         PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(this,
                 new TranslationContainer(TextFormat.YELLOW + "%multiplayer.player.joined", new String[]{
@@ -1187,7 +1188,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
             this.server.saveOfflinePlayerData(this.uuid, nbt, true);
         }
 
-        this.sendPlayStatus(PlayStatusPacket.LOGIN_SUCCESS);
+        this.sendPlayStatus(Status.LOGIN_SUCCESS);
         this.server.onPlayerLogin(this);
 
         ListTag<DoubleTag> posList = nbt.getList("Pos", DoubleTag.class);
@@ -1536,11 +1537,11 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
         }
     }
 
-    protected void sendPlayStatus(int status) {
+    protected void sendPlayStatus(Status status) {
         sendPlayStatus(status, false);
     }
 
-    protected void sendPlayStatus(int status, boolean immediate) {
+    protected void sendPlayStatus(Status status, boolean immediate) {
         PlayStatusPacket pk = new PlayStatusPacket();
         pk.status = status;
 
@@ -5409,7 +5410,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
     }
 
 
-    public void completeUsingItem(int itemId, int action) {
+    public void completeUsingItem(int itemId, UsingItem.Action action) {
         CompletedUsingItemPacket pk = new CompletedUsingItemPacket();
         pk.itemId = itemId;
         pk.action = action;

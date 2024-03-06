@@ -13,18 +13,7 @@ public class PlayStatusPacket extends DataPacket {
         return ProtocolInfo.PLAY_STATUS_PACKET;
     }
 
-    public static final int LOGIN_SUCCESS = 0;
-    public static final int LOGIN_FAILED_CLIENT = 1;
-    public static final int LOGIN_FAILED_SERVER = 2;
-    public static final int PLAYER_SPAWN = 3;
-    public static final int LOGIN_FAILED_INVALID_TENANT = 4;
-    public static final int LOGIN_FAILED_VANILLA_EDU = 5;
-    public static final int LOGIN_FAILED_EDU_VANILLA = 6;
-    public static final int LOGIN_FAILED_SERVER_FULL = 7;
-    public static final int LOGIN_FAILED_EDITOR_TO_VANILLA_MISMATCH = 8;
-    public static final int LOGIN_FAILED_VANILLA_TO_EDITOR_MISMATCH = 9;
-
-    public int status;
+    public Status status;
 
     @Override
     public void decode() {
@@ -34,7 +23,6 @@ public class PlayStatusPacket extends DataPacket {
     @Override
     public void encode() {
         this.reset();
-        this.putInt(this.status);
+        this.putInt(this.status.ordinal());
     }
-
 }

@@ -12,7 +12,7 @@ public class UpdatePlayerGameTypePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return  ProtocolInfo.UPDATE_PLAYER_GAME_TYPE_PACKET;
+        return ProtocolInfo.UPDATE_PLAYER_GAME_TYPE_PACKET;
     }
 
     @Override

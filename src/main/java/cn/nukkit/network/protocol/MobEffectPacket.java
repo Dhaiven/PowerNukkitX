@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -13,12 +14,8 @@ public class MobEffectPacket extends DataPacket {
         return ProtocolInfo.MOB_EFFECT_PACKET;
     }
 
-    public static final byte EVENT_ADD = 1;
-    public static final byte EVENT_MODIFY = 2;
-    public static final byte EVENT_REMOVE = 3;
-
     public long eid;
-    public int eventId;
+    public Event eventId;
     public int effectId;
     public int amplifier = 0;
     public boolean particles = true;
@@ -33,10 +30,23 @@ public class MobEffectPacket extends DataPacket {
     public void encode() {
         this.reset();
         this.putEntityRuntimeId(this.eid);
-        this.putByte((byte) this.eventId);
+        this.putByte((byte) this.eventId.getId());
         this.putVarInt(this.effectId);
         this.putVarInt(this.amplifier);
         this.putBoolean(this.particles);
         this.putVarInt(this.duration);
+    }
+
+    @Getter
+    public enum Event {
+        ADD(1),
+        MODIFY(2),
+        REMOVE(3);
+
+        private final int id;
+
+        Event(int id) {
+            this.id = id;
+        }
     }
 }

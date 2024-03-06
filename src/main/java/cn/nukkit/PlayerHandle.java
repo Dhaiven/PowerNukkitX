@@ -15,6 +15,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.connection.BedrockServerSession;
 import cn.nukkit.network.protocol.PlayerFogPacket;
+import cn.nukkit.network.protocol.Status;
 import cn.nukkit.network.protocol.types.PlayerBlockActionData;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.DummyBossBar;
@@ -43,11 +44,11 @@ public final class PlayerHandle {
         return player.networkSession;
     }
 
-    public void sendPlayStatus(int status) {
+    public void sendPlayStatus(Status status) {
         player.sendPlayStatus(status);
     }
 
-    public void sendPlayStatus(int status, boolean immediate) {
+    public void sendPlayStatus(Status status, boolean immediate) {
         player.sendPlayStatus(status, immediate);
     }
 

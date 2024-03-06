@@ -1,6 +1,7 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.math.Vector3f;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -64,5 +65,24 @@ public class MoveEntityAbsolutePacket extends DataPacket {
         this.putByte((byte) (this.pitch / (360d / 256d)));
         this.putByte((byte) (this.headYaw / (360d / 256d)));
         this.putByte((byte) (this.yaw / (360d / 256d)));
+    }
+
+    @Getter
+    public enum Flag {
+        GROUND(0x01),
+        TELEPORT(0x02),
+        FORCE_MOVE_LOCAL_ENTITY(0x04);
+
+        private final byte flag;
+
+        Flag(int flag) {
+            this.flag = (byte) flag;
+        }
+
+        public static Boolean isOnGround(int flags) {
+            return (flags & Flag.GROUND.getFlag()) != 0;
+        }
+
+        
     }
 }
