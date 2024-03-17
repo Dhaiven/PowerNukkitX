@@ -9,9 +9,11 @@ import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityLiving;
+import cn.nukkit.entity.data.EntityFlag;
 import cn.nukkit.entity.item.EntityArmorStand;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.player.PlayerDropItemEvent;
 import cn.nukkit.event.player.PlayerInteractEntityEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerKickEvent;
@@ -91,6 +93,14 @@ public class InventoryTransactionProcessor extends DataPacketProcessor<Inventory
                         var count = action.newItem.getCount();
                         Item item = player.getInventory().getItemInHand();
                         if (item.isNull()) return;
+
+                        PlayerDropItemEvent ev;
+                        player.getServer().getPluginManager().callEvent(ev = new PlayerDropItemEvent(player, item));
+                        if (ev.isCancelled()) {
+                            player.getInventory().sendContents(player);
+                            return;
+                        }
+
                         HumanInventory inventory = player.getInventory();
                         int c = item.getCount() - count;
                         if (c <= 0) {
@@ -251,7 +261,7 @@ public class InventoryTransactionProcessor extends DataPacketProcessor<Inventory
                 if (spamBug && player.getInventory().getItemInHand().getBlock().isAir()) {
                     return;
                 }
-                player.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_ACTION, false);
+                player.setDataFlag(EntityFlag.USING_ITEM, false);
                 if (player.canInteract(blockVector.add(0.5, 0.5, 0.5), player.isCreative() ? 13 : 7)) {
                     if (player.isCreative()) {
                         Item i = player.getInventory().getItemInHand();

@@ -38,10 +38,10 @@ dependencies {
     api(libs.fastutil)
     api(libs.leveldbjni)
     api(libs.snakeyaml)
+    api(libs.stateless4j)
 
 
     compileOnly(libs.lombok)
-    compileOnlyApi(libs.lombok)
     annotationProcessor(libs.lombok)
 
     implementation(libs.rng.simple)
@@ -204,6 +204,9 @@ tasks.shadowJar {
                 "Main-Class" to "cn.nukkit.JarStart"
         )
     }
+
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer::class.java) //required to fix shadowJar log4j2 issue
+
     destinationDirectory = layout.buildDirectory
 }
 

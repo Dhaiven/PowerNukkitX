@@ -17,22 +17,18 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.format.LevelConfig;
 import cn.nukkit.level.format.LevelProvider;
 import cn.nukkit.level.format.leveldb.LevelDBProvider;
-import cn.nukkit.level.updater.Updater;
-import cn.nukkit.level.updater.block.BlockStateUpdaterBase;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.Network;
-import cn.nukkit.network.RakNetInterface;
-import cn.nukkit.network.SourceInterface;
-import cn.nukkit.network.connection.BedrockServerSession;
+import cn.nukkit.network.connection.BedrockSession;
 import cn.nukkit.permission.BanList;
+import cn.nukkit.player.info.PlayerInfo;
 import cn.nukkit.plugin.JavaPluginLoader;
 import cn.nukkit.plugin.PluginManager;
+import cn.nukkit.positiontracking.PositionTrackingService;
 import cn.nukkit.registry.BlockRegistry;
 import cn.nukkit.registry.Registries;
 import cn.nukkit.scheduler.ServerScheduler;
-import cn.nukkit.tags.BiomeTags;
-import cn.nukkit.tags.BlockTags;
-import cn.nukkit.tags.ItemTags;
+import cn.nukkit.utils.ClientChainData;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.collection.FreezableArrayManager;
 import org.apache.commons.io.FileUtils;
@@ -44,15 +40,17 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -70,7 +68,6 @@ public class GameMockExtension extends MockitoExtension {
     static FreezableArrayManager freezableArrayManager;
     static Network network;
     static QueryRegenerateEvent queryRegenerateEvent;
-    static RakNetInterface rakNetInterface;
     static MockedStatic<Server> serverMockedStatic;
     final static GameMockExtension gameMockExtension;
     final static BlockRegistry BLOCK_REGISTRY;
@@ -82,10 +79,6 @@ public class GameMockExtension extends MockitoExtension {
         Registries.ENTITY.init();
         Profession.init();
         Registries.BLOCKENTITY.init();
-        String a = BlockTags.ACACIA;
-        String b = ItemTags.ARROW;
-        String c = BiomeTags.WARM;
-        Updater d = BlockStateUpdaterBase.INSTANCE;
         Registries.BLOCKSTATE_ITEMMETA.init();
         Registries.BLOCK.init();
         Enchantment.init();
@@ -95,6 +88,7 @@ public class GameMockExtension extends MockitoExtension {
         Registries.CREATIVE.init();
         Registries.BIOME.init();
         Registries.FUEL.init();
+        Registries.GENERATE_STAGE.init();
         Registries.GENERATOR.init();
         Registries.RECIPE.init();
         Registries.EFFECT.init();
@@ -120,10 +114,11 @@ public class GameMockExtension extends MockitoExtension {
         when(server.getLanguage()).thenReturn(lang);
         when(server.getApiVersion()).thenReturn("1.0.0");
 
-        when(simpleCommandMap.getCommands()).thenReturn(Collections.EMPTY_MAP);
+        when(simpleCommandMap.getCommands()).thenReturn(Collections.emptyMap());
         pluginManager = new PluginManager(server, simpleCommandMap);
         pluginManager.registerInterface(JavaPluginLoader.class);
         when(server.getPluginManager()).thenReturn(pluginManager);
+        pluginManager.loadInternalPlugin();
 
         freezableArrayManager = new FreezableArrayManager(
                 server.getConfig("memory-compression.enable", true),
@@ -159,6 +154,12 @@ public class GameMockExtension extends MockitoExtension {
         when(server.getCommandMap()).thenReturn(simpleCommandMap);
         when(server.getScoreboardManager()).thenReturn(null);
         when(server.getChunkUnloadDelay()).thenReturn(100);
+        try {
+            PositionTrackingService positionTrackingService = new PositionTrackingService(new File(Nukkit.DATA_PATH, "services/position_tracking_db"));
+            when(server.getPositionTrackingService()).thenReturn(positionTrackingService);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         doNothing().when(server).sendRecipeList(any());
         try {
             FieldUtils.writeDeclaredField(server, "levelArray", Level.EMPTY_ARRAY, true);
@@ -166,10 +167,7 @@ public class GameMockExtension extends MockitoExtension {
             FieldUtils.writeDeclaredField(server, "tickAverage", new float[]{20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20}, true);
             FieldUtils.writeDeclaredField(server, "useAverage", new float[]{20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20}, true);
             network = new Network(server);
-            network.setName("PNX");
-            network.setSubName("TEST MOCK");
-            rakNetInterface = new RakNetInterface(server);
-            network.registerInterface(rakNetInterface);
+            network.setPong("PNX");
             FieldUtils.writeDeclaredField(server, "network", network, true);
             FieldUtils.writeDeclaredStaticField(Server.class, "instance", server, true);
         } catch (IllegalAccessException e) {
@@ -180,16 +178,19 @@ public class GameMockExtension extends MockitoExtension {
 
     //mock player
     static {
-        SourceInterface sourceInterface = mock(SourceInterface.class);
-        BedrockServerSession serverSession = mock(BedrockServerSession.class);
-        when(sourceInterface.getSession(any())).thenReturn(serverSession);
+        BedrockSession serverSession = mock(BedrockSession.class);
+        PlayerInfo info = new PlayerInfo(
+                "test",
+                UUID.randomUUID(),
+                null,
+                mock(ClientChainData.class)
+        );
         doNothing().when(serverSession).sendPacketImmediately(any());
         doNothing().when(serverSession).sendPacket(any());
-        player = new Player(sourceInterface, 0, new InetSocketAddress("1.1.1.1", 55555));
+        player = new Player(serverSession, info);
         player.loggedIn = true;
-        player.verified = true;
         player.username = "test";
-        player.iusername = "test";
+        player.temporalVector = new Vector3(0, 0, 0);
         player.setInventories(new Inventory[]{
                 new HumanInventory(player),
                 new HumanOffHandInventory(player),
@@ -263,11 +264,9 @@ public class GameMockExtension extends MockitoExtension {
         final Thread main = Thread.currentThread();
         Thread t = new Thread(() -> {
             while (running.get()) {
-                for (SourceInterface interfaz : network.getInterfaces()) {
-                    try {
-                        interfaz.process();
-                    } catch (Exception ignore) {
-                    }
+                try {
+                    network.process();
+                } catch (Exception ignore) {
                 }
                 try {
                     Thread.sleep(50);

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 
 public abstract class BlockFungus extends BlockFlowable implements BlockFlowerPot.FlowerPotBlock {
-    protected BlockFungus(BlockState blockState) {
+    public BlockFungus(BlockState blockState) {
         super(blockState);
     }
 
@@ -64,7 +64,7 @@ public abstract class BlockFungus extends BlockFlowable implements BlockFlowerPo
 
     protected boolean isValidSupport(@NotNull Block support) {
         return switch (support.getId()) {
-            case GRASS, DIRT, PODZOL, FARMLAND, CRIMSON_NYLIUM, WARPED_NYLIUM, SOUL_SOIL, MYCELIUM -> true;
+            case GRASS_BLOCK, DIRT, PODZOL, FARMLAND, CRIMSON_NYLIUM, WARPED_NYLIUM, SOUL_SOIL, MYCELIUM -> true;
             default -> false;
         };
     }

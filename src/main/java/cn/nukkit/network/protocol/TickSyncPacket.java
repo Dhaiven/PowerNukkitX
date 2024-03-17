@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -25,16 +26,16 @@ public class TickSyncPacket extends DataPacket {
     }
     
     @Override
-    public void decode() {
-        this.requestTimestamp = this.getLLong();
-        this.responseTimestamp = this.getLLong();
+    public void decode(HandleByteBuf byteBuf) {
+        this.requestTimestamp = byteBuf.readLongLE();
+        this.responseTimestamp = byteBuf.readLongLE();
     }
     
     @Override
-    public void encode() {
-        this.reset();
-        this.putLLong(this.requestTimestamp);
-        this.putLLong(this.responseTimestamp);
+    public void encode(HandleByteBuf byteBuf) {
+
+        byteBuf.writeLongLE(this.requestTimestamp);
+        byteBuf.writeLongLE(this.responseTimestamp);
     }
 
     public long getRequestTimestamp() {
@@ -51,5 +52,9 @@ public class TickSyncPacket extends DataPacket {
 
     public void setResponseTimestamp(long responseTimestamp) {
         this.responseTimestamp = responseTimestamp;
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

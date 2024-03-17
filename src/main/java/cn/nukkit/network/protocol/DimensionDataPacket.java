@@ -1,13 +1,9 @@
 package cn.nukkit.network.protocol;
 
-import cn.nukkit.level.DimensionData;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import java.util.List;
-
+import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class DimensionDataPacket extends DataPacket {
-    private final List<DimensionData> definitions = new ObjectArrayList<>();
 
     @Override
     public int pid() {
@@ -15,11 +11,15 @@ public class DimensionDataPacket extends DataPacket {
     }
 
     @Override
-    public void decode() {
+    public void decode(HandleByteBuf byteBuf) {
     }
 
     @Override
-    public void encode() {
+    public void encode(HandleByteBuf byteBuf) {
 
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

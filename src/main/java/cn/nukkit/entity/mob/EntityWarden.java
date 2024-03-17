@@ -18,7 +18,6 @@ import cn.nukkit.entity.ai.memory.CoreMemoryTypes;
 import cn.nukkit.entity.ai.route.finder.impl.SimpleFlatAStarRouteFinder;
 import cn.nukkit.entity.ai.route.posevaluator.WalkingPosEvaluator;
 import cn.nukkit.entity.ai.sensor.RouteUnreachableTimeSensor;
-import cn.nukkit.entity.data.IntEntityData;
 import cn.nukkit.entity.effect.EffectType;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -41,16 +40,17 @@ import java.util.Set;
 
 public class EntityWarden extends EntityMob implements EntityWalkable, VibrationListener {
 
-    @Override
-    @NotNull public String getIdentifier() {
-        return WARDEN;
-    }
     protected int lastDetectTime = Server.getInstance().getTick();
     protected int lastCollideTime = Server.getInstance().getTick();
     protected boolean waitForVibration = false;
-
     public EntityWarden(IChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
+    }
+
+    @Override
+    @NotNull
+    public String getIdentifier() {
+        return WARDEN;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class EntityWarden extends EntityMob implements EntityWalkable, Vibration
                         }, (entity) -> true, 1, 1, 120),
                         new Behavior((entity) -> {
                             //计算心跳间隔
-                            this.setDataProperty(new IntEntityData(Entity.DATA_HEARTBEAT_INTERVAL_TICKS, this.calHeartBeatDelay()));
+                            this.setDataProperty(Entity.HEARTBEAT_INTERVAL_TICKS, this.calHeartBeatDelay());
                             return false;
                         }, (entity) -> true, 1, 1, 20)),
                 Set.of(
@@ -131,7 +131,17 @@ public class EntityWarden extends EntityMob implements EntityWalkable, Vibration
                                             case 3 -> 45;
                                             default -> 0;
                                         }, 0.7f),
-                                new MemoryCheckNotEmptyEvaluator(CoreMemoryTypes.ATTACK_TARGET), 3, 1
+                                entity -> {
+                                    if (entity.getMemoryStorage().isEmpty(CoreMemoryTypes.ATTACK_TARGET)) {
+                                        return false;
+                                    } else {
+                                        Entity e = entity.getMemoryStorage().get(CoreMemoryTypes.ATTACK_TARGET);
+                                        if (e instanceof Player player) {
+                                            return player.isSurvival() || player.isAdventure();
+                                        }
+                                        return true;
+                                    }
+                                }, 3, 1
                         ),
                         new Behavior(new WardenSniffExecutor((int) (4.2 * 20), 35), new RandomTimeRangeEvaluator(5 * 20, 10 * 20), 2),
                         new Behavior(new FlatRandomRoamExecutor(0.1f, 12, 100, true, -1, true, 10), (entity -> true), 1)
@@ -143,7 +153,6 @@ public class EntityWarden extends EntityMob implements EntityWalkable, Vibration
         );
     }
 
-    
 
     @Override
     public float getHeight() {
@@ -164,8 +173,8 @@ public class EntityWarden extends EntityMob implements EntityWalkable, Vibration
     protected void initEntity() {
         this.setMaxHealth(500);
         super.initEntity();
-        this.setDataProperty(new IntEntityData(Entity.DATA_HEARTBEAT_INTERVAL_TICKS, 40));
-        this.setDataProperty(new IntEntityData(Entity.DATA_HEARTBEAT_SOUND_EVENT, LevelSoundEventPacket.SOUND_HEARTBEAT));
+        this.setDataProperty(Entity.HEARTBEAT_INTERVAL_TICKS, 40);
+        this.setDataProperty(Entity.HEARTBEAT_SOUND_EVENT, LevelSoundEventPacket.SOUND_HEARTBEAT);
         //空闲声音
         this.setAmbientSoundEvent(Sound.MOB_WARDEN_IDLE);
         this.setAmbientSoundInterval(8.0f);

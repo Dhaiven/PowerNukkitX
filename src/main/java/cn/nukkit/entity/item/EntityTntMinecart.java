@@ -5,7 +5,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityExplosive;
-import cn.nukkit.entity.data.IntEntityData;
+import cn.nukkit.entity.data.EntityFlag;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityExplosionPrimeEvent;
 import cn.nukkit.item.Item;
@@ -16,6 +16,7 @@ import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.IChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.types.EntityLink;
 import cn.nukkit.utils.MinecartType;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class EntityTntMinecart extends EntityMinecartAbstract implements EntityE
         } else {
             fuse = 80;
         }
-        this.setDataFlag(DATA_FLAGS, DATA_FLAG_CHARGED, false);
+        this.setDataFlag(EntityFlag.CHARGED, false);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class EntityTntMinecart extends EntityMinecartAbstract implements EntityE
             lastUpdate = currentTick;
 
             if (fuse % 5 == 0) {
-                setDataProperty(new IntEntityData(DATA_FUSE_LENGTH, fuse));
+                setDataProperty(FUSE_TIME, fuse);
             }
 
             fuse -= tickDiff;
@@ -154,7 +155,7 @@ public class EntityTntMinecart extends EntityMinecartAbstract implements EntityE
     }
 
     @Override
-    public boolean mountEntity(Entity entity, byte mode) {
+    public boolean mountEntity(Entity entity, EntityLink.Type mode) {
         return false;
     }
 }

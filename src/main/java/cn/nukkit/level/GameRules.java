@@ -1,10 +1,15 @@
 package cn.nukkit.level;
 
-import cn.nukkit.nbt.tag.*;
-import cn.nukkit.utils.BinaryStream;
+import cn.nukkit.nbt.tag.ByteTag;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.FloatTag;
+import cn.nukkit.nbt.tag.IntTag;
+import cn.nukkit.nbt.tag.Tag;
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
+import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,9 +17,9 @@ import java.util.Optional;
 
 import static cn.nukkit.level.GameRule.*;
 
-@SuppressWarnings({"unchecked"})
+
 public class GameRules {
-    private final EnumMap<GameRule, Value> gameRules = new EnumMap<>(GameRule.class);
+    private final @Nonnull EnumMap<GameRule, Value<?>> gameRules = new EnumMap<>(GameRule.class);
     private boolean stale;
 
     private GameRules() {
@@ -64,7 +69,7 @@ public class GameRules {
         return gameRules;
     }
 
-    public Map<GameRule, Value> getGameRules() {
+    public Map<GameRule, Value<?>> getGameRules() {
         return ImmutableMap.copyOf(gameRules);
     }
 
@@ -76,31 +81,27 @@ public class GameRules {
         stale = false;
     }
 
-    public void setGameRule(GameRule gameRule, boolean value) {
+    public <V> void setGameRule(GameRule gameRule, V value, Type type) {
         if (!gameRules.containsKey(gameRule)) {
             throw new IllegalArgumentException("Gamerule does not exist");
         }
-        gameRules.get(gameRule).setValue(value, Type.BOOLEAN);
+        ((Value<V>) gameRules.get(gameRule)).setValue(value, type);
         stale = true;
+    }
+
+    public void setGameRule(GameRule gameRule, boolean value) {
+        setGameRule(gameRule, value, Type.BOOLEAN);
     }
 
     public void setGameRule(GameRule gameRule, int value) {
-        if (!gameRules.containsKey(gameRule)) {
-            throw new IllegalArgumentException("Gamerule does not exist");
-        }
-        gameRules.get(gameRule).setValue(value, Type.INTEGER);
-        stale = true;
+        setGameRule(gameRule, value, Type.INTEGER);
     }
 
     public void setGameRule(GameRule gameRule, float value) {
-        if (!gameRules.containsKey(gameRule)) {
-            throw new IllegalArgumentException("Gamerule does not exist");
-        }
-        gameRules.get(gameRule).setValue(value, Type.FLOAT);
-        stale = true;
+        setGameRule(gameRule, value, Type.FLOAT);
     }
 
-    public void setGameRules(GameRule gameRule, String value) throws IllegalArgumentException {
+    public void setGameRule(GameRule gameRule, String value) throws IllegalArgumentException {
         Preconditions.checkNotNull(gameRule, "gameRule");
         Preconditions.checkNotNull(value, "value");
 
@@ -155,7 +156,7 @@ public class GameRules {
     public CompoundTag writeNBT() {
         CompoundTag nbt = new CompoundTag();
 
-        for (Entry<GameRule, Value> entry : gameRules.entrySet()) {
+        for (Entry<GameRule, Value<?>> entry : gameRules.entrySet()) {
             nbt.putString(entry.getKey().getName(), entry.getValue().value.toString());
         }
 
@@ -170,36 +171,36 @@ public class GameRules {
                 continue;
             }
 
-            setGameRules(gameRule.get(), nbt.getString(key));
+            setGameRule(gameRule.get(), nbt.getString(key));
         }
     }
 
     public enum Type {
         UNKNOWN {
             @Override
-            void write(BinaryStream pk, Value value) {
+            void write(HandleByteBuf pk, Value<?> value) {
             }
         },
         BOOLEAN {
             @Override
-            void write(BinaryStream pk, Value value) {
-                pk.putBoolean(value.getValueAsBoolean());
+            void write(HandleByteBuf pk, Value<?> value) {
+                pk.writeBoolean(value.getValueAsBoolean());
             }
         },
         INTEGER {
             @Override
-            void write(BinaryStream pk, Value value) {
-                pk.putUnsignedVarInt(value.getValueAsInteger());
+            void write(HandleByteBuf pk, Value<?> value) {
+                pk.writeUnsignedVarInt(value.getValueAsInteger());
             }
         },
         FLOAT {
             @Override
-            void write(BinaryStream pk, Value value) {
-                pk.putLFloat(value.getValueAsFloat());
+            void write(HandleByteBuf pk, Value<?> value) {
+                pk.writeFloatLE(value.getValueAsFloat());
             }
         };
 
-        abstract void write(BinaryStream pk, Value value);
+        abstract void write(HandleByteBuf pk, Value<?> value);
     }
 
     public static class Value<T> {
@@ -232,18 +233,12 @@ public class GameRules {
         }
 
         public Tag getTag() {
-            switch (this.type) {
-                case BOOLEAN -> {
-                    return new ByteTag(getValueAsBoolean() ? 1 : 0);
-                }
-                case INTEGER -> {
-                    return new IntTag(getValueAsInteger());
-                }
-                case FLOAT -> {
-                    return new FloatTag(getValueAsFloat());
-                }
-            }
-            throw new IllegalArgumentException("unknown type");
+            return switch (this.type) {
+                case BOOLEAN -> new ByteTag(getValueAsBoolean() ? 1 : 0);
+                case INTEGER -> new IntTag(getValueAsInteger());
+                case FLOAT -> new FloatTag(getValueAsFloat());
+                case UNKNOWN -> throw new IllegalArgumentException("unknown type");
+            };
         }
 
         private boolean getValueAsBoolean() {
@@ -267,9 +262,9 @@ public class GameRules {
             return (Float) value;
         }
 
-        public void write(BinaryStream stream) {
-            stream.putBoolean(this.canBeChanged);
-            stream.putUnsignedVarInt(type.ordinal());
+        public void write(HandleByteBuf stream) {
+            stream.writeBoolean(this.canBeChanged);
+            stream.writeUnsignedVarInt(type.ordinal());
             type.write(stream, this);
         }
     }

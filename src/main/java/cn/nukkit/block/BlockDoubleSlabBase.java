@@ -1,10 +1,9 @@
 package cn.nukkit.block;
 
 import cn.nukkit.item.Item;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class BlockDoubleSlabBase extends BlockSolid {
-    protected BlockDoubleSlabBase(BlockState blockState) {
+    public BlockDoubleSlabBase(BlockState blockState) {
         super(blockState);
     }
 

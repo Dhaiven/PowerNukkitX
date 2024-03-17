@@ -99,7 +99,7 @@ public class BlockDoublePlant extends BlockFlowable {
 
     private boolean isSupportValid(Block support) {
         return switch (support.getId()) {
-            case GRASS, DIRT, PODZOL, FARMLAND, MYCELIUM, DIRT_WITH_ROOTS, MOSS_BLOCK -> true;
+            case GRASS_BLOCK, DIRT, PODZOL, FARMLAND, MYCELIUM, DIRT_WITH_ROOTS, MOSS_BLOCK -> true;
             default -> false;
         };
     }
@@ -123,29 +123,27 @@ public class BlockDoublePlant extends BlockFlowable {
             return Item.EMPTY_ARRAY;
         }
 
-        switch (getDoublePlantType()) {
-            case GRASS, FERN -> {
-                boolean dropSeeds = ThreadLocalRandom.current().nextInt(10) == 0;
-                if (item.isShears()) {
-                    //todo enchantment
-                    if (dropSeeds) {
-                        return new Item[]{
-                                Item.get(ItemID.WHEAT_SEEDS),
-                                toItem()
-                        };
-                    } else {
-                        return new Item[]{
-                                toItem()
-                        };
-                    }
-                }
+        if (getDoublePlantType() == DoublePlantType.GRASS || getDoublePlantType() == DoublePlantType.FERN) {
+            boolean dropSeeds = ThreadLocalRandom.current().nextInt(10) == 0;
+            if (item.isShears()) {
+                //todo enchantment
                 if (dropSeeds) {
                     return new Item[]{
-                            Item.get(ItemID.WHEAT_SEEDS)
+                            Item.get(ItemID.WHEAT_SEEDS),
+                            toItem()
                     };
                 } else {
-                    return Item.EMPTY_ARRAY;
+                    return new Item[]{
+                            toItem()
+                    };
                 }
+            }
+            if (dropSeeds) {
+                return new Item[]{
+                        Item.get(ItemID.WHEAT_SEEDS)
+                };
+            } else {
+                return Item.EMPTY_ARRAY;
             }
         }
 

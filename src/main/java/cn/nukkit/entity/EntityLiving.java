@@ -5,7 +5,7 @@ import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockCactus;
 import cn.nukkit.block.BlockMagma;
-import cn.nukkit.entity.data.ShortEntityData;
+import cn.nukkit.entity.data.EntityFlag;
 import cn.nukkit.entity.effect.EffectType;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.entity.weather.EntityWeather;
@@ -20,6 +20,7 @@ import cn.nukkit.item.ItemTurtleHelmet;
 import cn.nukkit.level.GameRule;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.IChunk;
+import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.FloatTag;
@@ -226,7 +227,7 @@ public abstract class EntityLiving extends Entity implements EntityDamageable {
             }
         }
 
-        this.setDataFlag(DATA_FLAGS, DATA_FLAG_BREATHING, isBreathing);
+        this.setDataFlag(EntityFlag.BREATHING, isBreathing);
 
         boolean hasUpdate = super.entityBaseTick(tickDiff);
 
@@ -387,15 +388,15 @@ public abstract class EntityLiving extends Entity implements EntityDamageable {
      * @param speed 速度大小<br>Speed value
      */
     public void setMovementSpeed(float speed) {
-        this.movementSpeed = speed;
+        this.movementSpeed = (float) NukkitMath.round(speed, 2);
     }
 
     public int getAirTicks() {
-        return this.getDataPropertyShort(DATA_AIR);
+        return this.getDataProperty(AIR_SUPPLY);
     }
 
     public void setAirTicks(int ticks) {
-        this.setDataProperty(new ShortEntityData(DATA_AIR, ticks));
+        this.setDataProperty(AIR_SUPPLY, ticks);
     }
 
     protected boolean blockedByShield(EntityDamageEvent source) {
@@ -443,11 +444,11 @@ public abstract class EntityLiving extends Entity implements EntityDamageable {
     }
 
     public boolean isBlocking() {
-        return this.getDataFlag(DATA_FLAGS_EXTENDED, DATA_FLAG_BLOCKING);
+        return this.getDataFlag(EntityFlag.BLOCKING);
     }
 
     public void setBlocking(boolean value) {
-        this.setDataFlag(DATA_FLAGS_EXTENDED, DATA_FLAG_BLOCKING, value);
+        this.setDataFlagExtend(EntityFlag.BLOCKING, value);
     }
 
     public boolean isPersistent() {

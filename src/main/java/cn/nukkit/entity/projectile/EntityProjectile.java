@@ -5,7 +5,6 @@ import cn.nukkit.api.DeprecationDetails;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityLiving;
-import cn.nukkit.entity.data.LongEntityData;
 import cn.nukkit.entity.item.EntityBoat;
 import cn.nukkit.entity.item.EntityEnderCrystal;
 import cn.nukkit.entity.item.EntityMinecartAbstract;
@@ -17,6 +16,7 @@ import cn.nukkit.level.format.IChunk;
 import cn.nukkit.level.vibration.VibrationEvent;
 import cn.nukkit.level.vibration.VibrationType;
 import cn.nukkit.math.AxisAlignedBB;
+import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -29,9 +29,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author MagicDroidX (Nukkit Project)
  */
 public abstract class EntityProjectile extends Entity {
-
-    public static final int DATA_SHOOTER_ID = 17;
-
     public static final int PICKUP_NONE = 0;
 
     public static final int PICKUP_ANY = 1;
@@ -59,7 +56,7 @@ public abstract class EntityProjectile extends Entity {
         super(chunk, nbt);
         this.shootingEntity = shootingEntity;
         if (shootingEntity != null) {
-            this.setDataProperty(new LongEntityData(DATA_SHOOTER_ID, shootingEntity.getId()));
+            this.setDataProperty(TARGET_EID, shootingEntity.getId());
         }
     }
 
@@ -232,7 +229,7 @@ public abstract class EntityProjectile extends Entity {
                 this.motionY = 0;
                 this.motionZ = 0;
 
-                this.server.getPluginManager().callEvent(new ProjectileHitEvent(this, MovingObjectPosition.fromBlock(this.getFloorX(), this.getFloorY(), this.getFloorZ(), -1, this)));
+                this.server.getPluginManager().callEvent(new ProjectileHitEvent(this, MovingObjectPosition.fromBlock(this.getFloorX(), this.getFloorY(), this.getFloorZ(), BlockFace.UP, this)));
                 onCollideWithBlock(position, motion);
                 addHitEffect();
                 return false;

@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
 /**
@@ -20,20 +21,24 @@ public class ChangeDimensionPacket extends DataPacket {
     public boolean respawn;
 
     @Override
-    public void decode() {
+    public void decode(HandleByteBuf byteBuf) {
 
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        this.putVarInt(this.dimension);
-        this.putVector3f(this.x, this.y, this.z);
-        this.putBoolean(this.respawn);
+    public void encode(HandleByteBuf byteBuf) {
+
+        byteBuf.writeVarInt(this.dimension);
+        byteBuf.writeVector3f(this.x, this.y, this.z);
+        byteBuf.writeBoolean(this.respawn);
     }
 
     @Override
     public int pid() {
         return NETWORK_ID;
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

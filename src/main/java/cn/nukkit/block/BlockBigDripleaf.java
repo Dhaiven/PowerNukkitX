@@ -124,12 +124,11 @@ public class BlockBigDripleaf extends BlockFlowable implements Faceable {
             b.setBlockFace(bf);
             b.setHead(false);
             level.setBlock(below, b, true, false);
-            setHead(true);
             setBlockFace(bf);
         } else {
-            setBlockFace(player.getHorizontalFacing().getOpposite());
-            setHead(true);
+            setBlockFace(player != null ? player.getHorizontalFacing().getOpposite() : BlockFace.SOUTH);
         }
+        setHead(true);
 
         if (block instanceof BlockFlowingWater)
             level.setBlock(this, 1, block, true, false);
@@ -307,7 +306,7 @@ public class BlockBigDripleaf extends BlockFlowable implements Faceable {
 
     private boolean isValidSupportBlock(String id) {
         return Objects.equals(id, BIG_DRIPLEAF) ||
-                Objects.equals(id, GRASS) ||
+                Objects.equals(id, GRASS_BLOCK) ||
                 Objects.equals(id, DIRT) ||
                 Objects.equals(id, MYCELIUM) ||
                 Objects.equals(id, PODZOL) ||
