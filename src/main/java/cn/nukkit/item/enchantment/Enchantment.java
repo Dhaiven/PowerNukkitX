@@ -34,7 +34,6 @@ import cn.nukkit.utils.OK;
 import cn.nukkit.utils.TextFormat;
 import io.netty.util.internal.EmptyArrays;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -68,7 +67,6 @@ import static org.objectweb.asm.Opcodes.V17;
  *
  * @author MagicDroidX (Nukkit Project)
  */
-@Slf4j
 public abstract class Enchantment implements Cloneable {
     public static final Enchantment[] EMPTY_ARRAY = new Enchantment[0];
     public static final int CUSTOM_ENCHANTMENT_ID = dynamic(256);
@@ -247,6 +245,12 @@ public abstract class Enchantment implements Cloneable {
             case 10 -> "X";
             default -> "∞";
         };
+    }
+
+    public static void reload() {
+        enchantments = new Enchantment[256];
+        namedEnchantments.clear();
+        init();
     }
 
     public static OK<?> register(Enchantment enchantment, boolean registerItem) {
@@ -463,6 +467,7 @@ public abstract class Enchantment implements Cloneable {
         this.type = type;
         this.name = name;
     }
+
     /**
      * 自定义附魔使用的构造函数
      *

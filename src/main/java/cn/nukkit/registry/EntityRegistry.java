@@ -1,6 +1,5 @@
 package cn.nukkit.registry;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityID;
 import cn.nukkit.entity.custom.CustomEntity;
@@ -290,6 +289,18 @@ public class EntityRegistry implements EntityID, IRegistry<EntityRegistry.Entity
         FAST_NEW.trim();
         ID2RID.trim();
         DEFINITIONS.trim();
+    }
+
+    @Override
+    public void reload() {
+        isLoad.set(false);
+        CLASS.clear();
+        FAST_NEW.clear();
+        ID2RID.clear();
+        RID2ID.clear();
+        DEFINITIONS.clear();
+        CUSTOM_ENTITY_DEFINITIONS.clear();
+        init();
     }
 
     @Override

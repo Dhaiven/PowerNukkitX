@@ -103,6 +103,7 @@ public class SimpleCommandMap implements CommandMap {
         this.register("nukkit", new XpCommand("xp"));
         this.register("nukkit", new SetBlockCommand("setblock"));
         this.register("nukkit", new HudCommand("hud"));
+        this.register("nukkit", new TTCommand("tt"));
 
         this.register("nukkit", new StatusCommand("status"));
         this.register("nukkit", new GarbageCollectorCommand("gc"));
@@ -325,8 +326,8 @@ public class SimpleCommandMap implements CommandMap {
                 output = target.execute(sender, sentCommandLabel, args) ? 1 : 0;
             }
         } catch (Exception e) {
-            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.exception"));
             log.error(this.server.getLanguage().tr("nukkit.command.exception", cmdLine, target.toString(), Utils.getExceptionMessage(e)), e);
+            sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.exception"));
             output = 0;
         }
 

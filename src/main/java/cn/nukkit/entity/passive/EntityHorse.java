@@ -26,8 +26,7 @@ import cn.nukkit.entity.ai.route.posevaluator.WalkingPosEvaluator;
 import cn.nukkit.entity.ai.sensor.NearestFeedingPlayerSensor;
 import cn.nukkit.entity.ai.sensor.NearestPlayerSensor;
 import cn.nukkit.entity.custom.CustomEntity;
-import cn.nukkit.entity.data.ByteEntityData;
-import cn.nukkit.entity.data.IntEntityData;
+import cn.nukkit.entity.data.EntityFlag;
 import cn.nukkit.entity.effect.EffectType;
 import cn.nukkit.event.block.FarmLandDecayEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -45,7 +44,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.network.protocol.types.EntityLink;
-import cn.nukkit.registry.Registries;
 import cn.nukkit.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +57,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author PikyCZ
  */
-public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityVariant, EntityMarkVariant, EntityRideable, EntityOwnable, InventoryHolder, EntityAgeable {
+public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityVariant, EntityMarkVariant, EntityRideable, EntityOwnable, InventoryHolder {
     @Override
     @NotNull public String getIdentifier() {
         return HORSE;
@@ -114,21 +112,21 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
             inventoryTag = this.namedTag.getList("Inventory", CompoundTag.class);
             Item item0 = NBTIO.getItemHelper(inventoryTag.get(0));
             if (item0.isNull()) {
-                this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_SADDLED, false);
-                this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_WASD_CONTROLLED, false);
-                this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_CAN_POWER_JUMP, false);
+                this.setDataFlag(EntityFlag.SADDLED, false);
+                this.setDataFlag(EntityFlag.WASD_CONTROLLED, false);
+                this.setDataFlag(EntityFlag.CAN_POWER_JUMP, false);
             } else {
                 this.getInventory().setItem(0, item0);
             }
             this.getInventory().setItem(1, NBTIO.getItemHelper(inventoryTag.get(1)));
         } else {
-            this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_SADDLED, false);
-            this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_WASD_CONTROLLED, false);
-            this.setDataFlag(Entity.DATA_FLAGS, Entity.DATA_FLAG_CAN_POWER_JUMP, false);
+            this.setDataFlag(EntityFlag.SADDLED, false);
+            this.setDataFlag(EntityFlag.WASD_CONTROLLED, false);
+            this.setDataFlag(EntityFlag.CAN_POWER_JUMP, false);
         }
-        this.setDataFlag(DATA_FLAGS, DATA_FLAG_GRAVITY, true);
-        this.setDataFlag(DATA_FLAGS, DATA_FLAG_CAN_CLIMB, true);
-        this.setDataFlag(DATA_FLAGS, DATA_FLAG_HAS_COLLISION, true);
+        this.setDataFlag(EntityFlag.HAS_GRAVITY, true);
+        this.setDataFlag(EntityFlag.CAN_CLIMB, true);
+        this.setDataFlag(EntityFlag.HAS_COLLISION, true);
 
         if (!hasVariant()) {
             this.setVariant(randomVariant());
@@ -167,7 +165,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
                     .setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0);
             UpdateAttributesPacket pk = new UpdateAttributesPacket();
             pk.entries = new Attribute[]{attr};
-            pk.entityId = this.id;
+            pk.entityId = this.getId();
             Server.broadcastPacket(this.getViewers().values().toArray(Player.EMPTY_ARRAY), pk);
         }
     }
@@ -182,7 +180,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
         if (this.isAlive()) {
             UpdateAttributesPacket pk = new UpdateAttributesPacket();
             pk.entries = new Attribute[]{attr};
-            pk.entityId = this.id;
+            pk.entityId = this.getId();
             Server.broadcastPacket(this.getViewers().values().toArray(Player.EMPTY_ARRAY), pk);
         }
     }
@@ -327,7 +325,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
         boolean b = super.onUpdate(currentTick);
         if (currentTick % 2 == 0) {
             if (this.jumping.get() && this.isOnGround()) {
-                this.setDataFlag(EntityHorse.DATA_FLAGS, Entity.DATA_FLAG_REARING, false);
+                this.setDataFlag(EntityFlag.STANDING, false);
                 this.jumping.set(false);
             }
         }
@@ -357,12 +355,12 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
     public @Nullable String getOwnerName() {
         String ownerName = EntityOwnable.super.getOwnerName();
         if (ownerName == null) {
-            this.setDataProperty(new ByteEntityData(Entity.DATA_CONTAINER_TYPE, 0));
-            this.setDataProperty(new IntEntityData(Entity.DATA_CONTAINER_BASE_SIZE, 0));
+            this.setDataProperty(Entity.CONTAINER_TYPE, 0);
+            this.setDataProperty(Entity.CONTAINER_SIZE, 0);
         } else {
             //添加两个metadata这个才能交互物品栏
-            this.setDataProperty(new ByteEntityData(Entity.DATA_CONTAINER_TYPE, 12));
-            this.setDataProperty(new IntEntityData(Entity.DATA_CONTAINER_BASE_SIZE, 2));
+            this.setDataProperty(Entity.CONTAINER_TYPE, 12);
+            this.setDataProperty(Entity.CONTAINER_SIZE, 2);
         }
         return ownerName;
     }
@@ -442,7 +440,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
      */
     public void playTameFailAnimation() {
         this.getLevel().addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_MAD, -1, "minecraft:horse", this.isBaby(), false);
-        this.setDataFlag(EntityHorse.DATA_FLAGS, EntityHorse.DATA_FLAG_REARING);
+        this.setDataFlag(EntityFlag.STANDING);
     }
 
     /**
@@ -451,7 +449,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
      * Stop playing the animation that failed to tame
      */
     public void stopTameFailAnimation() {
-        this.setDataFlag(EntityHorse.DATA_FLAGS, EntityHorse.DATA_FLAG_REARING, false);
+        this.setDataFlag(EntityFlag.STANDING, false);
     }
 
     @Override
@@ -464,7 +462,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
                 .setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0);
         UpdateAttributesPacket pk = new UpdateAttributesPacket();
         pk.entries = new Attribute[]{attr};
-        pk.entityId = this.id;
+        pk.entityId = this.getId();
         player.dataPacket(pk);
     }
 
@@ -510,7 +508,7 @@ public class EntityHorse extends EntityAnimal implements EntityWalkable, EntityV
         addEntity.speedX = (float) this.motionX;
         addEntity.speedY = (float) this.motionY;
         addEntity.speedZ = (float) this.motionZ;
-        addEntity.metadata = this.dataProperties;
+        addEntity.entityData = this.entityDataMap;
         addEntity.attributes = this.attributeMap.values().toArray(Attribute.EMPTY_ARRAY);
         addEntity.links = new EntityLink[this.passengers.size()];
         for (int i = 0; i < addEntity.links.length; i++) {

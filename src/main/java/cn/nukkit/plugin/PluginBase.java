@@ -18,7 +18,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
 
 /**
  * 一般的Nukkit插件需要继承的类。<br>
@@ -218,7 +217,7 @@ public abstract class PluginBase implements Plugin {
     @Override
     public boolean saveResource(String filename, String outputName, boolean replace) {
         Preconditions.checkArgument(filename != null && outputName != null, "Filename can not be null!");
-        Preconditions.checkArgument(filename.trim().length() != 0 && outputName.trim().length() != 0, "Filename can not be empty!");
+        Preconditions.checkArgument(!filename.trim().isEmpty() && !outputName.trim().isEmpty(), "Filename can not be empty!");
 
         File out = new File(dataFolder, outputName);
         if (!out.exists() || replace) {
@@ -264,16 +263,19 @@ public abstract class PluginBase implements Plugin {
     @Override
     public void reloadConfig() {
         this.config = new Config(this.configFile);
-        InputStream configStream = this.getResource("config.yml");
-        if (configStream != null) {
-            DumperOptions dumperOptions = new DumperOptions();
-            dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Yaml yaml = new Yaml(dumperOptions);
-            try {
-                this.config.setDefault(yaml.loadAs(Utils.readFile(this.configFile), ConfigSection.class));
-            } catch (IOException e) {
-                log.error("Error while reloading configs for the plugin {}", getDescription().getName(), e);
+        try (InputStream configStream = this.getResource("config.yml")){
+            if (configStream != null) {
+                DumperOptions dumperOptions = new DumperOptions();
+                dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+                Yaml yaml = new Yaml(dumperOptions);
+                try {
+                    this.config.setDefault(yaml.loadAs(Utils.readFile(this.configFile), ConfigSection.class));
+                } catch (IOException e) {
+                    log.error("Error while reloading configs for the plugin {}", getDescription().getName(), e);
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

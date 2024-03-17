@@ -48,7 +48,7 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
         DOOR_DIRECTION.put(BlockFace.NORTH, 3);
     }
 
-    protected BlockDoor(BlockState blockState) {
+    public BlockDoor(BlockState blockState) {
         super(blockState);
     }
 
@@ -227,7 +227,7 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
             return false;
         }
 
-        BlockFace direction = player.getDirection();
+        BlockFace direction = player != null ? player.getDirection() : BlockFace.SOUTH;
         setBlockFace(direction);
 
         Block left = this.getSide(direction.rotateYCCW());

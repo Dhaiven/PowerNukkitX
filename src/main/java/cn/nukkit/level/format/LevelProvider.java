@@ -3,9 +3,8 @@ package cn.nukkit.level.format;
 import cn.nukkit.level.DimensionData;
 import cn.nukkit.level.GameRules;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.format.leveldb.LevelDat;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.scheduler.AsyncTask;
+import it.unimi.dsi.fastutil.Pair;
 
 import java.util.Map;
 
@@ -18,7 +17,7 @@ public interface LevelProvider {
 
     DimensionData getDimensionData();
 
-    AsyncTask requestChunkTask(int X, int Z);
+    Pair<byte[], Integer> requestChunkData(int X, int Z);
 
     String getPath();
 

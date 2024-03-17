@@ -4,7 +4,6 @@ import cn.nukkit.block.BlockID;
 import cn.nukkit.level.DimensionData;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.format.IChunk;
-import cn.nukkit.registry.Registries;
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -46,66 +45,51 @@ public abstract class Generator implements BlockID {
     public abstract String getName();
 
     @NotNull
-    public final DimensionData getDimensionData() {
+    public DimensionData getDimensionData() {
         return dimensionData;
     }
 
     public final IChunk syncGenerate(IChunk chunk) {
-        return this.syncGenerate(chunk, end);
+        return this.syncGenerate(chunk, end.name());
     }
 
-    public final IChunk syncGenerate(IChunk chunk, GenerateStage to) {
+    public final IChunk syncGenerate(IChunk chunk, String to) {
         final ChunkGenerateContext context = new ChunkGenerateContext(this, level, chunk);
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             start.apply(context);
         }, start.getExecutor());
-        GenerateStage now;
-        while ((now = start.getNextStage()) != null) {
-            if (now == to || now.name().equals(to.name())) {
-                future = future.thenRunAsync(() -> start.getNextStage().apply(context), start.getExecutor());
+        GenerateStage now = start;
+        while ((now = now.getNextStage()) != null) {
+            final GenerateStage finalNow = now;
+            if (finalNow.name().equals(to)) {
+                future = future.thenRunAsync(() -> finalNow.apply(context), now.getExecutor());
                 break;
             }
-            future = future.thenRunAsync(() -> start.getNextStage().apply(context), start.getExecutor());
+            future = future.thenRunAsync(() -> finalNow.getNextStage().apply(context), finalNow.getExecutor());
         }
         future.join();
-        IChunk c = context.getChunk();
-        level.setChunk(c.getX(), c.getZ(), c);
-        return c;
+        return context.getChunk();
     }
 
     public final void asyncGenerate(IChunk chunk) {
-        asyncGenerate(chunk, end, (c) -> {
+        asyncGenerate(chunk, end.name(), (c) -> {
         });
     }
 
     public final void asyncGenerate(IChunk chunk, Consumer<ChunkGenerateContext> callback) {
-        asyncGenerate(chunk, end, callback);
-    }
-
-    public final void asyncGenerate(IChunk chunk, GenerateStage to, Consumer<ChunkGenerateContext> callback) {
-        final ChunkGenerateContext context = new ChunkGenerateContext(this, level, chunk);
-        asyncGenerate0(context, start, to, () -> {
-            IChunk c = context.getChunk();
-            level.setChunk(c.getX(), c.getZ(), c);
-            callback.accept(context);
-        });
+        asyncGenerate(chunk, end.name(), callback);
     }
 
     public final void asyncGenerate(IChunk chunk, String to, Consumer<ChunkGenerateContext> callback) {
-        GenerateStage generateStage = Registries.GENERATE_STAGE.get(to);
-        Preconditions.checkNotNull(generateStage);
+        Preconditions.checkNotNull(to);
         final ChunkGenerateContext context = new ChunkGenerateContext(this, level, chunk);
-        asyncGenerate0(context, start, generateStage, () -> {
-            IChunk c = context.getChunk();
-            level.setChunk(c.getX(), c.getZ(), c);
-            callback.accept(context);
-        });
+        asyncGenerate0(context, start, to, () -> callback.accept(context));
     }
 
 
-    private void asyncGenerate0(final ChunkGenerateContext context, final GenerateStage start, final GenerateStage to, final Runnable callback) {
+    private void asyncGenerate0(final ChunkGenerateContext context, final GenerateStage start, String to, final Runnable callback) {
         if (start == null || to == null) return;
-        if (to == start || to.name().equals(start.name())) {
+        if (to.equals(start.name())) {
             start.getExecutor().execute(() -> {
                 start.apply(context);
                 callback.run();

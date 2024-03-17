@@ -1,6 +1,7 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.item.Item;
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
 /**
@@ -18,20 +19,26 @@ public class MobArmorEquipmentPacket extends DataPacket {
     public Item[] slots = new Item[4];
 
     @Override
-    public void decode() {
-        this.eid = this.getEntityRuntimeId();
-        //this.slots = new Item[4];
-        for (int i = 0; i < slots.length; i++) {
-            this.slots[i] = this.getSlot();
-        }
+    public void decode(HandleByteBuf byteBuf) {
+        this.eid = byteBuf.readEntityRuntimeId();
+        this.slots = new Item[4];
+        this.slots[0] = byteBuf.readSlot();
+        this.slots[1] = byteBuf.readSlot();
+        this.slots[2] = byteBuf.readSlot();
+        this.slots[3] = byteBuf.readSlot();
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        this.putEntityRuntimeId(this.eid);
-        for (int i = 0; i < slots.length; i++) {
-            this.putSlot(this.slots[i]);
-        }
+    public void encode(HandleByteBuf byteBuf) {
+        
+        byteBuf.writeEntityRuntimeId(this.eid);
+        byteBuf.writeSlot(this.slots[0]);
+        byteBuf.writeSlot(this.slots[1]);
+        byteBuf.writeSlot(this.slots[2]);
+        byteBuf.writeSlot(this.slots[3]);
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

@@ -1,7 +1,7 @@
 package cn.nukkit.network.protocol;
 
-import javax.annotation.Nonnegative;
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class AgentAnimationPacket extends DataPacket {
     public byte animation;
@@ -13,14 +13,18 @@ public class AgentAnimationPacket extends DataPacket {
     }
 
     @Override
-    public void decode() {
-        this.animation = getByte();
-        this.runtimeEntityId = getEntityRuntimeId();
+    public void decode(HandleByteBuf byteBuf) {
+        this.animation = byteBuf.readByte();
+        this.runtimeEntityId = byteBuf.readEntityRuntimeId();
     }
 
     @Override
-    public void encode() {
-        putByte(this.animation);
-        putEntityRuntimeId(this.runtimeEntityId);
+    public void encode(HandleByteBuf byteBuf) {
+        byteBuf.writeByte(this.animation);
+        byteBuf.writeEntityRuntimeId(this.runtimeEntityId);
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

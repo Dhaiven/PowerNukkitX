@@ -68,7 +68,7 @@ public class ChunkTest {
         chunk.addEntity(itemEntity);
 
         List<Entity> list = chunk.getEntities().values().stream().filter(e -> e.getIdentifier().equals(EntityID.ITEM)).toList();
-        Assertions.assertEquals(2, chunk.getEntities().values().size());
+        Assertions.assertEquals(2, chunk.getEntities().values().size());//player test and item entity
         Assertions.assertEquals(1, list.size());
         Assertions.assertEquals(EntityID.ITEM, list.get(0).getIdentifier());
 
@@ -94,7 +94,7 @@ public class ChunkTest {
     }
 
     @Test
-    void testMutiThreadOperate(LevelProvider levelDBProvider) {
+    void testMultiThreadOperate(LevelProvider levelDBProvider) {
         final IChunk chunk = levelDBProvider.getChunk(0, 0);
         Set<Thread> threadSet = new HashSet<>();
         for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {

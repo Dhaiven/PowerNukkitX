@@ -15,6 +15,7 @@ import cn.nukkit.utils.Identifier;
 import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -31,8 +32,7 @@ import java.util.function.Consumer;
  * <p>
  * CustomBlockDefinition is used to get the data of the item behavior_pack sent to the client. The methods provided in {@link CustomItemDefinition.SimpleBuilder} control the data sent to the client, if you need to control some of the server-side behavior, please override the methods in {@link cn.nukkit.item.Item Item}.
  */
-
-
+@Slf4j
 public record CustomItemDefinition(String identifier, CompoundTag nbt) implements BlockID {
     private static final Object2IntOpenHashMap<String> INTERNAL_ALLOCATION_ID_MAP = new Object2IntOpenHashMap<>();
     private static final AtomicInteger nextRuntimeId = new AtomicInteger(10000);
@@ -194,7 +194,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
          */
         public SimpleBuilder creativeGroup(String creativeGroup) {
             if (creativeGroup.isBlank()) {
-                System.out.println("creativeGroup has an invalid value!");
+                log.error("creativeGroup has an invalid value!");
                 return this;
             }
             this.nbt.getCompound("components")
@@ -328,7 +328,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
 
         protected SimpleBuilder addRepairs(@NotNull List<String> repairItemNames, String molang) {
             if (molang.isBlank()) {
-                System.out.println("repairAmount has an invalid value!");
+                log.error("repairAmount has an invalid value!");
                 return this;
             }
 
@@ -389,17 +389,27 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
             }
             toolBlocks.put(ItemTags.IS_PICKAXE, pickaxeBlocks);
 
-            for (var name : List.of(CHEST, BOOKSHELF, MELON_BLOCK, WARPED_STEM, CRIMSON_STEM, WARPED_STEM, CRIMSON_STEM, CRAFTING_TABLE, CRIMSON_PLANKS, WARPED_PLANKS, WARPED_STAIRS, WARPED_TRAPDOOR, CRIMSON_STAIRS, CRIMSON_TRAPDOOR, CRIMSON_DOOR, CRIMSON_DOUBLE_SLAB, WARPED_DOOR, WARPED_DOUBLE_SLAB, CRAFTING_TABLE, COMPOSTER, CARTOGRAPHY_TABLE, LECTERN, STRIPPED_CRIMSON_STEM, STRIPPED_WARPED_STEM, TRAPDOOR, SPRUCE_TRAPDOOR, BIRCH_TRAPDOOR, JUNGLE_TRAPDOOR, ACACIA_TRAPDOOR, DARK_OAK_TRAPDOOR, WOODEN_DOOR, SPRUCE_DOOR, BIRCH_DOOR, JUNGLE_DOOR, ACACIA_DOOR, DARK_OAK_DOOR, ACACIA_FENCE, DARK_OAK_FENCE, BAMBOO_FENCE, MANGROVE_FENCE, NETHER_BRICK_FENCE, OAK_FENCE, CRIMSON_FENCE, JUNGLE_FENCE, CHERRY_FENCE, BIRCH_FENCE, WARPED_FENCE, SPRUCE_FENCE, FENCE_GATE, SPRUCE_FENCE_GATE, BIRCH_FENCE_GATE, JUNGLE_FENCE_GATE, ACACIA_FENCE_GATE, DARK_OAK_FENCE_GATE, MANGROVE_LOG, OAK_LOG, JUNGLE_LOG, SPRUCE_LOG, DARK_OAK_LOG, CHERRY_LOG, ACACIA_LOG, BIRCH_LOG, WOOD, ACACIA_PLANKS, BAMBOO_PLANKS, CRIMSON_PLANKS, BIRCH_PLANKS, DARK_OAK_PLANKS, CHERRY_PLANKS, WARPED_PLANKS, OAK_PLANKS, SPRUCE_PLANKS, MANGROVE_PLANKS, JUNGLE_PLANKS, WOODEN_SLAB, DOUBLE_WOODEN_SLAB, OAK_STAIRS, SPRUCE_STAIRS, BIRCH_STAIRS, JUNGLE_STAIRS, ACACIA_STAIRS, DARK_OAK_STAIRS, WALL_SIGN, SPRUCE_WALL_SIGN, BIRCH_WALL_SIGN, JUNGLE_WALL_SIGN, ACACIA_WALL_SIGN, DARKOAK_WALL_SIGN, WOODEN_PRESSURE_PLATE, SPRUCE_PRESSURE_PLATE, BIRCH_PRESSURE_PLATE, JUNGLE_PRESSURE_PLATE, ACACIA_PRESSURE_PLATE, DARK_OAK_PRESSURE_PLATE, SMITHING_TABLE, FLETCHING_TABLE, BARREL, BEEHIVE, BEE_NEST, LADDER, PUMPKIN, CARVED_PUMPKIN, LIT_PUMPKIN, MANGROVE_DOOR, MANGROVE_DOUBLE_SLAB, MANGROVE_FENCE, MANGROVE_FENCE_GATE, MANGROVE_LOG, MANGROVE_PLANKS, MANGROVE_PRESSURE_PLATE, MANGROVE_SLAB, MANGROVE_STAIRS, MANGROVE_WALL_SIGN, MANGROVE_WOOD, WOODEN_BUTTON, SPRUCE_BUTTON, BIRCH_BUTTON, JUNGLE_BUTTON, ACACIA_BUTTON, DARK_OAK_BUTTON, MANGROVE_BUTTON, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, STRIPPED_BIRCH_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_MANGROVE_WOOD, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, STRIPPED_BIRCH_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_MANGROVE_LOG, STANDING_SIGN, SPRUCE_STANDING_SIGN, BIRCH_STANDING_SIGN, JUNGLE_STANDING_SIGN, ACACIA_STANDING_SIGN, DARKOAK_STANDING_SIGN, MANGROVE_STANDING_SIGN, MANGROVE_TRAPDOOR, WARPED_STANDING_SIGN, WARPED_WALL_SIGN, CRIMSON_STANDING_SIGN, CRIMSON_WALL_SIGN, MANGROVE_ROOTS)) {
+            for (var name : List.of(CHEST, BOOKSHELF, MELON_BLOCK, WARPED_STEM, CRIMSON_STEM, WARPED_STEM, CRIMSON_STEM, CRAFTING_TABLE, CRIMSON_PLANKS, WARPED_PLANKS, WARPED_STAIRS, WARPED_TRAPDOOR, CRIMSON_STAIRS, CRIMSON_TRAPDOOR, CRIMSON_DOOR, CRIMSON_DOUBLE_SLAB, WARPED_DOOR, WARPED_DOUBLE_SLAB, CRAFTING_TABLE, COMPOSTER, CARTOGRAPHY_TABLE, LECTERN, STRIPPED_CRIMSON_STEM, STRIPPED_WARPED_STEM, TRAPDOOR, SPRUCE_TRAPDOOR, BIRCH_TRAPDOOR, JUNGLE_TRAPDOOR, ACACIA_TRAPDOOR, DARK_OAK_TRAPDOOR, WOODEN_DOOR, SPRUCE_DOOR, BIRCH_DOOR, JUNGLE_DOOR, ACACIA_DOOR, DARK_OAK_DOOR, ACACIA_FENCE, DARK_OAK_FENCE, BAMBOO_FENCE, MANGROVE_FENCE, NETHER_BRICK_FENCE, OAK_FENCE, CRIMSON_FENCE, JUNGLE_FENCE, CHERRY_FENCE, BIRCH_FENCE, WARPED_FENCE, SPRUCE_FENCE, FENCE_GATE, SPRUCE_FENCE_GATE, BIRCH_FENCE_GATE, JUNGLE_FENCE_GATE, ACACIA_FENCE_GATE, DARK_OAK_FENCE_GATE, MANGROVE_LOG, OAK_LOG, JUNGLE_LOG, SPRUCE_LOG, DARK_OAK_LOG, CHERRY_LOG, ACACIA_LOG, BIRCH_LOG, ACACIA_PLANKS, BAMBOO_PLANKS, CRIMSON_PLANKS, BIRCH_PLANKS, DARK_OAK_PLANKS, CHERRY_PLANKS, WARPED_PLANKS, OAK_PLANKS, SPRUCE_PLANKS, MANGROVE_PLANKS, JUNGLE_PLANKS, ACACIA_DOUBLE_SLAB, ACACIA_SLAB, BAMBOO_DOUBLE_SLAB, BAMBOO_MOSAIC_SLAB, BIRCH_DOUBLE_SLAB
+                    , BIRCH_SLAB, OAK_STAIRS, SPRUCE_STAIRS, BIRCH_STAIRS, JUNGLE_STAIRS, ACACIA_STAIRS, DARK_OAK_STAIRS, WALL_SIGN, SPRUCE_WALL_SIGN, BIRCH_WALL_SIGN, JUNGLE_WALL_SIGN, ACACIA_WALL_SIGN, DARKOAK_WALL_SIGN, WOODEN_PRESSURE_PLATE, SPRUCE_PRESSURE_PLATE, BIRCH_PRESSURE_PLATE, JUNGLE_PRESSURE_PLATE, ACACIA_PRESSURE_PLATE, DARK_OAK_PRESSURE_PLATE, SMITHING_TABLE, FLETCHING_TABLE, BARREL, BEEHIVE, BEE_NEST, LADDER, PUMPKIN, CARVED_PUMPKIN, LIT_PUMPKIN, MANGROVE_DOOR, MANGROVE_DOUBLE_SLAB, MANGROVE_FENCE, MANGROVE_FENCE_GATE, MANGROVE_LOG, MANGROVE_PLANKS, MANGROVE_PRESSURE_PLATE, MANGROVE_SLAB, MANGROVE_STAIRS, MANGROVE_WALL_SIGN, MANGROVE_WOOD, WOODEN_BUTTON, SPRUCE_BUTTON, BIRCH_BUTTON, JUNGLE_BUTTON, ACACIA_BUTTON, DARK_OAK_BUTTON, MANGROVE_BUTTON, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, STRIPPED_BIRCH_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_MANGROVE_WOOD, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, STRIPPED_BIRCH_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_MANGROVE_LOG, STANDING_SIGN, SPRUCE_STANDING_SIGN, BIRCH_STANDING_SIGN, JUNGLE_STANDING_SIGN, ACACIA_STANDING_SIGN, DARKOAK_STANDING_SIGN, MANGROVE_STANDING_SIGN, MANGROVE_TRAPDOOR, WARPED_STANDING_SIGN, WARPED_WALL_SIGN, CRIMSON_STANDING_SIGN, CRIMSON_WALL_SIGN, MANGROVE_ROOTS)) {
                 axeBlocks.put(name, new DigProperty());
             }
             toolBlocks.put(ItemTags.IS_AXE, axeBlocks);
 
-            for (var name : List.of(SOUL_SAND, SOUL_SOIL, DIRT_WITH_ROOTS, MYCELIUM, PODZOL, DIRT, FARMLAND, SAND, GRAVEL, GRASS, GRASS_PATH, SNOW, MUD, PACKED_MUD, CLAY)) {
+            for (var name : List.of(SOUL_SAND, SOUL_SOIL, DIRT_WITH_ROOTS, MYCELIUM, PODZOL, DIRT, FARMLAND, SAND, GRAVEL, GRASS_BLOCK, GRASS_PATH, SNOW, MUD, PACKED_MUD, CLAY)) {
                 shovelBlocks.put(name, new DigProperty());
             }
             toolBlocks.put(ItemTags.IS_SHOVEL, shovelBlocks);
 
-            for (var name : List.of(NETHER_WART_BLOCK, HAY_BLOCK, TARGET, SHROOMLIGHT, LEAVES, LEAVES2, AZALEA_LEAVES_FLOWERED, AZALEA_LEAVES, WARPED_WART_BLOCK)) {
+            for (var name : List.of(NETHER_WART_BLOCK, HAY_BLOCK, TARGET, SHROOMLIGHT, BlockID.ACACIA_LEAVES,
+                    BlockID.AZALEA_LEAVES,
+                    BlockID.BIRCH_LEAVES,
+                    BlockID.AZALEA_LEAVES_FLOWERED,
+                    BlockID.CHERRY_LEAVES,
+                    BlockID.DARK_OAK_LEAVES,
+                    BlockID.JUNGLE_LEAVES,
+                    BlockID.MANGROVE_LEAVES,
+                    BlockID.OAK_LEAVES,
+                    BlockID.SPRUCE_LEAVES, AZALEA_LEAVES_FLOWERED, AZALEA_LEAVES, WARPED_WART_BLOCK)) {
                 hoeBlocks.put(name, new DigProperty());
             }
             toolBlocks.put(ItemTags.IS_HOE, hoeBlocks);
@@ -450,7 +460,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
          */
         public ToolBuilder speed(int speed) {
             if (speed < 0) {
-                System.out.println("speed has an invalid value!");
+                log.error("speed has an invalid value!");
                 return this;
             }
             if (item.isPickaxe() || item.isShovel() || item.isHoe() || item.isAxe() || item.isShears()) {
@@ -471,7 +481,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
 
         public ToolBuilder addExtraBlock(@NotNull String blockName, int speed) {
             if (speed < 0) {
-                System.out.println("speed has an invalid value!");
+                log.error("speed has an invalid value!");
                 return this;
             }
             this.blocks.add(new CompoundTag()
@@ -496,7 +506,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
         public ToolBuilder addExtraBlocks(@NotNull Map<String, Integer> blocks) {
             blocks.forEach((blockName, speed) -> {
                 if (speed < 0) {
-                    System.out.println("speed has an invalid value!");
+                    log.error("speed has an invalid value!");
                     return;
                 }
                 this.blocks.add(new CompoundTag()
@@ -521,8 +531,9 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
          */
 
         public ToolBuilder addExtraBlocks(@NotNull String blockName, DigProperty property) {
-            if (property.getSpeed() != null && property.getSpeed() < 0) {
-                System.out.println("speed has an invalid value!");
+            Integer propertySpeed;
+            if ((propertySpeed = property.getSpeed()) != null && propertySpeed < 0) {
+                log.error("speed has an invalid value!");
                 return this;
             }
             this.blocks.add(new CompoundTag()
@@ -531,7 +542,7 @@ public record CustomItemDefinition(String identifier, CompoundTag nbt) implement
                             .putCompound("states", property.getStates())
                             .putString("tags", "")
                     )
-                    .putInt("speed", property.getSpeed()));
+                    .putInt("speed", propertySpeed));
             return this;
         }
 

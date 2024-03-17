@@ -1,5 +1,6 @@
 package cn.nukkit.network.connection;
 
+import cn.nukkit.Nukkit;
 import cn.nukkit.network.connection.netty.BedrockPacketWrapper;
 import cn.nukkit.network.connection.netty.codec.FrameIdCodec;
 import cn.nukkit.network.connection.netty.codec.batch.BedrockBatchDecoder;
@@ -20,16 +21,16 @@ import io.netty.handler.codec.DecoderException;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.ScheduledFuture;
 import io.netty.util.internal.PlatformDependent;
-import io.netty.util.internal.logging.InternalLogger;
-import io.netty.util.internal.logging.InternalLoggerFactory;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.cloudburstmc.netty.channel.raknet.RakChildChannel;
 import org.cloudburstmc.netty.channel.raknet.RakDisconnectReason;
 import org.cloudburstmc.netty.channel.raknet.RakServerChannel;
 import org.cloudburstmc.netty.channel.raknet.config.RakChannelOption;
 import org.cloudburstmc.netty.handler.codec.raknet.common.RakSessionCodec;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.crypto.SecretKey;
 import java.net.SocketAddress;
@@ -42,10 +43,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * A Bedrock peer that represents a single network connection to the remote peer.
  * It can hold one or more {@link BedrockSession}s.
  */
+@Slf4j
 public class BedrockPeer extends ChannelInboundHandlerAdapter {
     public static final String NAME = "bedrock-peer";
-    private static final InternalLogger log = InternalLoggerFactory.getInstance(BedrockPeer.class);
-
     protected final Int2ObjectMap<BedrockSession> sessions = new Int2ObjectOpenHashMap<>();
     protected final Queue<BedrockPacketWrapper> packetQueue = PlatformDependent.newMpscQueue();
     protected final Channel channel;
@@ -83,20 +83,31 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
             return;
         }
 
+        this.flushSendQueue();
+    }
+
+    public void flushSendQueue() {
         if (!this.packetQueue.isEmpty()) {
             BedrockPacketWrapper packet;
             while ((packet = this.packetQueue.poll()) != null) {
-                this.channel.write(packet);
+                if (this.isConnected()) {
+                    this.channel.write(packet);
+                }
             }
             this.channel.flush();
         }
     }
 
     private void onRakNetDisconnect(ChannelHandlerContext ctx, RakDisconnectReason reason) {
+        if (Nukkit.DEBUG > 1) {
+            log.debug("Currently in debug mode, onRakNetDisconnect skipped.");
+            return;
+        }
         String disconnectReason = BedrockDisconnectReasons.getReason(reason);
         for (BedrockSession session : this.sessions.values()) {
             session.disconnectReason = disconnectReason;
         }
+        this.channel.disconnect();
     }
 
     private void free() {
@@ -116,6 +127,10 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
         this.packetQueue.add(new BedrockPacketWrapper(0, senderClientId, targetClientId, packet, null));
     }
 
+    public void sendPacketSync(int senderClientId, int targetClientId, DataPacket packet) {
+        this.channel.writeAndFlush(new BedrockPacketWrapper(0, senderClientId, targetClientId, packet, null)).syncUninterruptibly();
+    }
+
     /**
      * Send packet immediately Asynchronously.
      *
@@ -125,6 +140,10 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
      */
     public void sendPacketImmediately(int senderClientId, int targetClientId, DataPacket packet) {
         this.channel.writeAndFlush(new BedrockPacketWrapper(0, senderClientId, targetClientId, packet, null));
+    }
+
+    public void sendRawPacket(BedrockPacketWrapper packet) {
+        this.channel.writeAndFlush(packet);
     }
 
     public void flush() {
@@ -179,6 +198,7 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
         return ((CompressionCodec) handler).getStrategy();
     }
 
+    @ApiStatus.Internal
     public void close(String reason) {
         for (BedrockSession session : this.sessions.values()) {
             session.disconnectReason = reason;
@@ -192,6 +212,14 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
             return;
         }
 
+        for (BedrockSession session : this.sessions.values()) {
+            try {
+                session.onClose();
+            } catch (Exception e) {
+                log.error("Exception whilst closing session", e);
+            }
+        }
+
         if (!this.closed.compareAndSet(false, true)) {
             return;
         }
@@ -200,13 +228,6 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
             this.tickFuture.cancel(false);
             this.tickFuture = null;
         }
-
-        for (BedrockSession session : this.sessions.values())
-            try {
-                session.onClose();
-            } catch (Exception e) {
-                log.error("Exception whilst closing session", e);
-            }
 
         this.free();
     }
@@ -242,7 +263,7 @@ public class BedrockPeer extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         this.sessions.put(0, this.sessionFactory.createSession(this, 0));
-        this.tickFuture = this.channel.eventLoop().scheduleAtFixedRate(this::onTick, 50, 50, TimeUnit.MILLISECONDS);
+        this.tickFuture = this.channel.eventLoop().scheduleAtFixedRate(this::onTick, 10, 10, TimeUnit.MILLISECONDS);
     }
 
     @Override

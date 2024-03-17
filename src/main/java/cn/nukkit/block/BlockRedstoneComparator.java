@@ -23,7 +23,7 @@ import static cn.nukkit.block.property.CommonBlockProperties.*;
 
 
 @Slf4j
-public abstract class BlockRedstoneComparator extends BlockRedstoneDiode implements RedstoneComponent, BlockEntityHolder<BlockEntityComparator> {
+public abstract class BlockRedstoneComparator extends BlockRedstoneDiode implements BlockEntityHolder<BlockEntityComparator> {
     public BlockRedstoneComparator(BlockState blockstate) {
         super(blockstate);
     }
@@ -59,12 +59,12 @@ public abstract class BlockRedstoneComparator extends BlockRedstoneDiode impleme
     }
 
     @Override
-    protected BlockRedstoneComparator getUnpowered() {
+    public BlockRedstoneComparator getUnpowered() {
         return (BlockRedstoneComparator) Block.get(BlockID.UNPOWERED_COMPARATOR).setPropertyValues(blockstate.getBlockPropertyValues());
     }
 
     @Override
-    protected BlockRedstoneComparator getPowered() {
+    public BlockRedstoneComparator getPowered() {
         return (BlockRedstoneComparator) Block.get(BlockID.POWERED_COMPARATOR).setPropertyValues(blockstate.getBlockPropertyValues());
     }
 

@@ -1,7 +1,6 @@
 package cn.nukkit;
 
 import cn.nukkit.nbt.stream.PGZIPOutputStream;
-import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.js.JSIInitiator;
 import cn.nukkit.utils.ServerKiller;
 import com.google.common.base.Preconditions;
@@ -23,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cn.nukkit.utils.Utils.dynamic;
@@ -49,6 +47,7 @@ import static cn.nukkit.utils.Utils.dynamic;
 public class Nukkit {
     public final static Properties GIT_INFO = getGitInfo();
     public final static String VERSION = getVersion();
+    public final static String CODENAME = dynamic("PowerNukkitX");
     public final static String GIT_COMMIT = getGitCommit();
     public final static String API_VERSION = dynamic("2.0.0");
     public final static String PATH = System.getProperty("user.dir") + "/";
@@ -93,7 +92,6 @@ public class Nukkit {
 
         // Netty logger for debug info
         InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
-        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         // Define args
         OptionParser parser = new OptionParser();

@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 import cn.nukkit.utils.version.Version;
 
@@ -14,16 +15,16 @@ public class ResourcePackChunkRequestPacket extends AbstractResourcePackDataPack
     public int chunkIndex;
 
     @Override
-    public void decode() {
-        decodePackInfo();
-        this.chunkIndex = this.getLInt();
+    public void decode(HandleByteBuf byteBuf) {
+        decodePackInfo(byteBuf);
+        this.chunkIndex = byteBuf.readIntLE();
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        encodePackInfo();
-        this.putLInt(this.chunkIndex);
+    public void encode(HandleByteBuf byteBuf) {
+        
+        encodePackInfo(byteBuf);
+        byteBuf.writeIntLE(this.chunkIndex);
     }
 
     @Override
@@ -49,5 +50,9 @@ public class ResourcePackChunkRequestPacket extends AbstractResourcePackDataPack
     @Override
     public int pid() {
         return ProtocolInfo.RESOURCE_PACK_CHUNK_REQUEST_PACKET;
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

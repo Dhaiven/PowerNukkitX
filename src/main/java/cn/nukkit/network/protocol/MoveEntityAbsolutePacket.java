@@ -1,6 +1,7 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.math.Vector3f;
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -31,25 +32,25 @@ public class MoveEntityAbsolutePacket extends DataPacket {
     }
 
     @Override
-    public void decode() {
-        this.eid = this.getEntityRuntimeId();
-        int flags = this.getByte();
+    public void decode(HandleByteBuf byteBuf) {
+        this.eid = byteBuf.readEntityRuntimeId();
+        int flags = byteBuf.readByte();
         onGround = (flags & 0x01) != 0;
         teleport = (flags & 0x02) != 0;
         forceMoveLocalEntity = (flags & 0x04) != 0;
-        Vector3f v = this.getVector3f();
+        Vector3f v = byteBuf.readVector3f();
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
-        this.pitch = this.getByte() * (360d / 256d);
-        this.headYaw = this.getByte() * (360d / 256d);
-        this.yaw = this.getByte() * (360d / 256d);
+        this.pitch = byteBuf.readByte() * (360d / 256d);
+        this.headYaw = byteBuf.readByte() * (360d / 256d);
+        this.yaw = byteBuf.readByte() * (360d / 256d);
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        this.putEntityRuntimeId(this.eid);
+    public void encode(HandleByteBuf byteBuf) {
+        
+        byteBuf.writeEntityRuntimeId(this.eid);
         byte flags = 0;
         if (onGround) {
             flags |= 0x01;
@@ -66,7 +67,7 @@ public class MoveEntityAbsolutePacket extends DataPacket {
         this.putByte((byte) (this.headYaw / (360d / 256d)));
         this.putByte((byte) (this.yaw / (360d / 256d)));
     }
-
+    
     @Getter
     public enum Flag {
         GROUND(0x01),
@@ -82,7 +83,6 @@ public class MoveEntityAbsolutePacket extends DataPacket {
         public static Boolean isOnGround(int flags) {
             return (flags & Flag.GROUND.getFlag()) != 0;
         }
-
-        
     }
+    
 }

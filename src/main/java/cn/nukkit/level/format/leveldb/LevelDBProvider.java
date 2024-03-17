@@ -12,20 +12,20 @@ import cn.nukkit.level.format.ChunkSection;
 import cn.nukkit.level.format.IChunk;
 import cn.nukkit.level.format.LevelConfig;
 import cn.nukkit.level.format.LevelProvider;
-import cn.nukkit.level.format.palette.Palette;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.IntTag;
+import cn.nukkit.network.protocol.LevelChunkPacket;
 import cn.nukkit.network.protocol.types.GameType;
-import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.ChunkException;
 import cn.nukkit.utils.SemVersion;
 import cn.nukkit.utils.Utils;
 import cn.nukkit.utils.collection.nb.Long2ObjectNonBlockingMap;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufOutputStream;
+import it.unimi.dsi.fastutil.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.iq80.leveldb.CompressionType;
 import org.iq80.leveldb.Options;
@@ -50,7 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author MagicDroidX (Nukkit Project)
@@ -107,19 +107,29 @@ public class LevelDBProvider implements LevelProvider {
     public static boolean isValid(String path) {
         boolean isValid = (new File(path, "level.dat").exists()) && new File(path, "db").isDirectory();
         if (isValid) {
+            boolean data = false, log = false, current = false, lock = false, manifest = false;
             for (File file : Objects.requireNonNull(new File(path, "db").listFiles())) {
-                if (!(file.getName().endsWith(".ldb") || file.getName().endsWith(".log") ||
-                        file.getName().equals("CURRENT") || file.getName().startsWith("MANIFEST-")
-                        || file.getName().equals("FIXED_MANIFEST") || file.getName().equals("LOCK")
-                        || file.getName().equals("LOG") || file.getName().equals("LOG.old")
-                        || file.getName().equals("lost")
-                )) {
-                    isValid = false;
-                    break;
+                if (!data && file.getName().endsWith(".ldb")) {
+                    data = true;
+                }
+                if (!log && file.getName().equals("LOG")) {
+                    log = true;
+                }
+                if (!current && file.getName().equals("CURRENT")) {
+                    current = true;
+                }
+                if (!lock && file.getName().equals("LOCK")) {
+                    lock = true;
+                }
+                if (!manifest && file.getName().startsWith("MANIFEST-")) {
+                    manifest = true;
+                }
+                if (data && log && current && lock && manifest) {
+                    return true;
                 }
             }
         }
-        return isValid;
+        return false;
     }
 
     public static void writeLevelDat(String pathName, DimensionData dimensionData, LevelDat levelDat) {
@@ -209,9 +219,10 @@ public class LevelDBProvider implements LevelProvider {
     public void setChunk(int chunkX, int chunkZ, IChunk chunk) {
         chunk.setPosition(chunkX, chunkZ);
         long index = Level.chunkHash(chunkX, chunkZ);
-        if (this.chunks.containsKey(index) && !this.chunks.get(index).equals(chunk)) {
+        if (this.chunks.containsKey(index) && !Objects.equals(this.chunks.get(index), chunk)) {
             this.unloadChunk(chunkX, chunkZ, false);
         }
+        this.lastChunk.remove();//remove cache
         this.chunks.put(index, chunk);
     }
 
@@ -221,22 +232,13 @@ public class LevelDBProvider implements LevelProvider {
     }
 
     @Override
-    public AsyncTask requestChunkTask(int X, int Z) {
+    public Pair<byte[], Integer> requestChunkData(int X, int Z) {
         IChunk chunk = this.getChunk(X, Z, false);
         if (chunk == null) {
             throw new ChunkException("Invalid Chunk Set");
         }
-        long timestamp = chunk.getChanges();
-        BiConsumer<byte[], Integer> callback = (stream, subchunks) -> this.getLevel().chunkRequestCallback(timestamp, X, Z, subchunks, stream);
-        return new AsyncTask() {
-            @Override
-            public void onRun() {
-                serializeToNetwork(chunk, callback);
-            }
-        };
-    }
-
-    public final void serializeToNetwork(IChunk chunk, BiConsumer<byte[], Integer> callback) {
+        AtomicReference<byte[]> data = new AtomicReference<>();
+        AtomicReference<Integer> subChunkCountRef = new AtomicReference<>();
         chunk.batchProcess(unsafeChunk -> {
             final var byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
             try {
@@ -257,10 +259,9 @@ public class LevelDBProvider implements LevelProvider {
                     sections[i].writeToBuf(byteBuf);
                 }
                 // Write biomes
-                Palette<Integer> lastBiomes = null;
-                for (int i = 0; i < total; i++) {
-                    sections[i].biomes().writeToNetwork(byteBuf, Integer::intValue, lastBiomes);
-                    lastBiomes = sections[i].biomes();
+                int last = total - 1;
+                for (int i = 0; i < last; i++) {
+                    sections[i].biomes().writeToNetwork(byteBuf, Integer::intValue);
                 }
 
                 byteBuf.writeByte(0); // edu- border blocks
@@ -270,7 +271,7 @@ public class LevelDBProvider implements LevelProvider {
                 final List<CompoundTag> tagList = new ArrayList<>();
                 for (BlockEntity blockEntity : tiles) {
                     if (blockEntity instanceof BlockEntitySpawnable blockEntitySpawnable) {
-                        tagList.add(blockEntitySpawnable.getSpawnCompound());
+//                        tagList.add(blockEntitySpawnable.getSpawnCompound());
                         //Adding NBT to a chunk pack does not show some block entities, and you have to send block entity packets to the player
                         level.addChunkPacket(blockEntitySpawnable.getChunkX(), blockEntitySpawnable.getChunkZ(), blockEntitySpawnable.getSpawnPacket());
                     }
@@ -280,13 +281,15 @@ public class LevelDBProvider implements LevelProvider {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                byte[] data = Utils.convertByteBuf2Array(byteBuf);
-                callback.accept(data, total);
+                data.set(Utils.convertByteBuf2Array(byteBuf));
+                subChunkCountRef.set(total);
             } finally {
                 byteBuf.release();
             }
         });
+        return Pair.of(data.get(),subChunkCountRef.get());
     }
+
 
     @Override
     public String getPath() {

@@ -1,5 +1,6 @@
 package cn.nukkit.network.protocol;
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
 /**
@@ -16,13 +17,16 @@ public class PlayStatusPacket extends DataPacket {
     public Status status;
 
     @Override
-    public void decode() {
+    public void decode(HandleByteBuf byteBuf) {
 
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        this.putInt(this.status.ordinal());
+    public void encode(HandleByteBuf byteBuf) {
+
+        byteBuf.writeInt(this.status.ordinal());
+    }
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

@@ -18,6 +18,7 @@ import cn.nukkit.entity.data.property.EntityProperty;
 import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.level.LevelInitEvent;
 import cn.nukkit.event.level.LevelLoadEvent;
+import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.server.QueryRegenerateEvent;
 import cn.nukkit.event.server.ServerStartedEvent;
 import cn.nukkit.event.server.ServerStopEvent;
@@ -33,6 +34,7 @@ import cn.nukkit.level.format.LevelConfig;
 import cn.nukkit.level.format.LevelProvider;
 import cn.nukkit.level.format.LevelProviderManager;
 import cn.nukkit.level.format.leveldb.LevelDBProvider;
+import cn.nukkit.level.generator.terra.PNXPlatform;
 import cn.nukkit.level.tickingarea.manager.SimpleTickingAreaManager;
 import cn.nukkit.level.tickingarea.manager.TickingAreaManager;
 import cn.nukkit.level.tickingarea.storage.JSONTickingAreaStorage;
@@ -49,8 +51,6 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.Network;
-import cn.nukkit.network.RakNetInterface;
-import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.PlayerListPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
@@ -59,6 +59,8 @@ import cn.nukkit.permission.BanEntry;
 import cn.nukkit.permission.BanList;
 import cn.nukkit.permission.DefaultPermissions;
 import cn.nukkit.permission.Permissible;
+import cn.nukkit.player.info.PlayerInfo;
+import cn.nukkit.player.info.XboxLivePlayerInfo;
 import cn.nukkit.plugin.InternalPlugin;
 import cn.nukkit.plugin.JSPluginLoader;
 import cn.nukkit.plugin.JavaPluginLoader;
@@ -99,6 +101,7 @@ import org.iq80.leveldb.CompressionType;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
 import org.iq80.leveldb.impl.Iq80DBFactory;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,7 +128,7 @@ import java.security.Permissions;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -272,9 +275,9 @@ public class Server {
     private QueryRegenerateEvent queryRegenerateEvent;
     private Config properties;
     private Config config;
-    private final Map<InetSocketAddress, Player> players = new HashMap<>();
+    private final Map<InetSocketAddress, Player> players = new ConcurrentHashMap<>();
 
-    private final Map<UUID, Player> playerList = new HashMap<>();
+    private final Map<UUID, Player> playerList = new ConcurrentHashMap<>();
 
     private PositionTrackingService positionTrackingService;
 
@@ -683,10 +686,6 @@ public class Server {
         log.info(this.getLanguage().tr("nukkit.server.networkStart", new String[]{this.getIp().equals("") ? "*" : this.getIp(), String.valueOf(this.getPort())}));
         this.serverID = UUID.randomUUID();
 
-        this.network = new Network(this);
-        this.network.setName(this.getMotd());
-        this.network.setSubName(this.getSubMotd());
-
         log.info(this.getLanguage().tr("nukkit.server.info", this.getName(), TextFormat.YELLOW + this.getNukkitVersion() + " (" + this.getGitCommit() + ")" + TextFormat.WHITE, this.getApiVersion()));
         log.info(this.getLanguage().tr("nukkit.server.license"));
 
@@ -695,31 +694,37 @@ public class Server {
         // Initialize metrics
         NukkitMetrics.startNow(this);
 
+
         {//init
             Registries.POTION.init();
             Registries.PACKET.init();
             Registries.ENTITY.init();
-            Profession.init();
             Registries.BLOCKENTITY.init();
-            String a = BlockTags.ACACIA;
-            String b = ItemTags.ARROW;
-            String c = BiomeTags.WARM;
-            Updater d = BlockStateUpdaterBase.INSTANCE;
             Registries.BLOCKSTATE_ITEMMETA.init();
+            Registries.BLOCKSTATE.init();
             Registries.ITEM_RUNTIMEID.init();
             Registries.BLOCK.init();
             Registries.ITEM.init();
             Registries.CREATIVE.init();
-            Enchantment.init();
             Registries.BIOME.init();
             Registries.FUEL.init();
             Registries.GENERATOR.init();
             Registries.GENERATE_STAGE.init();
             Registries.EFFECT.init();
+            Registries.RECIPE.init();
+            Profession.init();
+            String a = BlockTags.ACACIA;
+            String b = ItemTags.ARROW;
+            String c = BiomeTags.WARM;
+            Updater d = BlockStateUpdaterBase.INSTANCE;
+            Enchantment.init();
             Attribute.init();
             BlockComposter.init();
             DispenseBehaviorRegister.init();
-            Registries.RECIPE.init();
+        }
+
+        if (useTerra) {//load terra
+            PNXPlatform instance = PNXPlatform.getInstance();
         }
 
         freezableArrayManager = new FreezableArrayManager(
@@ -732,11 +737,8 @@ public class Server {
                 this.getConfig("memory-compression.heat.melting", 16),
                 this.getConfig("memory-compression.heat.single-operation", 1),
                 this.getConfig("memory-compression.heat.batch-operation", 32));
-
         scoreboardManager = new ScoreboardManager(new JSONScoreboardStorage(this.commandDataPath + "/scoreboard.json"));
-
         functionManager = new FunctionManager(this.commandDataPath + "/functions");
-
         tickingAreaManager = new SimpleTickingAreaManager(new JSONTickingAreaStorage(this.dataPath + "worlds/"));
 
         // Convert legacy data before plugins get the chance to mess with it.
@@ -753,17 +755,11 @@ public class Server {
                 new ZippedResourcePackLoader(new File(Nukkit.DATA_PATH, "resource_packs")),
                 new JarPluginResourcePackLoader(new File(this.pluginPath))
         );
-
         this.commandMap = new SimpleCommandMap(this);
         this.pluginManager = new PluginManager(this, this.commandMap);
         this.pluginManager.subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this.consoleSender);
-
         this.pluginManager.registerInterface(JavaPluginLoader.class);
         this.pluginManager.registerInterface(JSPluginLoader.class);
-
-        this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
-
-        this.network.registerInterface(new RakNetInterface(this));
 
         try {
             log.debug("Loading position tracking service");
@@ -771,8 +767,12 @@ public class Server {
         } catch (IOException e) {
             log.error("Failed to start the Position Tracking DB service!", e);
         }
-
         this.pluginManager.loadInternalPlugin();
+
+        this.queryRegenerateEvent = new QueryRegenerateEvent(this, 5);
+        this.network = new Network(this);
+        this.network.setPong(this.getMotd());
+
         this.pluginManager.loadPlugins(this.pluginPath);
 
         {//trim
@@ -781,6 +781,7 @@ public class Server {
             Registries.ENTITY.trim();
             Registries.BLOCKENTITY.trim();
             Registries.BLOCKSTATE_ITEMMETA.trim();
+            Registries.BLOCKSTATE.trim();
             Registries.ITEM_RUNTIMEID.trim();
             Registries.BLOCK.trim();
             Registries.ITEM.trim();
@@ -862,7 +863,7 @@ public class Server {
                     seed = seedString.hashCode();
                 }
                 //todo nether the_end overworld
-                generatorConfig.put(0, new LevelConfig.GeneratorConfig("flat", seed, DimensionEnum.OVERWORLD.getDimensionData(), Collections.EMPTY_MAP));
+                generatorConfig.put(0, new LevelConfig.GeneratorConfig("flat", seed, DimensionEnum.OVERWORLD.getDimensionData(), Collections.emptyMap()));
                 LevelConfig levelConfig = new LevelConfig(this.getConfig().get("level-settings.default-format", "leveldb"), generatorConfig);
                 this.generateLevel(levelFolder, levelConfig);
             }
@@ -879,7 +880,6 @@ public class Server {
      */
     public void reload() {
         log.info("Reloading...");
-
         log.info("Saving levels...");
 
         for (Level level : this.levelArray) {
@@ -887,7 +887,6 @@ public class Server {
         }
 
         this.scoreboardManager.save();
-
         this.pluginManager.disablePlugins();
         this.pluginManager.clearPlugins();
         this.commandMap.clearCommands();
@@ -895,7 +894,6 @@ public class Server {
         log.info("Reloading properties...");
         this.properties.reload();
         this.maxPlayers = this.getPropertyInt("max-players", 20);
-
         if (this.getPropertyBoolean("hardcore", false) && this.getDifficulty() < 3) {
             this.setPropertyInt("difficulty", difficulty = 3);
         }
@@ -919,9 +917,50 @@ public class Server {
         JSFeatures.initInternalFeatures();
         this.scoreboardManager.read();
         this.pluginManager.registerInterface(JSPluginLoader.class);
+
+        log.info("Reloading Registries...");
+        {
+            Registries.POTION.reload();
+            Registries.PACKET.reload();
+            Registries.ENTITY.reload();
+            Registries.BLOCKENTITY.reload();
+            Registries.BLOCKSTATE_ITEMMETA.reload();
+            Registries.BLOCKSTATE.reload();
+            Registries.ITEM_RUNTIMEID.reload();
+            Registries.BLOCK.reload();
+            Registries.ITEM.reload();
+            Registries.CREATIVE.reload();
+            Registries.BIOME.reload();
+            Registries.FUEL.reload();
+            Registries.GENERATOR.reload();
+            Registries.GENERATE_STAGE.reload();
+            Registries.EFFECT.reload();
+            Registries.RECIPE.reload();
+            Enchantment.reload();
+        }
+
         this.pluginManager.loadPlugins(this.pluginPath);
         this.functionManager.reload();
+
         this.enablePlugins(PluginLoadOrder.STARTUP);
+        {
+            Registries.POTION.trim();
+            Registries.PACKET.trim();
+            Registries.ENTITY.trim();
+            Registries.BLOCKENTITY.trim();
+            Registries.BLOCKSTATE_ITEMMETA.trim();
+            Registries.BLOCKSTATE.trim();
+            Registries.ITEM_RUNTIMEID.trim();
+            Registries.BLOCK.trim();
+            Registries.ITEM.trim();
+            Registries.CREATIVE.trim();
+            Registries.BIOME.trim();
+            Registries.FUEL.trim();
+            Registries.GENERATOR.trim();
+            Registries.GENERATE_STAGE.trim();
+            Registries.EFFECT.trim();
+            Registries.RECIPE.trim();
+        }
         this.enablePlugins(PluginLoadOrder.POSTWORLD);
         ServerStartedEvent serverStartedEvent = new ServerStartedEvent();
         getPluginManager().callEvent(serverStartedEvent);
@@ -989,11 +1028,7 @@ public class Server {
             this.consoleThread.interrupt();
 
             log.debug("Stopping network interfaces");
-            for (SourceInterface interfaz : this.network.getInterfaces()) {
-                interfaz.shutdown();
-                this.network.unregisterInterface(interfaz);
-            }
-
+            network.shutdown();
             playerDataDB.close();
             //close watchdog and metrics
             if (this.watchdog != null) {
@@ -1197,8 +1232,6 @@ public class Server {
                     log.error("", e);
                 }
             }
-
-            this.getNetwork().updateName();
         }
 
         if (this.autoSave && ++this.autoSaveTicker >= this.autoSaveTicks) {
@@ -1209,12 +1242,6 @@ public class Server {
         if (this.sendUsageTicker > 0 && --this.sendUsageTicker == 0) {
             this.sendUsageTicker = 6000;
             //todo sendUsage
-        }
-
-        if (this.tickCounter % 100 == 0) {
-            CompletableFuture.allOf(Arrays.stream(this.levelArray).parallel()
-                    .flatMap(l -> l.asyncChunkGarbageCollection().stream())
-                    .toArray(CompletableFuture[]::new));
         }
 
         // 处理可冻结数组
@@ -1567,7 +1594,7 @@ public class Server {
         Object section = this.getConfig("aliases");
         Map<String, List<String>> result = new LinkedHashMap<>();
         if (section instanceof Map) {
-            for (Map.Entry entry : (Set<Map.Entry>) ((Map) section).entrySet()) {
+            for (Map.Entry<?, ?> entry : (Set<Map.Entry<?, ?>>) ((Map) section).entrySet()) {
                 List<String> commands = new ArrayList<>();
                 String key = (String) entry.getKey();
                 Object value = entry.getValue();
@@ -1601,7 +1628,6 @@ public class Server {
      * @see #broadcastPacket(Player[], DataPacket)
      */
     public static void broadcastPacket(Collection<Player> players, DataPacket packet) {
-        packet.tryEncode();
         for (Player player : players) {
             player.dataPacket(packet);
         }
@@ -1614,8 +1640,6 @@ public class Server {
      * @param packet  数据包
      */
     public static void broadcastPacket(Player[] players, DataPacket packet) {
-        packet.tryEncode();
-
         for (Player player : players) {
             player.dataPacket(packet);
         }
@@ -1685,21 +1709,27 @@ public class Server {
         this.sendFullPlayerListData(player);
     }
 
-    public void onPlayerLogin(Player player) {
+    public void onPlayerLogin(InetSocketAddress socketAddress, Player player) {
+        PlayerLoginEvent ev;
+        this.getPluginManager().callEvent(ev = new PlayerLoginEvent(player, "Plugin reason"));
+        if (ev.isCancelled()) {
+            player.close(player.getLeaveMessage(), ev.getKickMessage());
+            return;
+        }
+
+        this.players.put(socketAddress, player);
         if (this.sendUsageTicker > 0) {
             this.uniquePlayers.add(player.getUniqueId());
         }
     }
 
-    public void addPlayer(InetSocketAddress socketAddress, Player player) {
-        this.players.put(socketAddress, player);
-    }
-
+    @ApiStatus.Internal
     public void addOnlinePlayer(Player player) {
         this.playerList.put(player.getUniqueId(), player);
         this.updatePlayerListData(player.getUniqueId(), player.getId(), player.getDisplayName(), player.getSkin(), player.getLoginChainData().getXUID());
     }
 
+    @ApiStatus.Internal
     public void removeOnlinePlayer(Player player) {
         if (this.playerList.containsKey(player.getUniqueId())) {
             this.playerList.remove(player.getUniqueId());
@@ -1858,20 +1888,23 @@ public class Server {
      * <p>
      * Update the UUID of the specified player name in the database, or add it if it does not exist.
      *
-     * @param player the player
+     * @param info the player info
      */
-    void updateName(Player player) {
-        byte[] nameBytes = player.getName().toLowerCase().getBytes(StandardCharsets.UTF_8);
+    void updateName(PlayerInfo info) {
+        var uniqueId = info.getUniqueId();
+        var name = info.getUsername();
+
+        byte[] nameBytes = name.toLowerCase().getBytes(StandardCharsets.UTF_8);
 
         ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putLong(player.getUniqueId().getMostSignificantBits());
-        buffer.putLong(player.getUniqueId().getLeastSignificantBits());
+        buffer.putLong(uniqueId.getMostSignificantBits());
+        buffer.putLong(uniqueId.getLeastSignificantBits());
         byte[] array = buffer.array();
         byte[] bytes = playerDataDB.get(array);
         if (bytes == null) {
             playerDataDB.put(nameBytes, array);
         }
-        if (player.getLoginChainData().isXboxAuthed() && this.getPropertyBoolean("xbox-auth") || !this.getPropertyBoolean("xbox-auth")) {//update
+        if (info instanceof XboxLivePlayerInfo && this.getPropertyBoolean("xbox-auth") || !this.getPropertyBoolean("xbox-auth")) {//update
             playerDataDB.put(nameBytes, array);
         }
     }
@@ -1932,7 +1965,22 @@ public class Server {
 
     public CompoundTag getOfflinePlayerData(String name, boolean create) {
         Optional<UUID> uuid = lookupName(name);
-        return getOfflinePlayerDataInternal(uuid.orElse(null), create);
+        if (uuid.isEmpty()) {
+            log.warn("Invalid uuid in name lookup database detected! Removing");
+            playerDataDB.delete(name.getBytes(StandardCharsets.UTF_8));
+            return null;
+        }
+        return getOfflinePlayerDataInternal(uuid.get(), create);
+    }
+
+    public boolean hasOfflinePlayerData(String name) {
+        Optional<UUID> uuid = lookupName(name);
+        if (uuid.isEmpty()) {
+            log.warn("Invalid uuid in name lookup database detected! Removing");
+            playerDataDB.delete(name.getBytes(StandardCharsets.UTF_8));
+            return false;
+        }
+        return hasOfflinePlayerData(uuid.get());
     }
 
     public boolean hasOfflinePlayerData(UUID uuid) {
@@ -2130,13 +2178,7 @@ public class Server {
         return matchedPlayer.toArray(Player.EMPTY_ARRAY);
     }
 
-    /**
-     * 删除一个玩家，可以让一个玩家离线.
-     * <p>
-     * Delete a player to take a player offline.
-     *
-     * @param player 需要删除的玩家<br>Players who need to be deleted
-     */
+    @ApiStatus.Internal
     public void removePlayer(Player player) {
         Player toRemove = this.players.remove(player.getRawSocketAddress());
         if (toRemove != null) {
@@ -2150,7 +2192,6 @@ public class Server {
                 break;
             }
         }
-        player.dataPacketManager = null;
     }
 
     /**
@@ -2185,6 +2226,10 @@ public class Server {
 
     public String getGitCommit() {
         return Nukkit.GIT_COMMIT;
+    }
+
+    public String getCodename() {
+        return Nukkit.CODENAME;
     }
 
     public String getVersion() {
@@ -2254,7 +2299,7 @@ public class Server {
      * @param player 玩家
      */
     public void sendRecipeList(Player player) {
-        player.dataPacket(Registries.RECIPE.getCraftingPacket());
+        player.getSession().sendRawPacket(ProtocolInfo.CRAFTING_DATA_PACKET, Registries.RECIPE.getCraftingPacket());
     }
 
     /**
@@ -2308,7 +2353,16 @@ public class Server {
      * @return 世界是否已经加载<br>Is the world already loaded
      */
     public boolean isLevelLoaded(String name) {
-        return this.getLevelByName(name) != null;
+        if (!name.matches("^.*Dim[0-9]$")) {
+            for (int i = 0; i < 3; i++) {
+                if (this.getLevelByName(name + " Dim" + i) != null) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return this.getLevelByName(name) != null;
+        }
     }
 
     /**
@@ -2335,6 +2389,9 @@ public class Server {
      * @return level实例<br>level instance
      */
     public Level getLevelByName(String name) {
+        if (!name.matches("^.*Dim[0-9]$")) {
+            name = name + " Dim0";
+        }
         for (Level level : this.levelArray) {
             if (level.getName().equalsIgnoreCase(name)) {
                 return level;
@@ -2373,7 +2430,7 @@ public class Server {
         if (name.contains("/") || name.contains("\\")) {
             path = name;
         } else {
-            path = this.getDataPath() + "worlds/" + name + "/";
+            path = new File(this.getDataPath(), "worlds/" + name).getAbsolutePath();
         }
         Path jpath = Path.of(path);
         path = jpath.toString();
@@ -2400,7 +2457,7 @@ public class Server {
         } else {
             Map<Integer, LevelConfig.GeneratorConfig> map = new HashMap<>();
             //todo nether the_end overworld
-            map.put(0, new LevelConfig.GeneratorConfig("flat", System.currentTimeMillis(), DimensionEnum.OVERWORLD.getDimensionData(), Collections.EMPTY_MAP));
+            map.put(0, new LevelConfig.GeneratorConfig("flat", System.currentTimeMillis(), DimensionEnum.OVERWORLD.getDimensionData(), Collections.emptyMap()));
             levelConfig = new LevelConfig(LevelProviderManager.getProviderName(provider), map);
             try {
                 config.createNewFile();
@@ -2489,6 +2546,7 @@ public class Server {
                     continue;
                 }
                 level = new Level(this, levelName, path, levelConfig.generators().size(), provider, generatorConfig);
+
                 this.levels.put(level.getId(), level);
                 level.initLevel();
                 level.setTickRate(this.baseTickRate);
@@ -2501,11 +2559,9 @@ public class Server {
         }
         return true;
     }
-
     // endregion
 
     // region Ban, OP and whitelist - Ban，OP与白名单
-
     public BanList getNameBans() {
         return this.banByName;
     }
@@ -2521,7 +2577,7 @@ public class Server {
             player.recalculatePermissions();
             player.getAdventureSettings().onOpChange(true);
             player.getAdventureSettings().update();
-            player.sendCommandData();
+            player.getSession().syncAvailableCommands();
         }
         this.operators.save(true);
     }
@@ -2533,7 +2589,7 @@ public class Server {
             player.recalculatePermissions();
             player.getAdventureSettings().onOpChange(false);
             player.getAdventureSettings().update();
-            player.sendCommandData();
+            player.getSession().syncAvailableCommands();
         }
         this.operators.save();
     }
@@ -3011,6 +3067,9 @@ public class Server {
         return maxCompressionBufferSize;
     }
 
+    /**
+     * This chunk will be unloaded after how many milliseconds It is not used,define whether is used through {@link Level#isChunkInUse(long)}
+     */
     public int getChunkUnloadDelay() {
         return chunkUnloadDelay;
     }

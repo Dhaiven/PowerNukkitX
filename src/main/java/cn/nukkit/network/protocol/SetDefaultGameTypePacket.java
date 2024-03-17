@@ -1,6 +1,8 @@
 package cn.nukkit.network.protocol;
 
 
+import cn.nukkit.network.connection.util.HandleByteBuf;
+
 public class SetDefaultGameTypePacket extends DataPacket {
 
     public int gamemode;
@@ -11,13 +13,16 @@ public class SetDefaultGameTypePacket extends DataPacket {
     }
 
     @Override
-    public void decode() {
-        this.gamemode = getVarInt();
+    public void decode(HandleByteBuf byteBuf) {
+        this.gamemode = byteBuf.readUnsignedVarInt();
     }
 
     @Override
-    public void encode() {
-        this.reset();
-        this.putUnsignedVarInt(this.gamemode);
+    public void encode(HandleByteBuf byteBuf) {
+        byteBuf.writeUnsignedVarInt(this.gamemode);
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
 }

@@ -2,6 +2,7 @@ package cn.nukkit.network.process.processor;
 
 import cn.nukkit.Player;
 import cn.nukkit.PlayerHandle;
+import cn.nukkit.entity.data.EntityFlag;
 import cn.nukkit.inventory.HumanInventory;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
@@ -27,14 +28,19 @@ public class MobEquipmentProcessor extends DataPacketProcessor<MobEquipmentPacke
             return;
         }
 
-        if(inv instanceof HumanInventory inventory && inventory.getHeldItemIndex() == pk.hotbarSlot){
+        if (inv instanceof HumanInventory inventory && inventory.getHeldItemIndex() == pk.hotbarSlot) {
             return;
         }
 
         Item item = inv.getItem(pk.hotbarSlot);
 
         if (!item.equals(pk.item, false, true)) {
-            log.debug("Tried to equip {} but have {} in target slot", pk.item, item);
+            Item fixItem = Item.get(item.getId(), item.getDamage(), item.getCount(),item.getCompoundTag());
+            if (!fixItem.equals(pk.item, false, true)) {
+                log.debug("Tried to equip {} but have {} in target slot", pk.item, fixItem);
+            } else {
+                inv.setItem(pk.hotbarSlot, fixItem);
+            }
             inv.sendContents(player);
             return;
         }
@@ -43,7 +49,7 @@ public class MobEquipmentProcessor extends DataPacketProcessor<MobEquipmentPacke
             inventory.equipItem(pk.hotbarSlot);
         }
 
-        player.setDataFlag(Player.DATA_FLAGS, Player.DATA_FLAG_ACTION, false);
+        player.setDataFlag(EntityFlag.USING_ITEM, false);
 
     }
 

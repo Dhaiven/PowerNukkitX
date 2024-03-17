@@ -7,8 +7,6 @@ import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.utils.Faceable;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -20,7 +18,7 @@ import static cn.nukkit.block.property.CommonBlockProperties.WEIRDO_DIRECTION;
  * @author MagicDroidX (Nukkit Project)
  */
 public abstract class BlockStairs extends BlockTransparent implements Faceable {
-    protected BlockStairs(BlockState blockState) {
+    public BlockStairs(BlockState blockState) {
         super(blockState);
     }
 

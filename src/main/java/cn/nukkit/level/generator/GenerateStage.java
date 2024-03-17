@@ -22,22 +22,15 @@ public abstract class GenerateStage {
 
     private void next(GenerateStage stage) {
         if (this.next == null) {
-            this.next = stage;
+            this.next = stage;//next -> null
         } else {
-            this.next.next(stage);
+            this.next.next(stage);//next -> next
         }
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.name());
-        GenerateStage next = this.next;
-        while (next != null) {
-            builder.append(next.name());
-            next = next.next;
-        }
-        return builder.toString();
+        return name();
     }
 
     public static class Builder {
