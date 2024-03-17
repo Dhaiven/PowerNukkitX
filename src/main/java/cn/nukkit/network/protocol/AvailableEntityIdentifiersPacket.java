@@ -14,7 +14,6 @@ import java.nio.ByteOrder;
 
 @ToString(exclude = {"tag"})
 public class AvailableEntityIdentifiersPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.AVAILABLE_ENTITY_IDENTIFIERS_PACKET;
 
     private static final byte[] TAG;
 
@@ -41,7 +40,7 @@ public class AvailableEntityIdentifiersPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.AVAILABLE_ENTITY_IDENTIFIERS_PACKET;
     }
 
     @Override

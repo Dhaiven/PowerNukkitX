@@ -6,8 +6,6 @@ import lombok.ToString;
 @ToString
 public class RiderJumpPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RIDER_JUMP_PACKET;
-
     /**
      * This is jumpStrength.
      * 对应跳跃进度条0-100
@@ -18,7 +16,7 @@ public class RiderJumpPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RIDER_JUMP_PACKET;
     }
 
     @Override

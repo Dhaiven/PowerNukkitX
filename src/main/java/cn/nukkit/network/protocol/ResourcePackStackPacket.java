@@ -11,8 +11,6 @@ import java.util.List;
 @ToString
 public class ResourcePackStackPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RESOURCE_PACK_STACK_PACKET;
-
     public boolean mustAccept = false;
     public ResourcePack[] behaviourPackStack = ResourcePack.EMPTY_ARRAY;
     public ResourcePack[] resourcePackStack = ResourcePack.EMPTY_ARRAY;
@@ -54,7 +52,7 @@ public class ResourcePackStackPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESOURCE_PACK_STACK_PACKET;
     }
 
     @Value

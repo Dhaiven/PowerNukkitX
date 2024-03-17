@@ -10,13 +10,12 @@ import lombok.ToString;
 @EqualsAndHashCode(doNotUseGetters = true, callSuper = false)
 @ToString(doNotUseGetters = true)
 public class OpenSignPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.OPEN_SIGN;
     private BlockVector3 position;
     private boolean frontSide;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.OPEN_SIGN;
     }
 
     @Override

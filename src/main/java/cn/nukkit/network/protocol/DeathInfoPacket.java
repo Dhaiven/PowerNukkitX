@@ -6,13 +6,11 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class DeathInfoPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.DEATH_INFO_PACKET;
-
     public TranslationContainer translation;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.DEATH_INFO_PACKET;
     }
 
     @Override

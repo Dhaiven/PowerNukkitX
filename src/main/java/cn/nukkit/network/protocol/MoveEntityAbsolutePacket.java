@@ -2,6 +2,7 @@ package cn.nukkit.network.protocol;
 
 import cn.nukkit.math.Vector3f;
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -9,7 +10,7 @@ import lombok.ToString;
  */
 @ToString
 public class MoveEntityAbsolutePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.MOVE_ENTITY_ABSOLUTE_PACKET;
+
     public static final byte FLAG_GROUND = 0x01;
     public static final byte FLAG_TELEPORT = 0x02;
     public static final byte FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04;
@@ -27,7 +28,7 @@ public class MoveEntityAbsolutePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.MOVE_ENTITY_ABSOLUTE_PACKET;
     }
 
     @Override
@@ -60,14 +61,28 @@ public class MoveEntityAbsolutePacket extends DataPacket {
         if (forceMoveLocalEntity) {
             flags |= 0x04;
         }
-        byteBuf.writeByte(flags);
-        byteBuf.writeVector3f((float) this.x, (float) this.y, (float) this.z);
-        byteBuf.writeByte((byte) (this.pitch / (360d / 256d)));
-        byteBuf.writeByte((byte) (this.headYaw / (360d / 256d)));
-        byteBuf.writeByte((byte) (this.yaw / (360d / 256d)));
+        this.putByte(flags);
+        this.putVector3f((float) this.x, (float) this.y, (float) this.z);
+        this.putByte((byte) (this.pitch / (360d / 256d)));
+        this.putByte((byte) (this.headYaw / (360d / 256d)));
+        this.putByte((byte) (this.yaw / (360d / 256d)));
     }
+    
+    @Getter
+    public enum Flag {
+        GROUND(0x01),
+        TELEPORT(0x02),
+        FORCE_MOVE_LOCAL_ENTITY(0x04);
 
-    public void handle(PacketHandler handler) {
-        handler.handle(this);
+        private final byte flag;
+
+        Flag(int flag) {
+            this.flag = (byte) flag;
+        }
+
+        public static Boolean isOnGround(int flags) {
+            return (flags & Flag.GROUND.getFlag()) != 0;
+        }
     }
+    
 }

@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class TakeItemEntityPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.TAKE_ITEM_ENTITY_PACKET;
-
     public long entityId;
     public long target;
 
@@ -29,7 +27,7 @@ public class TakeItemEntityPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TAKE_ITEM_ENTITY_PACKET;
     }
 
     public void handle(PacketHandler handler) {

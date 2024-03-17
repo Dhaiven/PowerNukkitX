@@ -9,7 +9,6 @@ import lombok.ToString;
  */
 @ToString
 public class LevelEventPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.LEVEL_EVENT_PACKET;
 
     public static final int EVENT_UNDEFINED = 0;
     public static final int EVENT_SOUND_CLICK = 1000;
@@ -170,7 +169,7 @@ public class LevelEventPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LEVEL_EVENT_PACKET;
     }
 
     @Override

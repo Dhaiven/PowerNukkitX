@@ -32,8 +32,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 @ToString
 public class AvailableCommandsPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.AVAILABLE_COMMANDS_PACKET;
-
     private static final ObjIntConsumer<HandleByteBuf> WRITE_BYTE = (s, v) -> s.writeByte((byte) v);
     private static final ObjIntConsumer<HandleByteBuf> WRITE_SHORT = HandleByteBuf::writeShortLE;
     private static final ObjIntConsumer<HandleByteBuf> WRITE_INT = HandleByteBuf::writeIntLE;
@@ -74,7 +72,7 @@ public class AvailableCommandsPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.AVAILABLE_COMMANDS_PACKET;
     }
 
     @Override

@@ -11,8 +11,6 @@ import lombok.ToString;
 @ToString
 public class ItemFrameDropItemPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
-
     public int x;
     public int y;
     public int z;
@@ -32,7 +30,7 @@ public class ItemFrameDropItemPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return  ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
     }
 
     public void handle(PacketHandler handler) {

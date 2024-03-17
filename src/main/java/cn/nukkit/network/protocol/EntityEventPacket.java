@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 @ToString
 public class EntityEventPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.ENTITY_EVENT_PACKET;
+
     public static final int NONE = 0;
     public static final int JUMP = 1;
     public static final int HURT_ANIMATION = 2;
@@ -100,7 +100,7 @@ public class EntityEventPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ENTITY_EVENT_PACKET;
     }
 
     public long eid;

@@ -9,14 +9,12 @@ import java.util.Set;
 
 public class SetHudPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.SET_HUD;
-
     public final Set<HudElement> elements = new ObjectOpenHashSet<>();
     public HudVisibility visibility;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_HUD;
     }
 
     @Override

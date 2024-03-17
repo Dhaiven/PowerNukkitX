@@ -10,8 +10,6 @@ import java.util.UUID;
 
 public class ResourcePackChunkDataPacket extends AbstractResourcePackDataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.RESOURCE_PACK_CHUNK_DATA_PACKET;
-
     public UUID packId;
     private Version packVersion;
     public int chunkIndex;
@@ -56,7 +54,7 @@ public class ResourcePackChunkDataPacket extends AbstractResourcePackDataPacket 
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.RESOURCE_PACK_CHUNK_DATA_PACKET;
     }
 
     public void handle(PacketHandler handler) {

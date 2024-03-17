@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @ToString
 public class SetTitlePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SET_TITLE_PACKET;
 
     private static final TitleAction[] TITLE_ACTIONS = TitleAction.values();
 
@@ -33,7 +32,7 @@ public class SetTitlePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_TITLE_PACKET;
     }
 
     @Override

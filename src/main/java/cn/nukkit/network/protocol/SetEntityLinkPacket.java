@@ -10,8 +10,6 @@ import lombok.ToString;
 @ToString
 public class SetEntityLinkPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.SET_ENTITY_LINK_PACKET;
-
     public long vehicleUniqueId; //from
     public long riderUniqueId; //to
     public EntityLink.Type type;
@@ -35,7 +33,7 @@ public class SetEntityLinkPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_ENTITY_LINK_PACKET;
     }
 
     public void handle(PacketHandler handler) {

@@ -7,13 +7,13 @@ import lombok.ToString;
 
 @ToString
 public class UpdateBlockSyncedPacket extends UpdateBlockPacket {
-    public static final int NETWORK_ID = ProtocolInfo.UPDATE_BLOCK_SYNCED_PACKET;
+
     public long actorUniqueId;
     public BlockSyncType updateType;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.UPDATE_BLOCK_SYNCED_PACKET;
     }
 
     @Override

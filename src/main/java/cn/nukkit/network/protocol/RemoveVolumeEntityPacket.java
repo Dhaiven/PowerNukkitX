@@ -5,9 +5,6 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class RemoveVolumeEntityPacket extends DataPacket {
 
-
-    public static final int NETWORK_ID = ProtocolInfo.REMOVE_VOLUME_ENTITY_PACKET;
-
     private long id;
     /**
      * @since v503
@@ -21,7 +18,7 @@ public class RemoveVolumeEntityPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.REMOVE_VOLUME_ENTITY_PACKET;
     }
 
     @Override

@@ -4,13 +4,12 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class SetDefaultGameTypePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SET_DEFAULT_GAME_TYPE_PACKET;
 
     public int gamemode;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_DEFAULT_GAME_TYPE_PACKET;
     }
 
     @Override

@@ -5,7 +5,6 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 
 
 public class AddVolumeEntityPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.ADD_VOLUME_ENTITY_PACKET;
 
     public int id;
     public CompoundTag data;
@@ -28,7 +27,7 @@ public class AddVolumeEntityPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADD_VOLUME_ENTITY_PACKET;
     }
 
     @Override

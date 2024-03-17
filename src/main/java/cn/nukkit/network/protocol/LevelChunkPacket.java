@@ -8,11 +8,10 @@ import lombok.ToString;
  */
 @ToString(exclude = "data")
 public class LevelChunkPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.FULL_CHUNK_DATA_PACKET;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.FULL_CHUNK_DATA_PACKET;
     }
 
     public int chunkX;

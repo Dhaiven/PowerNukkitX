@@ -12,9 +12,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor(onConstructor = @__())
 public class TickSyncPacket extends DataPacket {
-
-
-    public static final int NETWORK_ID = ProtocolInfo.TICK_SYNC_PACKET;
     
     private long requestTimestamp;
     
@@ -22,7 +19,7 @@ public class TickSyncPacket extends DataPacket {
     
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TICK_SYNC_PACKET;
     }
     
     @Override

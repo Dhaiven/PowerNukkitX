@@ -5,13 +5,11 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class ServerPostMovePositionPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.SERVER_POST_MOVE_POSITION;
-
     public Vector3f position;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SERVER_POST_MOVE_POSITION;
     }
 
     @Override

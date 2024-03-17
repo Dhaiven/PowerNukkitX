@@ -10,8 +10,6 @@ import lombok.ToString;
 @ToString
 public class AdventureSettingsPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.ADVENTURE_SETTINGS_PACKET;
-
     public static final int PERMISSION_NORMAL = 0;
     public static final int PERMISSION_OPERATOR = 1;
     public static final int PERMISSION_HOST = 2;
@@ -100,7 +98,7 @@ public class AdventureSettingsPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADVENTURE_SETTINGS_PACKET;
     }
 
     public void handle(PacketHandler handler) {

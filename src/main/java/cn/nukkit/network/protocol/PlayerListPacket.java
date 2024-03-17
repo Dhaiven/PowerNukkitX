@@ -13,8 +13,6 @@ import java.util.UUID;
 @ToString
 public class PlayerListPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.PLAYER_LIST_PACKET;
-
     public static final byte TYPE_ADD = 0;
     public static final byte TYPE_REMOVE = 1;
 
@@ -59,7 +57,7 @@ public class PlayerListPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAYER_LIST_PACKET;
     }
 
     @ToString

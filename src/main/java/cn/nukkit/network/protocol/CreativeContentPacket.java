@@ -7,14 +7,13 @@ import lombok.ToString;
 
 @ToString
 public class CreativeContentPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.CREATIVE_CONTENT_PACKET;
 
 
     public Item[] entries = Item.EMPTY_ARRAY;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CREATIVE_CONTENT_PACKET;
     }
 
     @Override

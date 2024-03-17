@@ -9,11 +9,10 @@ import lombok.ToString;
  */
 @ToString
 public class MobArmorEquipmentPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.MOB_ARMOR_EQUIPMENT_PACKET;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.MOB_ARMOR_EQUIPMENT_PACKET;
     }
 
     public long eid;

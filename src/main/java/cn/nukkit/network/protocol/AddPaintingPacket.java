@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class AddPaintingPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.ADD_PAINTING_PACKET;
-
     public long entityUniqueId;
     public long entityRuntimeId;
     public float x;
@@ -37,7 +35,7 @@ public class AddPaintingPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ADD_PAINTING_PACKET;
     }
 
     public void handle(PacketHandler handler) {

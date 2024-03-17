@@ -3,13 +3,12 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class ClientCacheStatusPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.CLIENT_CACHE_STATUS_PACKET;
 
     public boolean supported;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CLIENT_CACHE_STATUS_PACKET;
     }
 
     @Override

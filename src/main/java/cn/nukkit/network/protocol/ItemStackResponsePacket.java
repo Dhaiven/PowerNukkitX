@@ -12,7 +12,6 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class ItemStackResponsePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.ITEM_STACK_RESPONSE_PACKET;
 
     public final List<ItemStackResponse> entries = new ArrayList<>();
 
@@ -43,7 +42,7 @@ public class ItemStackResponsePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ITEM_STACK_RESPONSE_PACKET;
     }
 
     public void handle(PacketHandler handler) {

@@ -9,14 +9,13 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 public class LevelEventGenericPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.LEVEL_EVENT_GENERIC_PACKET;
 
     public int eventId;
     public CompoundTag tag;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LEVEL_EVENT_GENERIC_PACKET;
     }
 
     @Override

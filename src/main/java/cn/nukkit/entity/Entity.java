@@ -740,7 +740,7 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
                 MobEffectPacket packet = new MobEffectPacket();
                 packet.eid = player.getId();
                 packet.effectId = effect.getId();
-                packet.eventId = MobEffectPacket.EVENT_REMOVE;
+                packet.eventId = MobEffectPacket.Event.REMOVE;
                 player.dataPacket(packet);
             }
 
@@ -789,9 +789,9 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
             packet.particles = effect.isVisible();
             packet.duration = effect.getDuration();
             if (oldEffect != null) {
-                packet.eventId = MobEffectPacket.EVENT_MODIFY;
+                packet.eventId = MobEffectPacket.Event.MODIFY;
             } else {
-                packet.eventId = MobEffectPacket.EVENT_ADD;
+                packet.eventId = MobEffectPacket.Event.ADD;
             }
 
             player.dataPacket(packet);
@@ -1030,7 +1030,7 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
                 packet.amplifier = effect.getAmplifier();
                 packet.particles = effect.isVisible();
                 packet.duration = effect.getDuration();
-                packet.eventId = MobEffectPacket.EVENT_ADD;
+                packet.eventId = MobEffectPacket.Event.ADD;
                 player.dataPacket(packet);
             }
         }

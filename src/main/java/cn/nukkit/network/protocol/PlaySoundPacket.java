@@ -6,8 +6,6 @@ import lombok.ToString;
 @ToString
 public class PlaySoundPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.PLAY_SOUND_PACKET;
-
     public String name;
     public int x;
     public int y;
@@ -17,7 +15,7 @@ public class PlaySoundPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAY_SOUND_PACKET;
     }
 
     @Override

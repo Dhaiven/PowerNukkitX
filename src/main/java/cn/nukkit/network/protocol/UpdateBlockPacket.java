@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 @ToString
 public class UpdateBlockPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.UPDATE_BLOCK_PACKET;
+
     public static final int FLAG_NONE = 0b0000;
     public static final int FLAG_NEIGHBORS = 0b0001;
     public static final int FLAG_NETWORK = 0b0010;
@@ -27,7 +27,7 @@ public class UpdateBlockPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.UPDATE_BLOCK_PACKET;
     }
 
     @Override

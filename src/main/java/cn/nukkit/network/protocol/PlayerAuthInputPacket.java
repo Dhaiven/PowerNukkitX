@@ -17,7 +17,6 @@ import java.util.Set;
 @ToString
 @Getter
 public class PlayerAuthInputPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.PLAYER_AUTH_INPUT_PACKET;
 
     private float yaw;
     private float pitch;
@@ -51,7 +50,7 @@ public class PlayerAuthInputPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.PLAYER_AUTH_INPUT_PACKET;
     }
 
     @Override

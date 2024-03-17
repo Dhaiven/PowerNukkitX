@@ -10,11 +10,9 @@ import lombok.ToString;
 @ToString
 public class TextPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.TEXT_PACKET;
-
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.TEXT_PACKET;
     }
 
     public static final byte TYPE_RAW = 0;

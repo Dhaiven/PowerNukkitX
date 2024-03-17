@@ -9,14 +9,14 @@ import lombok.ToString;
 
 @ToString
 public class LabTablePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.LAB_TABLE_PACKET;
+    
     public LabTableType actionType;
     public BlockVector3 blockPosition;
     public LabTableReactionType reactionType;
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.LAB_TABLE_PACKET;
     }
 
     @Override

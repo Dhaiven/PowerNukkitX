@@ -6,7 +6,6 @@ import lombok.ToString;
 
 @ToString
 public class CreatePhotoPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.CREATE_PHOTO_PACKET;
     public long id;
     public String photoName;
     public String photoItemName;
@@ -14,7 +13,7 @@ public class CreatePhotoPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CREATE_PHOTO_PACKET;
     }
 
     @Override

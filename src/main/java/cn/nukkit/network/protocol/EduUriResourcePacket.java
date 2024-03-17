@@ -7,13 +7,13 @@ import lombok.ToString;
 
 @ToString
 public class EduUriResourcePacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.EDU_URI_RESOURCE_PACKET;
+
     public EduSharedUriResource eduSharedUriResource;
 
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return  ProtocolInfo.EDU_URI_RESOURCE_PACKET;
     }
 
     @Override

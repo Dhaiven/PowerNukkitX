@@ -28,9 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class NPCDialoguePacket extends DataPacket {
-
-
-    public static final int NETWORK_ID = ProtocolInfo.NPC_DIALOGUE_PACKET;
     
     private static final NPCDialogAction[] ACTIONS = NPCDialogAction.values();
     
@@ -48,7 +45,7 @@ public class NPCDialoguePacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.NPC_DIALOGUE_PACKET;
     }
 
     @Override

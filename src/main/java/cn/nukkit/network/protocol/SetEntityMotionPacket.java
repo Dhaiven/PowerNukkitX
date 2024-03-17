@@ -8,7 +8,6 @@ import lombok.ToString;
  */
 @ToString
 public class SetEntityMotionPacket extends DataPacket {
-    public static final int NETWORK_ID = ProtocolInfo.SET_ENTITY_MOTION_PACKET;
 
     public long eid;
     public float motionX;
@@ -18,7 +17,7 @@ public class SetEntityMotionPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.SET_ENTITY_MOTION_PACKET;
     }
 
     @Override

@@ -15,10 +15,6 @@ import java.nio.ByteOrder;
 @ToString
 public class ItemComponentPacket extends DataPacket {
 
-
-    public static final int NETWORK_ID = ProtocolInfo.ITEM_COMPONENT_PACKET;
-    
-
     private Entry[] entries = Entry.EMPTY_ARRAY;
 
 
@@ -32,7 +28,7 @@ public class ItemComponentPacket extends DataPacket {
     
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.ITEM_COMPONENT_PACKET;
     }
     
     @Override

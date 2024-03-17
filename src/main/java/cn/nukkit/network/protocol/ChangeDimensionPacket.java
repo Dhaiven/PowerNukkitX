@@ -10,8 +10,6 @@ import lombok.ToString;
 @ToString
 public class ChangeDimensionPacket extends DataPacket {
 
-    public static final int NETWORK_ID = ProtocolInfo.CHANGE_DIMENSION_PACKET;
-
     public int dimension;
 
     public float x;
@@ -35,7 +33,7 @@ public class ChangeDimensionPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return NETWORK_ID;
+        return ProtocolInfo.CHANGE_DIMENSION_PACKET;
     }
 
     public void handle(PacketHandler handler) {
