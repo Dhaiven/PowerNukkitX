@@ -3,6 +3,7 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -10,8 +11,6 @@ import lombok.ToString;
  */
 @ToString
 public class AnimatePacket extends DataPacket {
-
-
     public long eid;
     public Action action;
     public float rowingTime;
@@ -27,7 +26,6 @@ public class AnimatePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.action.getId());
         byteBuf.writeEntityRuntimeId(this.eid);
         if (this.action == Action.ROW_RIGHT || this.action == Action.ROW_LEFT) {
@@ -40,6 +38,7 @@ public class AnimatePacket extends DataPacket {
         return ProtocolInfo.ANIMATE_PACKET;
     }
 
+    @Getter
     public enum Action {
         NO_ACTION(0),
         SWING_ARM(1),
@@ -49,11 +48,11 @@ public class AnimatePacket extends DataPacket {
         ROW_RIGHT(128),
         ROW_LEFT(129);
 
-        private static final Int2ObjectMap<Action> ID_LOOKUP = new Int2ObjectOpenHashMap<>();
+        private static final Int2ObjectMap<Action> ID_LOOKUP = new Int2ObjectOpenHashMap<>(7);
 
         static {
-            for (Action value : values()) {
-                ID_LOOKUP.put(value.id, value);
+            for (Action action : values()) {
+                ID_LOOKUP.put(action.id, action);
             }
         }
 
@@ -61,10 +60,6 @@ public class AnimatePacket extends DataPacket {
 
         Action(int id) {
             this.id = id;
-        }
-
-        public int getId() {
-            return id;
         }
 
         public static Action fromId(int id) {

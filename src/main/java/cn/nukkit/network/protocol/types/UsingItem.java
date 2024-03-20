@@ -1,6 +1,10 @@
 package cn.nukkit.network.protocol.types;
 
+import lombok.Getter;
+
 public class UsingItem {
+
+    @Getter
     public enum Action {
         UNKNOWN(-1),
         EQUIP_ARMOR(0),
@@ -24,10 +28,6 @@ public class UsingItem {
 
         Action(int id) {
             this.id = id;
-        }
-
-        public int getId() {
-            return id;
         }
     }
 }

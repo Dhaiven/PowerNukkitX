@@ -2,19 +2,13 @@ package cn.nukkit.network.protocol;
 
 import cn.nukkit.camera.data.Ease;
 import cn.nukkit.camera.data.Time;
-import cn.nukkit.camera.instruction.CameraInstruction;
 import cn.nukkit.camera.instruction.impl.ClearInstruction;
 import cn.nukkit.camera.instruction.impl.FadeInstruction;
 import cn.nukkit.camera.instruction.impl.SetInstruction;
 import cn.nukkit.network.connection.util.HandleByteBuf;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.awt.*;
 
-
-@Getter
-@Setter
 public class CameraInstructionPacket extends DataPacket {
     private SetInstruction setInstruction;
     private FadeInstruction fadeInstruction;
@@ -51,14 +45,16 @@ public class CameraInstructionPacket extends DataPacket {
         });
     }
 
-    public void setInstruction(CameraInstruction instruction) {
-        if (instruction instanceof SetInstruction se) {
-            this.setInstruction = se;
-        } else if (instruction instanceof FadeInstruction fa) {
-            this.fadeInstruction = fa;
-        } else if (instruction instanceof ClearInstruction cl) {
-            this.clearInstruction = cl;
-        }
+    public void setInstruction(SetInstruction instruction) {
+        this.setInstruction = instruction;
+    }
+
+    public void setInstruction(FadeInstruction instruction) {
+        this.fadeInstruction = instruction;
+    }
+
+    public void setInstruction(ClearInstruction instruction) {
+        this.clearInstruction = instruction;
     }
 
     protected void writeEase(HandleByteBuf byteBuf, Ease ease) {

@@ -36,7 +36,6 @@ public class TrimDataPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUnsignedVarInt(patterns.size());
         patterns.forEach(p -> {
             byteBuf.writeString(p.itemName());

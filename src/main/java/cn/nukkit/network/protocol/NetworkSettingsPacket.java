@@ -21,7 +21,6 @@ public class NetworkSettingsPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeShortLE(this.compressionThreshold);
         byteBuf.writeShortLE(this.compressionAlgorithm.ordinal());
         byteBuf.writeBoolean(this.clientThrottleEnabled);

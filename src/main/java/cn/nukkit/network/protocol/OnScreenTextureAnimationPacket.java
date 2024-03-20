@@ -18,7 +18,6 @@ public class OnScreenTextureAnimationPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeIntLE(this.effectId);
     }
 

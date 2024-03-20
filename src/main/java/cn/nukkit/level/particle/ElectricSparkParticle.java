@@ -20,7 +20,7 @@ public class ElectricSparkParticle extends GenericParticle {
     @Override
     public DataPacket[] encode() {
         LevelEventPacket pk = new LevelEventPacket();
-        pk.evid = LevelEventPacket.EVENT_PARTICLE_ELECTRIC_SPARK;
+        pk.evid = LevelEventPacket.Event.PARTICLE_ELECTRIC_SPARK;
         pk.x = (float) this.x;
         pk.y = (float) this.y;
         pk.z = (float) this.z;

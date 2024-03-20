@@ -22,7 +22,6 @@ public class EventPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarLong(this.eid);
         byteBuf.writeVarInt(this.eventData.getType().ordinal());
         byteBuf.writeByte(this.usePlayerId);

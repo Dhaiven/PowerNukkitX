@@ -82,7 +82,6 @@ public class AvailableCommandsPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         Set<String> enumValuesSet = new ObjectOpenHashSet<>();
         SequencedHashSet<String> subCommandValues = new SequencedHashSet<>();
         Set<String> postfixSet = new ObjectOpenHashSet<>();

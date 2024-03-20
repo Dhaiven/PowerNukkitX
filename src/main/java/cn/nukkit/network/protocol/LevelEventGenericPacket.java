@@ -10,7 +10,7 @@ import java.nio.ByteOrder;
 
 public class LevelEventGenericPacket extends DataPacket {
 
-    public int eventId;
+    public LevelEventPacket.Event eventId;
     public CompoundTag tag;
 
     @Override
@@ -24,8 +24,7 @@ public class LevelEventGenericPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
-        byteBuf.writeVarInt(eventId);
+        byteBuf.writeVarInt(eventId.getId());
         try {
             byteBuf.writeBytes(NBTIO.writeValue(tag, ByteOrder.LITTLE_ENDIAN, true));
         } catch (IOException e) {

@@ -13,7 +13,7 @@ public class TextProcessor extends DataPacketProcessor<TextPacket> {
             return;
         }
 
-        if (pk.type == TextPacket.TYPE_CHAT) {
+        if (pk.type == TextPacket.Type.CHAT) {
             String chatMessage = pk.message;
             int breakLine = chatMessage.indexOf('\n');
             // Chat messages shouldn't contain break lines so ignore text afterwards

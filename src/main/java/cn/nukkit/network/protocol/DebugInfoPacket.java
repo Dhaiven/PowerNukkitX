@@ -3,7 +3,6 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
-
 @ToString
 public class DebugInfoPacket extends DataPacket {
 
@@ -23,7 +22,6 @@ public class DebugInfoPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeLong(this.entityId);
         byteBuf.writeString(this.data);
     }

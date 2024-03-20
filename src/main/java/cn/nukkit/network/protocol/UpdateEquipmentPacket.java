@@ -12,7 +12,6 @@ public class UpdateEquipmentPacket extends DataPacket {
     public long eid;
     public byte[] namedtag;
 
-
     @Override
     public int pid() {
         return ProtocolInfo.UPDATE_EQUIPMENT_PACKET;
@@ -25,7 +24,6 @@ public class UpdateEquipmentPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte((byte) this.windowId);
         byteBuf.writeByte((byte) this.windowType);
         byteBuf.writeVarInt(0);//size

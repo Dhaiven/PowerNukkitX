@@ -28,7 +28,6 @@ public class ResourcePackClientResponsePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte(this.responseStatus);
         byteBuf.writeShortLE(this.packEntries.length);
         for (Entry entry : this.packEntries) {
@@ -41,15 +40,8 @@ public class ResourcePackClientResponsePacket extends DataPacket {
         return ProtocolInfo.RESOURCE_PACK_CLIENT_RESPONSE_PACKET;
     }
 
-    @ToString
-    public static class Entry {
-        public final UUID uuid;
-        public final String version;
+    public record Entry (UUID uuid, String version) {
 
-        public Entry(UUID uuid, String version) {
-            this.uuid = uuid;
-            this.version = version;
-        }
     }
 
     public void handle(PacketHandler handler) {

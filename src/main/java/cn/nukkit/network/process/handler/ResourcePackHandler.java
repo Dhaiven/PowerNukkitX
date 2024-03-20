@@ -28,7 +28,7 @@ public class ResourcePackHandler extends BedrockSessionPacketHandler {
             case ResourcePackClientResponsePacket.STATUS_REFUSED -> this.session.close("disconnectionScreen.noReason");
             case ResourcePackClientResponsePacket.STATUS_SEND_PACKS -> {
                 for (ResourcePackClientResponsePacket.Entry entry : pk.packEntries) {
-                    ResourcePack resourcePack = server.getResourcePackManager().getPackById(entry.uuid);
+                    ResourcePack resourcePack = server.getResourcePackManager().getPackById(entry.uuid());
                     if (resourcePack == null) {
                         this.session.close("disconnectionScreen.resourcePack");
                         return;

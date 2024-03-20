@@ -24,7 +24,6 @@ public class ResourcePackStackPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeBoolean(this.mustAccept);
 
         byteBuf.writeUnsignedVarInt(this.behaviourPackStack.length);

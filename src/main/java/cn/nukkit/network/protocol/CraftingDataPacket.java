@@ -67,7 +67,6 @@ public class CraftingDataPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUnsignedVarInt(entries.size());
 
         int recipeNetworkId = 1;
@@ -187,6 +186,7 @@ public class CraftingDataPacket extends DataPacket {
     public int pid() {
         return ProtocolInfo.CRAFTING_DATA_PACKET;
     }
+
     public void handle(PacketHandler handler) {
         handler.handle(this);
     }

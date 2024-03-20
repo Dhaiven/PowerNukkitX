@@ -68,7 +68,7 @@ public class SimpleVibrationManager implements VibrationManager {
                 .putCompound("target", listener.isEntity() ? createEntityTargetTag(listener.asEntity()) : createVec3fTag(listenerPos))
                 .putFloat("timeToLive", (float) (listenerPos.distance(sourcePos) / 20.0));
         LevelEventGenericPacket packet = new LevelEventGenericPacket();
-        packet.eventId = LevelEventPacket.EVENT_PARTICLE_VIBRATION_SIGNAL;
+        packet.eventId = LevelEventPacket.Event.PARTICLE_VIBRATION_SIGNAL;
         packet.tag = tag;
         //todo: 只对在视野范围内的玩家发包
         Server.broadcastPacket(level.getPlayers().values(), packet);

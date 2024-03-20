@@ -4,7 +4,6 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.network.protocol.types.BlockSyncType;
 import lombok.ToString;
 
-
 @ToString
 public class UpdateBlockSyncedPacket extends UpdateBlockPacket {
 

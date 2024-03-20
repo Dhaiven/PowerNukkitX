@@ -55,7 +55,6 @@ public class CommandBlockUpdatePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeBoolean(this.isBlock);
         if (this.isBlock) {
             byteBuf.writeBlockVector3(this.x, this.y, this.z);

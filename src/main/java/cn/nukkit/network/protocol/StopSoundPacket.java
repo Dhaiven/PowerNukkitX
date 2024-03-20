@@ -21,7 +21,6 @@ public class StopSoundPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(this.name);
         byteBuf.writeBoolean(this.stopAll);
     }

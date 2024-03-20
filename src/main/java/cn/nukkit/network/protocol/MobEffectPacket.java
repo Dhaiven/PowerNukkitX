@@ -16,7 +16,7 @@ public class MobEffectPacket extends DataPacket {
     }
 
     public long eid;
-    public Event eventId;
+    public Event event;
     public int effectId;
     public int amplifier = 0;
     public boolean particles = true;
@@ -34,7 +34,7 @@ public class MobEffectPacket extends DataPacket {
     @Override
     public void encode(HandleByteBuf byteBuf) {
         byteBuf.writeEntityRuntimeId(this.eid);
-        byteBuf.writeByte((byte) this.eventId);
+        byteBuf.writeByte((byte) this.event.getId());
         byteBuf.writeVarInt(this.effectId);
         byteBuf.writeVarInt(this.amplifier);
         byteBuf.writeBoolean(this.particles);

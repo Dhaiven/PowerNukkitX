@@ -295,7 +295,7 @@ public class InventoryTransactionProcessor extends DataPacketProcessor<Inventory
                 player.level.sendBlocks(new Player[]{player}, new Block[]{target.getLevelBlockAtLayer(1), block.getLevelBlockAtLayer(1)}, UpdateBlockPacket.FLAG_NOGRAPHIC, 1);
             }
             case InventoryTransactionPacket.USE_ITEM_ACTION_BREAK_BLOCK -> {
-                //Creative mode use PlayerActionPacket.ACTION_CREATIVE_PLAYER_DESTROY_BLOCK
+                //Creative mode use PlayerActionPacket.Action.CREATIVE_PLAYER_DESTROY_BLOCK
                 if (!player.spawned || !player.isAlive() || player.isCreative()) {
                     return;
                 }

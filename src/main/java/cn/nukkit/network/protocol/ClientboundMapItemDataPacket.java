@@ -3,7 +3,6 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.connection.util.HandleByteBuf;
-import cn.nukkit.utils.Utils;
 import io.netty.util.internal.EmptyArrays;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.Getter;
@@ -137,8 +136,6 @@ public class ClientboundMapItemDataPacket extends DataPacket {
     }
 
     public static class MapDecorator {
-
-
         public static final MapDecorator[] EMPTY_ARRAY = new MapDecorator[0];
 
         public byte rotation;

@@ -23,7 +23,6 @@ public class ShowProfilePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(this.xuid);
     }
 

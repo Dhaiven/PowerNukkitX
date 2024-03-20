@@ -9,6 +9,7 @@ import lombok.ToString;
  */
 @ToString
 public class InventoryContentPacket extends DataPacket {
+
     @Override
     public int pid() {
         return ProtocolInfo.INVENTORY_CONTENT_PACKET;

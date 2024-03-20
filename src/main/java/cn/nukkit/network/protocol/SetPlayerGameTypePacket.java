@@ -23,7 +23,6 @@ public class SetPlayerGameTypePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.gamemode);
     }
 

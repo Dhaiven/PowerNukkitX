@@ -7,8 +7,6 @@ import lombok.ToString;
 /**
  * @author joserobjr
  */
-
-
 @ToString
 @NoArgsConstructor(onConstructor = @__())
 public class PositionTrackingDBClientRequestPacket extends DataPacket {
@@ -17,7 +15,6 @@ public class PositionTrackingDBClientRequestPacket extends DataPacket {
 
     private Action action;
     private int trackingId;
-
 
     public Action getAction() {
         return action;
@@ -46,8 +43,6 @@ public class PositionTrackingDBClientRequestPacket extends DataPacket {
     }
 
     public enum Action {
-
-
         QUERY
     }
 

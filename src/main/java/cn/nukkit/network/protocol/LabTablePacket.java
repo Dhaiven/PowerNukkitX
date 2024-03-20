@@ -6,7 +6,6 @@ import cn.nukkit.network.protocol.types.LabTableReactionType;
 import cn.nukkit.network.protocol.types.LabTableType;
 import lombok.ToString;
 
-
 @ToString
 public class LabTablePacket extends DataPacket {
     
@@ -26,7 +25,6 @@ public class LabTablePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte((byte) actionType.ordinal());
         byteBuf.writeBlockVector3(blockPosition);
         byteBuf.writeByte((byte) reactionType.ordinal());

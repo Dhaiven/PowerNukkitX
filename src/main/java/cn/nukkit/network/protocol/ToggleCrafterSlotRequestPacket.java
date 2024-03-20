@@ -23,7 +23,6 @@ public class ToggleCrafterSlotRequestPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVector3f(this.blockPosition);
         byteBuf.writeByte(this.slot);
         byteBuf.writeBoolean(this.disabled);

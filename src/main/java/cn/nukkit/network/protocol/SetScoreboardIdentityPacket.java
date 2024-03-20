@@ -24,7 +24,6 @@ public class SetScoreboardIdentityPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeByte((byte) this.action.ordinal());
 
         for (Entry entry : this.entries) {
@@ -38,9 +37,7 @@ public class SetScoreboardIdentityPacket extends DataPacket {
         REMOVE
     }
 
-    public static class Entry {
-        public long scoreboardId;
-        public UUID uuid;
+    public record Entry(long scoreboardId, UUID uuid) {
     }
 
     public void handle(PacketHandler handler) {

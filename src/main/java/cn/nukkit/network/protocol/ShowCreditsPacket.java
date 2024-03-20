@@ -6,11 +6,8 @@ import lombok.ToString;
 @ToString
 public class ShowCreditsPacket extends DataPacket {
 
-    public static final int STATUS_START_CREDITS = 0;
-    public static final int STATUS_END_CREDITS = 1;
-
     public long eid;
-    public int status;
+    public Status status;
 
     @Override
     public int pid() {
@@ -20,14 +17,18 @@ public class ShowCreditsPacket extends DataPacket {
     @Override
     public void decode(HandleByteBuf byteBuf) {
         this.eid = byteBuf.readEntityRuntimeId();
-        this.status = byteBuf.readVarInt();
+        this.status = Status.values()[byteBuf.readVarInt()];
     }
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityRuntimeId(this.eid);
-        byteBuf.writeVarInt(this.status);
+        byteBuf.writeVarInt(this.status.ordinal());
+    }
+
+    public enum Status {
+        START,
+        END;
     }
 
     public void handle(PacketHandler handler) {

@@ -6,7 +6,6 @@ import lombok.ToString;
 @ToString
 public class EmotePacket extends DataPacket {
 
-
     public long runtimeId;
 
     public String xuid = "";
@@ -33,7 +32,6 @@ public class EmotePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeEntityRuntimeId(this.runtimeId);
         byteBuf.writeString(this.emoteID);
         byteBuf.writeString(this.xuid);

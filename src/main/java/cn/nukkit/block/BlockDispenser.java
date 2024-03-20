@@ -243,7 +243,7 @@ public class BlockDispenser extends BlockSolid implements RedstoneComponent, Fac
                 this.level.addSound(this, Sound.RANDOM_CLICK, 1.0f, 1.0f);
         }
 
-        pk.evid = LevelEventPacket.EVENT_PARTICLE_SHOOT;
+        pk.evid = LevelEventPacket.Event.PARTICLE_SHOOT;
         pk.data = 7;
         this.level.addChunkPacket(getChunkX(), getChunkZ(), pk);
 

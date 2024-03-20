@@ -7,7 +7,6 @@ import cn.nukkit.utils.version.Version;
 import java.util.UUID;
 
 @ToString(exclude = "data")
-
 public class ResourcePackChunkDataPacket extends AbstractResourcePackDataPacket {
 
     public UUID packId;

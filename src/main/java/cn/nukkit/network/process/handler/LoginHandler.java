@@ -8,6 +8,7 @@ import cn.nukkit.network.process.SessionState;
 import cn.nukkit.network.protocol.LoginPacket;
 import cn.nukkit.network.protocol.PlayStatusPacket;
 import cn.nukkit.network.protocol.ServerToClientHandshakePacket;
+import cn.nukkit.network.protocol.Status;
 import cn.nukkit.player.info.PlayerInfo;
 import cn.nukkit.player.info.XboxLivePlayerInfo;
 import cn.nukkit.utils.ClientChainData;
@@ -41,7 +42,7 @@ public class LoginHandler extends BedrockSessionPacketHandler {
         if (pk.issueUnixTime != -1 && Server.getInstance().checkLoginTime && System.currentTimeMillis() - pk.issueUnixTime > 20000) {
             var message = "disconnectionScreen.noReason";
             log.debug("disconnection due to noReason");
-            session.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_CLIENT, true);
+            session.sendPlayStatus(Status.LOGIN_FAILED_CLIENT, true);
             session.close(message);
             return;
         }

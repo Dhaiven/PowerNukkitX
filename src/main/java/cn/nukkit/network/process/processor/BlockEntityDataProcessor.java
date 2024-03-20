@@ -26,11 +26,11 @@ public class BlockEntityDataProcessor extends DataPacketProcessor<BlockEntityDat
             return;
         }
 
-        BlockEntity t = player.level.getBlockEntity(pos);
-        if (t instanceof BlockEntitySpawnable) {
+        BlockEntity blockEntity = player.level.getBlockEntity(pos);
+        if (blockEntity instanceof BlockEntitySpawnable blockEntitySpawnable) {
             CompoundTag nbt = pk.namedTag;
-            if (!((BlockEntitySpawnable) t).updateCompoundTag(nbt, player)) {
-                ((BlockEntitySpawnable) t).spawnTo(player);
+            if (!blockEntitySpawnable.updateCompoundTag(nbt, player)) {
+                blockEntitySpawnable.spawnTo(player);
             }
         }
     }

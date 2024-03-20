@@ -35,7 +35,6 @@ public class ContainerOpenPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte((byte) this.windowId);
         byteBuf.writeByte((byte) this.type);
         byteBuf.writeBlockVector3(this.x, this.y, this.z);

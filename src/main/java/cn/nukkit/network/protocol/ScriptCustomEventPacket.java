@@ -26,7 +26,6 @@ public class ScriptCustomEventPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeString(this.eventName);
         byteBuf.writeByteArray(this.eventData);
     }

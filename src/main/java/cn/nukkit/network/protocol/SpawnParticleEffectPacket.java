@@ -29,7 +29,6 @@ public class SpawnParticleEffectPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte((byte) this.dimensionId);
         byteBuf.writeEntityUniqueId(uniqueEntityId);
         byteBuf.writeVector3f(this.position);

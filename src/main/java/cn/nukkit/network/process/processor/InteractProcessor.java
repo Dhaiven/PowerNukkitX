@@ -44,19 +44,19 @@ public class InteractProcessor extends DataPacketProcessor<InteractPacket> {
         }
 
         switch (pk.action) {
-            case InteractPacket.ACTION_MOUSEOVER -> {
+            case MOUSEOVER -> {
                 if (pk.target == 0) {
                     return;
                 }
                 player.getServer().getPluginManager().callEvent(new PlayerMouseOverEntityEvent(player, targetEntity));
             }
-            case InteractPacket.ACTION_VEHICLE_EXIT -> {
+            case VEHICLE_EXIT -> {
                 if (!(targetEntity instanceof EntityRideable) || player.riding == null) {
                     return;
                 }
                 ((EntityRideable) player.riding).dismountEntity(player);
             }
-            case InteractPacket.ACTION_OPEN_INVENTORY -> {
+            case OPEN_INVENTORY -> {
                 if (targetEntity instanceof EntityRideable) {
                     if (targetEntity instanceof EntityChestBoat chestBoat) {
                         player.addWindow(chestBoat.getInventory());

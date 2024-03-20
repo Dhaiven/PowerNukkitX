@@ -12,7 +12,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
-
 @ToString
 public class UpdateAbilitiesPacket extends DataPacket {
     public static final PlayerAbility[] VALID_FLAGS = {
@@ -56,7 +55,6 @@ public class UpdateAbilitiesPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeLongLE(this.entityId);
         byteBuf.writeUnsignedVarInt(this.playerPermission.ordinal());
         byteBuf.writeUnsignedVarInt(this.commandPermission.ordinal());

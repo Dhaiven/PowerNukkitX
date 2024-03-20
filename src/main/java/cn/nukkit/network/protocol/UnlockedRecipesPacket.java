@@ -6,7 +6,6 @@ import lombok.Getter;
 
 import java.util.List;
 
-
 @Getter
 public class UnlockedRecipesPacket extends DataPacket {
     public boolean unlockedNotification;
@@ -28,7 +27,6 @@ public class UnlockedRecipesPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeBoolean(this.unlockedNotification);
         byteBuf.writeUnsignedVarInt(this.unlockedRecipes.size());
         for (String recipe : this.unlockedRecipes) {

@@ -585,11 +585,11 @@ public class Level implements Metadatable {
         }
     }
 
-    public void addLevelEvent(int type, int data) {
+    public void addLevelEvent(LevelEventPacket.Event type, int data) {
         addLevelEvent(type, data, null);
     }
 
-    public void addLevelEvent(int type, int data, Vector3 pos) {
+    public void addLevelEvent(LevelEventPacket.Event type, int data, Vector3 pos) {
         if (pos == null) {
             addLevelEvent(type, data, 0, 0, 0);
         } else {
@@ -597,7 +597,7 @@ public class Level implements Metadatable {
         }
     }
 
-    public void addLevelEvent(int type, int data, float x, float y, float z) {
+    public void addLevelEvent(LevelEventPacket.Event type, int data, float x, float y, float z) {
         LevelEventPacket packet = new LevelEventPacket();
         packet.evid = type;
         packet.x = x;
@@ -608,11 +608,11 @@ public class Level implements Metadatable {
         this.addChunkPacket(NukkitMath.floorFloat(x) >> 4, NukkitMath.floorFloat(z) >> 4, packet);
     }
 
-    public void addLevelEvent(Vector3 pos, int event) {
+    public void addLevelEvent(Vector3 pos, LevelEventPacket.Event event) {
         this.addLevelEvent(pos, event, 0);
     }
 
-    public void addLevelEvent(Vector3 pos, int event, int data) {
+    public void addLevelEvent(Vector3 pos, LevelEventPacket.Event event, int data) {
         LevelEventPacket pk = new LevelEventPacket();
         pk.evid = event;
         pk.x = (float) pos.x;
@@ -623,7 +623,7 @@ public class Level implements Metadatable {
         addChunkPacket(pos.getFloorX() >> 4, pos.getFloorZ() >> 4, pk);
     }
 
-    public void addLevelEvent(Vector3 pos, int event, CompoundTag data) {
+    public void addLevelEvent(Vector3 pos, LevelEventPacket.Event event, CompoundTag data) {
         LevelEventGenericPacket pk = new LevelEventGenericPacket();
         pk.eventId = event;
         pk.tag = data;
@@ -1187,7 +1187,7 @@ public class Level implements Metadatable {
 
     public void sendBlockExtraData(int x, int y, int z, int id, int data, Player[] players) {
         LevelEventPacket pk = new LevelEventPacket();
-        pk.evid = LevelEventPacket.EVENT_SET_DATA;
+        pk.evid = LevelEventPacket.Event.SET_DATA;
         pk.x = x + 0.5f;
         pk.y = y + 0.5f;
         pk.z = z + 0.5f;
@@ -3251,7 +3251,7 @@ public class Level implements Metadatable {
         this.requireProvider().setSpawn(pos);
         this.server.getPluginManager().callEvent(new SpawnChangeEvent(this, previousSpawn));
         SetSpawnPositionPacket pk = new SetSpawnPositionPacket();
-        pk.spawnType = SetSpawnPositionPacket.TYPE_WORLD_SPAWN;
+        pk.spawnType = SetSpawnPositionPacket.Type.WORLD_SPAWN;
         pk.x = pos.getFloorX();
         pk.y = pos.getFloorY();
         pk.z = pos.getFloorZ();
@@ -4034,12 +4034,12 @@ public class Level implements Metadatable {
         // These numbers are from Minecraft
 
         if (raining) {
-            pk.evid = LevelEventPacket.EVENT_START_RAIN;
+            pk.evid = LevelEventPacket.Event.START_RAIN;
             int time = ThreadLocalRandom.current().nextInt(12000) + 12000;
             pk.data = time;
             setRainTime(time);
         } else {
-            pk.evid = LevelEventPacket.EVENT_STOP_RAIN;
+            pk.evid = LevelEventPacket.Event.STOP_RAIN;
             setRainTime(ThreadLocalRandom.current().nextInt(168000) + 12000);
         }
 
@@ -4077,12 +4077,12 @@ public class Level implements Metadatable {
         LevelEventPacket pk = new LevelEventPacket();
         // These numbers are from Minecraft
         if (thundering) {
-            pk.evid = LevelEventPacket.EVENT_START_THUNDER;
+            pk.evid = LevelEventPacket.Event.START_THUNDER;
             int time = ThreadLocalRandom.current().nextInt(12000) + 3600;
             pk.data = time;
             setThunderTime(time);
         } else {
-            pk.evid = LevelEventPacket.EVENT_STOP_THUNDER;
+            pk.evid = LevelEventPacket.Event.STOP_THUNDER;
             setThunderTime(ThreadLocalRandom.current().nextInt(168000) + 12000);
         }
 
@@ -4107,19 +4107,19 @@ public class Level implements Metadatable {
         LevelEventPacket pk = new LevelEventPacket();
 
         if (this.isRaining()) {
-            pk.evid = LevelEventPacket.EVENT_START_RAIN;
+            pk.evid = LevelEventPacket.Event.START_RAIN;
             pk.data = this.rainTime;
         } else {
-            pk.evid = LevelEventPacket.EVENT_STOP_RAIN;
+            pk.evid = LevelEventPacket.Event.STOP_RAIN;
         }
 
         Server.broadcastPacket(players, pk);
 
         if (this.isThundering()) {
-            pk.evid = LevelEventPacket.EVENT_START_THUNDER;
+            pk.evid = LevelEventPacket.Event.START_THUNDER;
             pk.data = this.thunderTime;
         } else {
-            pk.evid = LevelEventPacket.EVENT_STOP_THUNDER;
+            pk.evid = LevelEventPacket.Event.STOP_THUNDER;
         }
 
         Server.broadcastPacket(players, pk);

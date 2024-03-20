@@ -9,13 +9,8 @@ import lombok.ToString;
 @ToString
 public class HurtArmorPacket extends DataPacket {
 
-
     public int cause;
-
-
     public int damage;
-
-
     public long armorSlots;
 
     @Override
@@ -27,7 +22,6 @@ public class HurtArmorPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(this.cause);
         byteBuf.writeVarInt(this.damage);
         byteBuf.writeUnsignedVarLong(this.armorSlots);

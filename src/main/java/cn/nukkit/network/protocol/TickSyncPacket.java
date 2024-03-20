@@ -1,20 +1,21 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
  * @author GoodLucky777
  */
-
-
+@Getter
+@Setter
 @ToString
 @NoArgsConstructor(onConstructor = @__())
 public class TickSyncPacket extends DataPacket {
     
     private long requestTimestamp;
-    
     private long responseTimestamp;
     
     @Override
@@ -30,25 +31,8 @@ public class TickSyncPacket extends DataPacket {
     
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeLongLE(this.requestTimestamp);
         byteBuf.writeLongLE(this.responseTimestamp);
-    }
-
-    public long getRequestTimestamp() {
-        return requestTimestamp;
-    }
-
-    public void setRequestTimestamp(long requestTimestamp) {
-        this.requestTimestamp = requestTimestamp;
-    }
-
-    public long getResponseTimestamp() {
-        return responseTimestamp;
-    }
-
-    public void setResponseTimestamp(long responseTimestamp) {
-        this.responseTimestamp = responseTimestamp;
     }
 
     public void handle(PacketHandler handler) {

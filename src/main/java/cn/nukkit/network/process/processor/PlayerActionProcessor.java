@@ -30,7 +30,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
     @Override
     public void handle(@NotNull PlayerHandle playerHandle, @NotNull PlayerActionPacket pk) {
         Player player = playerHandle.player;
-        if (!player.spawned || (!player.isAlive() && pk.action != PlayerActionPacket.ACTION_RESPAWN && pk.action != PlayerActionPacket.ACTION_DIMENSION_CHANGE_ACK)) {
+        if (!player.spawned || (!player.isAlive() && pk.action != PlayerActionPacket.Action.RESPAWN && pk.action != PlayerActionPacket.Action.DIMENSION_CHANGE_ACK)) {
             return;
         }
 
@@ -39,27 +39,27 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
         BlockFace face = BlockFace.fromIndex(pk.face);
 
         switch (pk.action) {
-            case PlayerActionPacket.ACTION_START_BREAK -> playerHandle.onBlockBreakStart(pos, face);
-            case PlayerActionPacket.ACTION_ABORT_BREAK, PlayerActionPacket.ACTION_STOP_BREAK ->
+            case START_BREAK -> playerHandle.onBlockBreakStart(pos, face);
+            case ABORT_BREAK, STOP_BREAK ->
                     playerHandle.onBlockBreakAbort(pos, face);
-            case PlayerActionPacket.ACTION_GET_UPDATED_BLOCK -> {
+            case GET_UPDATED_BLOCK -> {
                 //TODO
             }
-            case PlayerActionPacket.ACTION_DROP_ITEM -> {
+            case DROP_ITEM -> {
                 //TODO
             }
-            case PlayerActionPacket.ACTION_STOP_SLEEPING -> player.stopSleep();
-            case PlayerActionPacket.ACTION_RESPAWN -> {
+            case STOP_SLEEPING -> player.stopSleep();
+            case RESPAWN -> {
                 if (!player.spawned || player.isAlive() || !player.isOnline()) {
                     return;
                 }
                 playerHandle.respawn();
             }
-            case PlayerActionPacket.ACTION_JUMP -> {
+            case JUMP -> {
                 PlayerJumpEvent playerJumpEvent = new PlayerJumpEvent(player);
                 player.getServer().getPluginManager().callEvent(playerJumpEvent);
             }
-            case PlayerActionPacket.ACTION_START_SPRINT -> {
+            case START_SPRINT -> {
                 PlayerToggleSprintEvent playerToggleSprintEvent = new PlayerToggleSprintEvent(player, true);
                 player.getServer().getPluginManager().callEvent(playerToggleSprintEvent);
                 if (playerToggleSprintEvent.isCancelled()) {
@@ -68,7 +68,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSprinting(true);
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_SPRINT -> {
+            case STOP_SPRINT -> {
                 var playerToggleSprintEvent = new PlayerToggleSprintEvent(player, false);
                 player.getServer().getPluginManager().callEvent(playerToggleSprintEvent);
                 if (playerToggleSprintEvent.isCancelled()) {
@@ -77,7 +77,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSprinting(false);
                 }
             }
-            case PlayerActionPacket.ACTION_START_SNEAK -> {
+            case START_SNEAK -> {
                 PlayerToggleSneakEvent playerToggleSneakEvent = new PlayerToggleSneakEvent(player, true);
                 player.getServer().getPluginManager().callEvent(playerToggleSneakEvent);
                 if (playerToggleSneakEvent.isCancelled()) {
@@ -86,7 +86,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSneaking(true);
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_SNEAK -> {
+            case STOP_SNEAK -> {
                 var playerToggleSneakEvent = new PlayerToggleSneakEvent(player, false);
                 player.getServer().getPluginManager().callEvent(playerToggleSneakEvent);
                 if (playerToggleSneakEvent.isCancelled()) {
@@ -95,7 +95,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSneaking(false);
                 }
             }
-            case PlayerActionPacket.ACTION_CREATIVE_PLAYER_DESTROY_BLOCK -> {
+            case CREATIVE_PLAYER_DESTROY_BLOCK -> {
                 // Used by client to get book from lecterns and items from item frame in creative mode since 1.20.70
                 Block blockLectern = playerHandle.player.getLevel().getBlock(pos);
                 if (blockLectern instanceof BlockLectern blockLecternI && blockLectern.distance(playerHandle.player) <= 6) {
@@ -107,9 +107,9 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                 if (player.getServer().getServerAuthoritativeMovement() > 0) break;//ServerAuthorInput not use player
                 playerHandle.onBlockBreakComplete(new BlockVector3(pk.x, pk.y, pk.z), face);
             }
-            case PlayerActionPacket.ACTION_DIMENSION_CHANGE_ACK ->
+            case DIMENSION_CHANGE_ACK ->
                     player.sendPosition(player, player.yaw, player.pitch, MovePlayerPacket.MODE_NORMAL);
-            case PlayerActionPacket.ACTION_START_GLIDE -> {
+            case START_GLIDE -> {
                 PlayerToggleGlideEvent playerToggleGlideEvent = new PlayerToggleGlideEvent(player, true);
                 player.getServer().getPluginManager().callEvent(playerToggleGlideEvent);
                 if (playerToggleGlideEvent.isCancelled()) {
@@ -118,7 +118,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setGliding(true);
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_GLIDE -> {
+            case STOP_GLIDE -> {
                 var playerToggleGlideEvent = new PlayerToggleGlideEvent(player, false);
                 player.getServer().getPluginManager().callEvent(playerToggleGlideEvent);
                 if (playerToggleGlideEvent.isCancelled()) {
@@ -127,8 +127,8 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setGliding(false);
                 }
             }
-            case PlayerActionPacket.ACTION_CONTINUE_BREAK -> playerHandle.onBlockBreakContinue(pos, face);
-            case PlayerActionPacket.ACTION_START_SWIMMING -> {
+            case CONTINUE_BREAK -> playerHandle.onBlockBreakContinue(pos, face);
+            case START_SWIMMING -> {
                 PlayerToggleSwimEvent ptse = new PlayerToggleSwimEvent(player, true);
                 player.getServer().getPluginManager().callEvent(ptse);
 
@@ -138,7 +138,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSwimming(true);
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_SWIMMING -> {
+            case STOP_SWIMMING -> {
                 var ptse = new PlayerToggleSwimEvent(player, false);
                 player.getServer().getPluginManager().callEvent(ptse);
 
@@ -148,7 +148,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSwimming(false);
                 }
             }
-            case PlayerActionPacket.ACTION_START_SPIN_ATTACK -> {
+            case START_SPIN_ATTACK -> {
                 if (player.getInventory().getItemInHand().getId() != ItemID.TRIDENT) {
                     player.sendPosition(player, player.yaw, player.pitch, MovePlayerPacket.MODE_RESET);
                     break;
@@ -184,7 +184,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.level.addSound(player, riptideSound);
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_SPIN_ATTACK -> {
+            case STOP_SPIN_ATTACK -> {
                 var playerToggleSpinAttackEvent = new PlayerToggleSpinAttackEvent(player, false);
                 player.getServer().getPluginManager().callEvent(playerToggleSpinAttackEvent);
 
@@ -194,7 +194,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.setSpinAttacking(false);
                 }
             }
-            case PlayerActionPacket.ACTION_START_FLYING -> {
+            case START_FLYING -> {
                 if (!player.getServer().getAllowFlight() && !player.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT)) {
                     player.kick(PlayerKickEvent.Reason.FLYING_DISABLED, "Flying is not enabled on this server");
                     break;
@@ -207,7 +207,7 @@ public class PlayerActionProcessor extends DataPacketProcessor<PlayerActionPacke
                     player.getAdventureSettings().set(AdventureSettings.Type.FLYING, playerToggleFlightEvent.isFlying());
                 }
             }
-            case PlayerActionPacket.ACTION_STOP_FLYING -> {
+            case STOP_FLYING -> {
                 var playerToggleFlightEvent = new PlayerToggleFlightEvent(player, false);
                 player.getServer().getPluginManager().callEvent(playerToggleFlightEvent);
                 if (playerToggleFlightEvent.isCancelled()) {

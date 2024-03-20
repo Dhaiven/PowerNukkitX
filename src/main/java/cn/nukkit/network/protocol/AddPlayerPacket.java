@@ -51,7 +51,6 @@ public class AddPlayerPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUUID(this.uuid);
         byteBuf.writeString(this.username);
 //        byteBuf.writeEntityUniqueId(this.entityUniqueId);

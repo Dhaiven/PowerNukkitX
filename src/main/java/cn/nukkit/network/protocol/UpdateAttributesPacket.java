@@ -26,8 +26,6 @@ public class UpdateAttributesPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
-
         byteBuf.writeEntityRuntimeId(this.entityId);
 
         if (this.entries == null) {

@@ -27,7 +27,6 @@ public class SetDisplayObjectivePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeString(this.displaySlot.getSlotName());
         byteBuf.writeString(this.objectiveName);
         byteBuf.writeString(this.displayName);

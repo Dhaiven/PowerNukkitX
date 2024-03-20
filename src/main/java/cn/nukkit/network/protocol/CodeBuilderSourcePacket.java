@@ -4,7 +4,11 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.network.protocol.types.CodeBuilderCategoryType;
 import cn.nukkit.network.protocol.types.CodeBuilderOperationType;
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CodeBuilderSourcePacket extends DataPacket {
     private CodeBuilderOperationType operation;
     private CodeBuilderCategoryType category;
@@ -27,30 +31,6 @@ public class CodeBuilderSourcePacket extends DataPacket {
         byteBuf.writeByte((byte) operation.ordinal());
         byteBuf.writeByte((byte) category.ordinal());
         byteBuf.writeString(value);
-    }
-
-    public CodeBuilderOperationType getOperation() {
-        return operation;
-    }
-
-    public void setOperation(CodeBuilderOperationType operation) {
-        this.operation = operation;
-    }
-
-    public CodeBuilderCategoryType getCategory() {
-        return category;
-    }
-
-    public void setCategory(CodeBuilderCategoryType category) {
-        this.category = category;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public void handle(PacketHandler handler) {

@@ -194,7 +194,7 @@ public class EntityFallingBlock extends Entity {
                         }
 
                         if (event.getTo().getId() == Block.ANVIL) {
-                            getLevel().addLevelEvent(block, LevelEventPacket.EVENT_SOUND_ANVIL_FALL);
+                            getLevel().addLevelEvent(block, LevelEventPacket.Event.SOUND_ANVIL_FALL);
 
                             Entity[] e = level.getCollidingEntities(this.getBoundingBox(), this);
                             for (Entity entity : e) {
@@ -204,7 +204,7 @@ public class EntityFallingBlock extends Entity {
                             }
                         }
                         if (event.getTo().getId() == BlockID.POINTED_DRIPSTONE) {
-                            getLevel().addLevelEvent(block, LevelEventPacket.EVENT_SOUND_POINTED_DRIPSTONE_LAND);
+                            getLevel().addLevelEvent(block, LevelEventPacket.Event.SOUND_POINTED_DRIPSTONE_LAND);
 
                             Entity[] e = level.getCollidingEntities(new SimpleAxisAlignedBB(pos, pos.add(1, 1, 1)));
                             for (Entity entity : e) {

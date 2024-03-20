@@ -19,16 +19,19 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
  * @author joserobjr
  * @since 2021-02-14
  */
-
+@Setter
 @ToString
 public class FilterTextPacket extends DataPacket {
 
+    @Getter
     public String text;
     public boolean fromServer;
 
@@ -57,20 +60,8 @@ public class FilterTextPacket extends DataPacket {
         fromServer = byteBuf.readBoolean();
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public boolean isFromServer() {
         return fromServer;
-    }
-
-    public void setFromServer(boolean fromServer) {
-        this.fromServer = fromServer;
     }
 
     public void handle(PacketHandler handler) {

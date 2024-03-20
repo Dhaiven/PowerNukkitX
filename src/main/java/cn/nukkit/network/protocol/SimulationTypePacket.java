@@ -33,7 +33,6 @@ public class SimulationTypePacket extends DataPacket {
 
     private SimulationType type;
 
-
     public SimulationTypePacket() {
         type = SimulationType.GAME;
     }

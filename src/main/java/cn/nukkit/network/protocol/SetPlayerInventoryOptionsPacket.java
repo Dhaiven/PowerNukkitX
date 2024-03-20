@@ -29,7 +29,6 @@ public class SetPlayerInventoryOptionsPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.leftTab.ordinal());
         byteBuf.writeVarInt(this.rightTab.ordinal());
         byteBuf.writeBoolean(this.filtering);

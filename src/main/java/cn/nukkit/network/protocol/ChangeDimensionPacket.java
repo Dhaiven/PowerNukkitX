@@ -25,7 +25,6 @@ public class ChangeDimensionPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.dimension);
         byteBuf.writeVector3f(this.x, this.y, this.z);
         byteBuf.writeBoolean(this.respawn);

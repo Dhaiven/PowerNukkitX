@@ -26,7 +26,6 @@ public class RiderJumpPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(this.unknown);
     }
 

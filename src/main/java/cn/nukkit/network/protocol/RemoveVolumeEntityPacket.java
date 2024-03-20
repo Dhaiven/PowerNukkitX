@@ -1,8 +1,11 @@
 package cn.nukkit.network.protocol;
 
-
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class RemoveVolumeEntityPacket extends DataPacket {
 
     private long id;
@@ -29,14 +32,6 @@ public class RemoveVolumeEntityPacket extends DataPacket {
     @Override
     public void encode(HandleByteBuf byteBuf) {
         byteBuf.writeUnsignedVarInt((int) id);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public void handle(PacketHandler handler) {

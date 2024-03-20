@@ -20,7 +20,6 @@ public class SetHealthPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUnsignedVarInt(this.health);
     }
 

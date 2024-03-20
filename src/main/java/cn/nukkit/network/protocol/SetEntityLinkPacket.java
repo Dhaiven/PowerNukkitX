@@ -23,7 +23,6 @@ public class SetEntityLinkPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityUniqueId(this.vehicleUniqueId);
         byteBuf.writeEntityUniqueId(this.riderUniqueId);
         byteBuf.writeByte((byte) this.type.ordinal());

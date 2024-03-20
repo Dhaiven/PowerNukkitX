@@ -116,7 +116,6 @@ public class EntityEventPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityRuntimeId(this.eid);
         byteBuf.writeByte((byte) this.event);
         byteBuf.writeVarInt(this.data);

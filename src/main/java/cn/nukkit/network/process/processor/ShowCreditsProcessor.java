@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class ShowCreditsProcessor extends DataPacketProcessor<ShowCreditsPacket> {
     @Override
     public void handle(@NotNull PlayerHandle playerHandle, @NotNull ShowCreditsPacket pk) {
-        if (pk.status == ShowCreditsPacket.STATUS_END_CREDITS) {
+        if (pk.status == ShowCreditsPacket.Status.END) {
             if (playerHandle.getShowingCredits()) {
                 playerHandle.player.setShowingCredits(false);
                 playerHandle.player.teleport(playerHandle.player.getSpawn().left(), PlayerTeleportEvent.TeleportCause.END_PORTAL);

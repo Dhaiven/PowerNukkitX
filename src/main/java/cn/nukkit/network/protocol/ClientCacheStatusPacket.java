@@ -18,7 +18,6 @@ public class ClientCacheStatusPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeBoolean(this.supported);
     }
 

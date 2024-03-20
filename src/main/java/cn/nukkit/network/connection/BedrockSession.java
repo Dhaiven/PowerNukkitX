@@ -29,6 +29,7 @@ import cn.nukkit.network.protocol.PacketHandler;
 import cn.nukkit.network.protocol.PlayStatusPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.SetCommandsEnabledPacket;
+import cn.nukkit.network.protocol.Status;
 import cn.nukkit.network.protocol.types.PacketCompressionAlgorithm;
 import cn.nukkit.player.info.PlayerInfo;
 import cn.nukkit.registry.Registries;
@@ -185,7 +186,7 @@ public class BedrockSession {
         this.logOutbound(packet);
     }
 
-    public void sendPlayStatus(int status, boolean immediate) {
+    public void sendPlayStatus(Status status, boolean immediate) {
         PlayStatusPacket pk = new PlayStatusPacket();
         pk.status = status;
         if (immediate) {
@@ -426,7 +427,7 @@ public class BedrockSession {
 
     private void onServerLoginSuccess() {
         log.debug("Login completed");
-        this.sendPlayStatus(PlayStatusPacket.LOGIN_SUCCESS, false);
+        this.sendPlayStatus(Status.LOGIN_SUCCESS, false);
     }
 
     private void onClientSpawned() {

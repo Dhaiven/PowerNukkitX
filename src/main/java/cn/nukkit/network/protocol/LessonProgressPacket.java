@@ -26,7 +26,6 @@ public class LessonProgressPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(action.ordinal());
         byteBuf.writeVarInt(score);
         byteBuf.writeString(activityId);

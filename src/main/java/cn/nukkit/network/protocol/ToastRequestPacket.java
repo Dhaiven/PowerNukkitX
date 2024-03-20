@@ -22,7 +22,6 @@ public class ToastRequestPacket extends DataPacket{
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeString(this.title);
         byteBuf.writeString(this.content);
     }

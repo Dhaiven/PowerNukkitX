@@ -13,7 +13,6 @@ public class UpdateClientInputLocksPacket extends DataPacket {
     private int lockComponentData;
     private Vector3f serverPosition;
 
-
     @Override
     public int pid() {
         return ProtocolInfo.UPDATE_CLIENT_INPUT_LOCKS;
@@ -27,7 +26,6 @@ public class UpdateClientInputLocksPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(lockComponentData);
         byteBuf.writeVector3f(serverPosition);
     }

@@ -1,8 +1,12 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+@Getter
+@Setter
 @ToString
 public class ServerToClientHandshakePacket extends DataPacket {
 
@@ -19,17 +23,7 @@ public class ServerToClientHandshakePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
-
         byteBuf.writeString(this.jwt);
-    }
-
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
-    }
-
-    public String getJwt() {
-        return jwt;
     }
 
     public void handle(PacketHandler handler) {

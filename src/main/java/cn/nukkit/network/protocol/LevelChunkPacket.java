@@ -34,7 +34,6 @@ public class LevelChunkPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.chunkX);
         byteBuf.writeVarInt(this.chunkZ);
         byteBuf.writeVarInt(this.dimension);
@@ -49,7 +48,6 @@ public class LevelChunkPacket extends DataPacket {
         byteBuf.writeBoolean(cacheEnabled);
         if (this.cacheEnabled) {
             byteBuf.writeUnsignedVarInt(blobIds.length);
-
             for (long blobId : blobIds) {
                 byteBuf.writeLongLE(blobId);
             }

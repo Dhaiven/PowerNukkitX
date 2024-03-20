@@ -4,7 +4,6 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.network.protocol.types.GameType;
 import lombok.ToString;
 
-
 @ToString
 public class UpdatePlayerGameTypePacket extends DataPacket {
 
@@ -24,7 +23,6 @@ public class UpdatePlayerGameTypePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVarInt(this.gameType.ordinal());
         byteBuf.writeVarLong(entityId);
     }

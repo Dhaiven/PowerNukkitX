@@ -7,7 +7,6 @@ import lombok.ToString;
 import java.util.List;
 import java.util.UUID;
 
-
 @ToString
 public class EmoteListPacket extends DataPacket {
 
@@ -31,7 +30,6 @@ public class EmoteListPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityRuntimeId(runtimeId);
         byteBuf.writeUnsignedVarInt(pieceIds.size());
         for (UUID id : pieceIds) {

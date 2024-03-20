@@ -22,7 +22,6 @@ public class CodeBuilderPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(url);
         byteBuf.writeBoolean(isOpening);
     }

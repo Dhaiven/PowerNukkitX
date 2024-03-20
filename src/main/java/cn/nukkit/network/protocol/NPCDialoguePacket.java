@@ -25,8 +25,6 @@ import org.jetbrains.annotations.NotNull;
  * @author joserobjr
  * @since 2021-07-06
  */
-
-
 public class NPCDialoguePacket extends DataPacket {
     
     private static final NPCDialogAction[] ACTIONS = NPCDialogAction.values();

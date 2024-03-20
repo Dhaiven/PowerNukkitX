@@ -3,7 +3,6 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
-
 @ToString
 public class PacketViolationWarningPacket extends DataPacket {
 
@@ -27,7 +26,6 @@ public class PacketViolationWarningPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(this.type.ordinal() - 1);
         byteBuf.writeVarInt(this.severity.ordinal());
         byteBuf.writeVarInt(this.packetId);

@@ -7,7 +7,6 @@ import cn.nukkit.utils.version.Version;
 import java.util.UUID;
 
 @ToString
-
 public class ResourcePackChunkRequestPacket extends AbstractResourcePackDataPacket {
 
     public UUID packId;
@@ -22,7 +21,6 @@ public class ResourcePackChunkRequestPacket extends AbstractResourcePackDataPack
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         encodePackInfo(byteBuf);
         byteBuf.writeIntLE(this.chunkIndex);
     }

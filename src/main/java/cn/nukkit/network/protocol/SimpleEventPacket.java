@@ -20,7 +20,6 @@ public class SimpleEventPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeShort(this.unknown);
     }
 

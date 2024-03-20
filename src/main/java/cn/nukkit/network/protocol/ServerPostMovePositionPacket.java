@@ -19,7 +19,6 @@ public class ServerPostMovePositionPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVector3f(this.position);
     }
 

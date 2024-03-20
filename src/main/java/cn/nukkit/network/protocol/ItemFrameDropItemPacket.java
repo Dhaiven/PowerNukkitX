@@ -30,7 +30,7 @@ public class ItemFrameDropItemPacket extends DataPacket {
 
     @Override
     public int pid() {
-        return  ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
+        return ProtocolInfo.ITEM_FRAME_DROP_ITEM_PACKET;
     }
 
     public void handle(PacketHandler handler) {

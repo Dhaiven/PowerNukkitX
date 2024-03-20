@@ -1,6 +1,7 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import cn.nukkit.network.protocol.types.UsingItem;
 import lombok.ToString;
 
 @ToString
@@ -20,9 +21,8 @@ public class CompletedUsingItemPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeShortLE(itemId);
-        byteBuf.writeIntLE(action);
+        byteBuf.writeIntLE(action.getId());
     }
 
     public void handle(PacketHandler handler) {

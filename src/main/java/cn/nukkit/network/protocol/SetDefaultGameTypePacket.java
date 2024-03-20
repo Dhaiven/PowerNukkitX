@@ -1,11 +1,12 @@
 package cn.nukkit.network.protocol;
 
+import org.jetbrains.annotations.Range;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class SetDefaultGameTypePacket extends DataPacket {
 
-    public int gamemode;
+    public @Range(from=0, to=3) int gamemode;
 
     @Override
     public int pid() {

@@ -23,9 +23,9 @@ public class PlayStatusPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeInt(this.status.ordinal());
     }
+
     public void handle(PacketHandler handler) {
         handler.handle(this);
     }

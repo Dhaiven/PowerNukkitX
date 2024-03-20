@@ -25,7 +25,6 @@ public class ContainerClosePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeByte((byte) this.windowId);
         byteBuf.writeBoolean(this.wasServerInitiated);
     }

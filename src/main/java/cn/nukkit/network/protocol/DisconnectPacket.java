@@ -28,7 +28,6 @@ public class DisconnectPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarInt(this.reason.ordinal());
         byteBuf.writeBoolean(this.hideDisconnectionScreen);
         if (!this.hideDisconnectionScreen) {

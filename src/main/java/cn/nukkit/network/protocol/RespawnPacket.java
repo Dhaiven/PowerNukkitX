@@ -10,14 +10,10 @@ import lombok.ToString;
 @ToString
 public class RespawnPacket extends DataPacket {
 
-    public static final int STATE_SEARCHING_FOR_SPAWN = 0;
-    public static final int STATE_READY_TO_SPAWN = 1;
-    public static final int STATE_CLIENT_READY_TO_SPAWN = 2;
-
     public float x;
     public float y;
     public float z;
-    public int respawnState = STATE_SEARCHING_FOR_SPAWN;
+    public State respawnState = State.SEARCHING_FOR_SPAWN;
     public long runtimeEntityId;
 
     @Override
@@ -26,21 +22,26 @@ public class RespawnPacket extends DataPacket {
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
-        this.respawnState = byteBuf.readByte();
+        this.respawnState = State.values()[byteBuf.readByte()];
         this.runtimeEntityId = byteBuf.readEntityRuntimeId();
     }
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVector3f(this.x, this.y, this.z);
-        byteBuf.writeByte((byte) respawnState);
+        byteBuf.writeByte((byte) respawnState.ordinal());
         byteBuf.writeEntityRuntimeId(runtimeEntityId);
     }
 
     @Override
     public int pid() {
         return ProtocolInfo.RESPAWN_PACKET;
+    }
+
+    public enum State {
+        SEARCHING_FOR_SPAWN,
+        READY_TO_SPAWN,
+        CLIENT_READY_TO_SPAWN;
     }
 
     public void handle(PacketHandler handler) {

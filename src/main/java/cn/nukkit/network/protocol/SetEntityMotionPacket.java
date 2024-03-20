@@ -27,7 +27,6 @@ public class SetEntityMotionPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeEntityRuntimeId(this.eid);
         byteBuf.writeVector3f(this.motionX, this.motionY, this.motionZ);
         byteBuf.writeUnsignedVarLong(this.tick);

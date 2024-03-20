@@ -15,7 +15,6 @@ public class GUIDataPickItemPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeIntLE(this.hotbarSlot);
     }
 

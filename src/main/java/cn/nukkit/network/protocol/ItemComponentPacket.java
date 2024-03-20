@@ -4,6 +4,7 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.utils.MainLogger;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.io.IOException;
@@ -16,7 +17,6 @@ import java.nio.ByteOrder;
 public class ItemComponentPacket extends DataPacket {
 
     private Entry[] entries = Entry.EMPTY_ARRAY;
-
 
     public void setEntries(Entry[] entries) {
         this.entries = entries == null? null : entries.length == 0? Entry.EMPTY_ARRAY : entries.clone();
@@ -38,7 +38,6 @@ public class ItemComponentPacket extends DataPacket {
     
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUnsignedVarInt(this.entries.length);
         try {
             for (Entry entry : this.entries) {
@@ -50,27 +49,17 @@ public class ItemComponentPacket extends DataPacket {
         }
     }
     
+    @Getter
     @ToString
     public static class Entry {
-
-
         public static final Entry[] EMPTY_ARRAY = new Entry[0];
         
         private final String name;
         private final CompoundTag data;
 
-
         public Entry(String name, CompoundTag data) {
             this.name = name;
             this.data = data;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public CompoundTag getData() {
-            return data;
         }
     }
 

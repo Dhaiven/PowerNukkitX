@@ -18,7 +18,6 @@ public class SpawnExperienceOrbPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeVector3f(this.x, this.y, this.z);
         byteBuf.writeUnsignedVarInt(this.amount);
     }

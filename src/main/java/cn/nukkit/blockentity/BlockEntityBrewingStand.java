@@ -302,13 +302,13 @@ public class BlockEntityBrewingStand extends BlockEntitySpawnable implements Rec
             if (windowId > 0) {
                 ContainerSetDataPacket pk1 = new ContainerSetDataPacket();
                 pk1.windowId = windowId;
-                pk1.property = ContainerSetDataPacket.PROPERTY_BREWING_STAND_FUEL_AMOUNT;
+                pk1.property = ContainerSetDataPacket.Property.BREWING_STAND_FUEL_AMOUNT;
                 pk1.value = this.fuelAmount;
                 p.dataPacket(pk1);
 
                 ContainerSetDataPacket pk2 = new ContainerSetDataPacket();
                 pk2.windowId = windowId;
-                pk2.property = ContainerSetDataPacket.PROPERTY_BREWING_STAND_FUEL_TOTAL;
+                pk2.property = ContainerSetDataPacket.Property.BREWING_STAND_FUEL_TOTAL;
                 pk2.value = this.fuelTotal;
                 p.dataPacket(pk2);
             }
@@ -317,7 +317,7 @@ public class BlockEntityBrewingStand extends BlockEntitySpawnable implements Rec
 
     protected void sendBrewTime() {
         ContainerSetDataPacket pk = new ContainerSetDataPacket();
-        pk.property = ContainerSetDataPacket.PROPERTY_BREWING_STAND_BREW_TIME;
+        pk.property = ContainerSetDataPacket.Property.BREWING_STAND_BREW_TIME;
         pk.value = brewTime;
 
         for (Player p : this.inventory.getViewers()) {

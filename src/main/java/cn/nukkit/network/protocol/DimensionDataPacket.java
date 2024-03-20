@@ -1,6 +1,5 @@
 package cn.nukkit.network.protocol;
 
-
 import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class DimensionDataPacket extends DataPacket {

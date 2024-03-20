@@ -1,8 +1,11 @@
 package cn.nukkit.network.protocol;
 
-
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ScriptMessagePacket extends DataPacket {
     private String channel;
     private String message;
@@ -22,22 +25,6 @@ public class ScriptMessagePacket extends DataPacket {
     public void encode(HandleByteBuf byteBuf) {
         byteBuf.writeString(channel);
         byteBuf.writeString(message);
-    }
-
-    public String _getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public void handle(PacketHandler handler) {

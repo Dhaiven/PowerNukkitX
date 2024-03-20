@@ -23,7 +23,6 @@ public class UpdateSoftEnumPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(name);
         byteBuf.writeUnsignedVarInt(values.size());
 

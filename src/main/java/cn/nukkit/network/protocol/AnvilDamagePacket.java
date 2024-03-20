@@ -4,10 +4,8 @@ import cn.nukkit.math.BlockVector3;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.ToString;
 
-
 @ToString
 public class AnvilDamagePacket extends DataPacket {
-
     public int damage;
     public int x;
     public int y;

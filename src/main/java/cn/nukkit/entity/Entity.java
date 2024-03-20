@@ -740,7 +740,7 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
                 MobEffectPacket packet = new MobEffectPacket();
                 packet.eid = player.getId();
                 packet.effectId = effect.getId();
-                packet.eventId = MobEffectPacket.Event.REMOVE;
+                packet.event = MobEffectPacket.Event.REMOVE;
                 player.dataPacket(packet);
             }
 
@@ -789,9 +789,9 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
             packet.particles = effect.isVisible();
             packet.duration = effect.getDuration();
             if (oldEffect != null) {
-                packet.eventId = MobEffectPacket.Event.MODIFY;
+                packet.event = MobEffectPacket.Event.MODIFY;
             } else {
-                packet.eventId = MobEffectPacket.Event.ADD;
+                packet.event = MobEffectPacket.Event.ADD;
             }
 
             player.dataPacket(packet);
@@ -1030,7 +1030,7 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
                 packet.amplifier = effect.getAmplifier();
                 packet.particles = effect.isVisible();
                 packet.duration = effect.getDuration();
-                packet.eventId = MobEffectPacket.Event.ADD;
+                packet.event = MobEffectPacket.Event.ADD;
                 player.dataPacket(packet);
             }
         }
@@ -1144,7 +1144,7 @@ public abstract class Entity extends Location implements Metadatable, EntityID, 
                 }
                 //复活图腾实现
                 if (totem) {
-                    this.getLevel().addLevelEvent(this, LevelEventPacket.EVENT_SOUND_TOTEM);
+                    this.getLevel().addLevelEvent(this, LevelEventPacket.Event.SOUND_TOTEM);
                     this.getLevel().addParticleEffect(this, ParticleEffect.TOTEM);
 
                     this.extinguish();

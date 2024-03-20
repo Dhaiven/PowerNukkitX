@@ -52,7 +52,6 @@ public class MovePlayerPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityRuntimeId(this.eid);
         byteBuf.writeVector3f(this.x, this.y, this.z);
         byteBuf.writeFloatLE(this.pitch);

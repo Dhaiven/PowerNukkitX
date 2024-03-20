@@ -9,7 +9,6 @@ import cn.nukkit.network.protocol.types.PlayerPermission;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class RequestPermissionsPacket extends DataPacket {
     //权限列表中可控制的能力
     public static final PlayerAbility[] CONTROLLABLE_ABILITIES = new PlayerAbility[]{

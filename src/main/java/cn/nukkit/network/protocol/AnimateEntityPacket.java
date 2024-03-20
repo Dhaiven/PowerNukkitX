@@ -2,7 +2,9 @@ package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,8 @@ import java.util.List;
 /**
  * @author IWareQ
  */
-
-
+@Getter
+@Setter
 @NoArgsConstructor(onConstructor = @__())
 public class AnimateEntityPacket extends DataPacket {
 
@@ -38,7 +40,6 @@ public class AnimateEntityPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(this.animation);
 		byteBuf.writeString(this.nextState);
         byteBuf.writeString(this.stopExpression);
@@ -54,62 +55,6 @@ public class AnimateEntityPacket extends DataPacket {
     @Override
     public int pid() {
         return ProtocolInfo.ANIMATE_ENTITY_PACKET;
-    }
-
-    public String getAnimation() {
-        return this.animation;
-    }
-
-    public void setAnimation(String animation) {
-        this.animation = animation;
-    }
-
-    public String getNextState() {
-        return this.nextState;
-    }
-
-    public void setNextState(String nextState) {
-        this.nextState = nextState;
-    }
-
-    public String getStopExpression() {
-        return this.stopExpression;
-    }
-
-    public void setStopExpression(String stopExpression) {
-        this.stopExpression = stopExpression;
-    }
-
-    public String getController() {
-        return this.controller;
-    }
-
-    public void setController(String controller) {
-        this.controller = controller;
-    }
-
-    public float getBlendOutTime() {
-        return this.blendOutTime;
-    }
-
-    public void setBlendOutTime(float blendOutTime) {
-        this.blendOutTime = blendOutTime;
-    }
-
-    public List<Long> getEntityRuntimeIds() {
-        return this.entityRuntimeIds;
-    }
-
-    public void setEntityRuntimeIds(List<Long> entityRuntimeIds) {
-        this.entityRuntimeIds = entityRuntimeIds;
-    }
-
-    public int getStopExpressionVersion() {
-        return stopExpressionVersion;
-    }
-
-    public void setStopExpressionVersion(int stopExpressionVersion) {
-        this.stopExpressionVersion = stopExpressionVersion;
     }
 
     /**

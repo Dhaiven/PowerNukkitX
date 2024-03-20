@@ -21,7 +21,6 @@ public class NetworkStackLatencyPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeLongLE(timestamp);
         byteBuf.writeBoolean(unknownBool);
     }

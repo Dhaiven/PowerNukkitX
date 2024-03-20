@@ -432,7 +432,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             if (miningTimeRequired > 0) {
                 int breakTick = (int) Math.ceil(miningTimeRequired * 20);
                 LevelEventPacket pk = new LevelEventPacket();
-                pk.evid = LevelEventPacket.EVENT_BLOCK_UPDATE_BREAK;
+                pk.evid = LevelEventPacket.Event.BLOCK_UPDATE_BREAK;
                 pk.x = (float) this.breakingBlock.x;
                 pk.y = (float) this.breakingBlock.y;
                 pk.z = (float) this.breakingBlock.z;
@@ -509,7 +509,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             int breakTime = (int) Math.ceil(miningTimeRequired * 20);
             if (breakTime > 0) {
                 LevelEventPacket pk = new LevelEventPacket();
-                pk.evid = LevelEventPacket.EVENT_BLOCK_START_BREAK;
+                pk.evid = LevelEventPacket.Event.BLOCK_START_BREAK;
                 pk.x = (float) pos.x;
                 pk.y = (float) pos.y;
                 pk.z = (float) pos.z;
@@ -527,7 +527,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     protected void onBlockBreakAbort(Vector3 pos, BlockFace face) {
         if (pos.distanceSquared(this) < 100) {// same as with ACTION_START_BREAK
             LevelEventPacket pk = new LevelEventPacket();
-            pk.evid = LevelEventPacket.EVENT_BLOCK_STOP_BREAK;
+            pk.evid = LevelEventPacket.Event.BLOCK_STOP_BREAK;
             pk.x = (float) pos.x;
             pk.y = (float) pos.y;
             pk.z = (float) pos.z;
@@ -586,7 +586,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     private void setTitle(String text) {
         SetTitlePacket packet = new SetTitlePacket();
         packet.text = text;
-        packet.type = SetTitlePacket.TYPE_TITLE;
+        packet.type = SetTitlePacket.Type.TITLE;
         this.dataPacket(packet);
     }
 
@@ -709,7 +709,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
         //update compass
         SetSpawnPositionPacket pk = new SetSpawnPositionPacket();
-        pk.spawnType = SetSpawnPositionPacket.TYPE_WORLD_SPAWN;
+        pk.spawnType = SetSpawnPositionPacket.Type.WORLD_SPAWN;
         pk.x = this.level.getSpawnLocation().getFloorX();
         pk.y = this.level.getSpawnLocation().getFloorY();
         pk.z = this.level.getSpawnLocation().getFloorZ();
@@ -2182,7 +2182,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
         this.spawnPoint = new Position(pos.x, pos.y, pos.z, level);
         this.spawnPointType = spawnPointType;
         SetSpawnPositionPacket pk = new SetSpawnPositionPacket();
-        pk.spawnType = SetSpawnPositionPacket.TYPE_PLAYER_SPAWN;
+        pk.spawnType = SetSpawnPositionPacket.Type.PLAYER_SPAWN;
         pk.x = (int) this.spawnPoint.x;
         pk.y = (int) this.spawnPoint.y;
         pk.z = (int) this.spawnPoint.z;
@@ -2211,7 +2211,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             this.needDimensionChangeACK = false;
 
             PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-            playerActionPacket.action = PlayerActionPacket.ACTION_DIMENSION_CHANGE_ACK;
+            playerActionPacket.action = PlayerActionPacket.Action.DIMENSION_CHANGE_ACK;
             playerActionPacket.entityId = this.getId();
             this.dataPacket(playerActionPacket);
         }
@@ -3000,7 +3000,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     @Override
     public void sendMessage(String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_RAW;
+        pk.type = TextPacket.Type.RAW;
         pk.message = this.server.getLanguage().tr(message);
         this.dataPacket(pk);
     }
@@ -3036,7 +3036,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void sendRawTextMessage(RawText text) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_OBJECT;
+        pk.type = TextPacket.Type.OBJECT;
         pk.message = text.toRawText();
         this.dataPacket(pk);
     }
@@ -3061,14 +3061,14 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     public void sendTranslation(String message, String[] parameters) {
         TextPacket pk = new TextPacket();
         if (!this.server.isLanguageForced()) {
-            pk.type = TextPacket.TYPE_TRANSLATION;
+            pk.type = TextPacket.Type.TRANSLATION;
             pk.message = this.server.getLanguage().tr(message, parameters, "nukkit.", true);
             for (int i = 0; i < parameters.length; i++) {
                 parameters[i] = this.server.getLanguage().tr(parameters[i], parameters, "nukkit.", true);
             }
             pk.parameters = parameters;
         } else {
-            pk.type = TextPacket.TYPE_RAW;
+            pk.type = TextPacket.Type.RAW;
             pk.message = this.server.getLanguage().tr(message, parameters);
         }
         this.dataPacket(pk);
@@ -3090,7 +3090,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void sendChat(String source, String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_CHAT;
+        pk.type = TextPacket.Type.CHAT;
         pk.source = source;
         pk.message = this.server.getLanguage().tr(message);
         this.dataPacket(pk);
@@ -3113,7 +3113,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     // TODO: Support Translation Parameters
     public void sendPopup(String message, String subtitle) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_POPUP;
+        pk.type = TextPacket.Type.POPUP;
         pk.message = message;
         this.dataPacket(pk);
     }
@@ -3127,7 +3127,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void sendTip(String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_TIP;
+        pk.type = TextPacket.Type.TIP;
         pk.message = message;
         this.dataPacket(pk);
     }
@@ -3139,7 +3139,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void clearTitle() {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_CLEAR;
+        pk.type = SetTitlePacket.Type.CLEAR;
         this.dataPacket(pk);
     }
 
@@ -3150,7 +3150,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void resetTitleSettings() {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_RESET;
+        pk.type = SetTitlePacket.Type.RESET;
         this.dataPacket(pk);
     }
 
@@ -3163,7 +3163,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void setSubtitle(String subtitle) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_SUBTITLE;
+        pk.type = SetTitlePacket.Type.SUBTITLE;
         pk.text = subtitle;
         this.dataPacket(pk);
     }
@@ -3178,7 +3178,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void setRawTextSubTitle(RawText text) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_SUBTITLE_JSON;
+        pk.type = SetTitlePacket.Type.SUBTITLE_JSON;
         pk.text = text.toRawText();
         this.dataPacket(pk);
     }
@@ -3194,7 +3194,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void setTitleAnimationTimes(int fadein, int duration, int fadeout) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_ANIMATION_TIMES;
+        pk.type = SetTitlePacket.Type.ANIMATION_TIMES;
         pk.fadeInTime = fadein;
         pk.stayTime = duration;
         pk.fadeOutTime = fadeout;
@@ -3211,7 +3211,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void setRawTextTitle(RawText text) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_TITLE_JSON;
+        pk.type = SetTitlePacket.Type.TITLE_JSON;
         pk.text = text.toRawText();
         this.dataPacket(pk);
     }
@@ -3277,7 +3277,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
      */
     public void sendActionBar(String title, int fadein, int duration, int fadeout) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_ACTION_BAR;
+        pk.type = SetTitlePacket.Type.ACTION_BAR;
         pk.text = title;
         pk.fadeInTime = fadein;
         pk.stayTime = duration;
@@ -3308,7 +3308,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void setRawTextActionBar(RawText text, int fadein, int duration, int fadeout) {
         SetTitlePacket pk = new SetTitlePacket();
-        pk.type = SetTitlePacket.TYPE_ACTIONBAR_JSON;
+        pk.type = SetTitlePacket.Type.ACTIONBAR_JSON;
         pk.text = text.toRawText();
         pk.fadeInTime = fadein;
         pk.stayTime = duration;
@@ -3754,7 +3754,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             pk.x = (float) pos.x;
             pk.y = (float) pos.y;
             pk.z = (float) pos.z;
-            pk.respawnState = RespawnPacket.STATE_SEARCHING_FOR_SPAWN;
+            pk.respawnState = RespawnPacket.State.SEARCHING_FOR_SPAWN;
             pk.runtimeEntityId = this.getId();
             this.dataPacket(pk);
         }
@@ -4695,7 +4695,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
         Level oldLevel = this.level;
         if (super.switchLevel(level)) {
             SetSpawnPositionPacket spawnPosition = new SetSpawnPositionPacket();
-            spawnPosition.spawnType = SetSpawnPositionPacket.TYPE_WORLD_SPAWN;
+            spawnPosition.spawnType = SetSpawnPositionPacket.Type.WORLD_SPAWN;
             Position spawn = level.getSpawnLocation();
             spawnPosition.x = spawn.getFloorX();
             spawnPosition.y = spawn.getFloorY();
@@ -4930,7 +4930,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             if (xpOrb.getPickupDelay() <= 0) {
                 int exp = xpOrb.getExp();
                 entity.kill();
-                this.getLevel().addLevelEvent(LevelEventPacket.EVENT_SOUND_EXPERIENCE_ORB, 0, this);
+                this.getLevel().addLevelEvent(LevelEventPacket.Event.SOUND_EXPERIENCE_ORB, 0, this);
                 pickedXPOrb = tick;
 
                 //Mending
@@ -5098,14 +5098,14 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
     // TODO: Support Translation Parameters
     public void sendPopupJukebox(String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_JUKEBOX_POPUP;
+        pk.type = TextPacket.Type.JUKEBOX_POPUP;
         pk.message = message;
         this.dataPacket(pk);
     }
 
     public void sendSystem(String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_SYSTEM;
+        pk.type = TextPacket.Type.SYSTEM;
         pk.message = message;
         this.dataPacket(pk);
     }
@@ -5118,7 +5118,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void sendWhisper(String source, String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_WHISPER;
+        pk.type = TextPacket.Type.WHISPER;
         pk.source = source;
         pk.message = message;
         this.dataPacket(pk);
@@ -5132,7 +5132,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
 
     public void sendAnnouncement(String source, String message) {
         TextPacket pk = new TextPacket();
-        pk.type = TextPacket.TYPE_ANNOUNCEMENT;
+        pk.type = TextPacket.Type.ANNOUNCEMENT;
         pk.source = source;
         pk.message = message;
         this.dataPacket(pk);
@@ -5157,7 +5157,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
         if (showingCredits) {
             ShowCreditsPacket pk = new ShowCreditsPacket();
             pk.eid = this.getId();
-            pk.status = ShowCreditsPacket.STATUS_START_CREDITS;
+            pk.status = ShowCreditsPacket.Status.START;
             this.dataPacket(pk);
         }
     }

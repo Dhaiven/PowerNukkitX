@@ -1,29 +1,23 @@
 package cn.nukkit.network.protocol;
 
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Tee7even
  */
+@Getter
+@Setter
 @ToString
 public class SetTitlePacket extends DataPacket {
 
     private static final TitleAction[] TITLE_ACTIONS = TitleAction.values();
 
-    public static final int TYPE_CLEAR = 0;
-    public static final int TYPE_RESET = 1;
-    public static final int TYPE_TITLE = 2;
-    public static final int TYPE_SUBTITLE = 3;
-    public static final int TYPE_ACTION_BAR = 4;
-    public static final int TYPE_ANIMATION_TIMES = 5;
-    public static final int TYPE_TITLE_JSON = 6;
-    public static final int TYPE_SUBTITLE_JSON = 7;
-    public static final int TYPE_ACTIONBAR_JSON = 8;
-
-    public int type;
-    public String text = "";
+    public Type type;
+    public @NotNull String text = "";
     public int fadeInTime = 0;
     public int stayTime = 0;
     public int fadeOutTime = 0;
@@ -37,7 +31,7 @@ public class SetTitlePacket extends DataPacket {
 
     @Override
     public void decode(HandleByteBuf byteBuf) {
-        this.type = byteBuf.readVarInt();
+        this.type = Type.values()[byteBuf.readVarInt()];
         this.text = byteBuf.readString();
         this.fadeInTime = byteBuf.readVarInt();
         this.stayTime = byteBuf.readVarInt();
@@ -48,8 +42,7 @@ public class SetTitlePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
-        byteBuf.writeVarInt(type);
+        byteBuf.writeVarInt(type.ordinal());
         byteBuf.writeString(text);
         byteBuf.writeVarInt(fadeInTime);
         byteBuf.writeVarInt(stayTime);
@@ -59,63 +52,24 @@ public class SetTitlePacket extends DataPacket {
     }
 
     @NotNull public TitleAction getTitleAction() {
-        int currentType = this.type;
-        if (currentType >= 0 && currentType < TITLE_ACTIONS.length) {
-            return TITLE_ACTIONS[currentType];
-        }
-        throw new UnsupportedOperationException("Bad type: "+currentType);
+        int currentType = this.type.ordinal();
+        return TITLE_ACTIONS[currentType];
     }
 
     public void setTitleAction(@NotNull TitleAction type) {
-        this.type = type.ordinal();
+        this.type = Type.values()[type.ordinal()];
     }
 
-    @NotNull public String getText() {
-        return text;
-    }
-
-    public void setText(@NotNull String text) {
-        this.text = text;
-    }
-
-    public int getFadeInTime() {
-        return fadeInTime;
-    }
-
-    public void setFadeInTime(int fadeInTime) {
-        this.fadeInTime = fadeInTime;
-    }
-
-    public int getStayTime() {
-        return stayTime;
-    }
-
-    public void setStayTime(int stayTime) {
-        this.stayTime = stayTime;
-    }
-
-    public int getFadeOutTime() {
-        return fadeOutTime;
-    }
-
-    public void setFadeOutTime(int fadeOutTime) {
-        this.fadeOutTime = fadeOutTime;
-    }
-
-    public String getXuid() {
-        return xuid;
-    }
-
-    public void setXuid(String xuid) {
-        this.xuid = xuid;
-    }
-
-    public String getPlatformOnlineId() {
-        return platformOnlineId;
-    }
-
-    public void setPlatformOnlineId(String platformOnlineId) {
-        this.platformOnlineId = platformOnlineId;
+    public enum Type {
+        CLEAR,
+        RESET,
+        TITLE,
+        SUBTITLE,
+        ACTION_BAR,
+        ANIMATION_TIMES,
+        TITLE_JSON,
+        SUBTITLE_JSON,
+        ACTIONBAR_JSON;
     }
 
     public enum TitleAction {

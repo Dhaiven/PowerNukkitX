@@ -49,7 +49,6 @@ public class MoveEntityAbsolutePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeEntityRuntimeId(this.eid);
         byte flags = 0;
         if (onGround) {
@@ -61,11 +60,15 @@ public class MoveEntityAbsolutePacket extends DataPacket {
         if (forceMoveLocalEntity) {
             flags |= 0x04;
         }
-        this.putByte(flags);
-        this.putVector3f((float) this.x, (float) this.y, (float) this.z);
-        this.putByte((byte) (this.pitch / (360d / 256d)));
-        this.putByte((byte) (this.headYaw / (360d / 256d)));
-        this.putByte((byte) (this.yaw / (360d / 256d)));
+        byteBuf.writeByte(flags);
+        byteBuf.writeVector3f((float) this.x, (float) this.y, (float) this.z);
+        byteBuf.writeByte((byte) (this.pitch / (360d / 256d)));
+        byteBuf.writeByte((byte) (this.headYaw / (360d / 256d)));
+        byteBuf.writeByte((byte) (this.yaw / (360d / 256d)));
+    }
+
+    public void handle(PacketHandler handler) {
+        handler.handle(this);
     }
     
     @Getter

@@ -474,7 +474,7 @@ public abstract class BlockLiquid extends BlockTransparent {
 
     protected void triggerLavaMixEffects(Vector3 pos) {
         Random random = ThreadLocalRandom.current();
-        this.getLevel().addLevelEvent(pos.add(0.5, 0.5, 0.5), LevelEventPacket.EVENT_SOUND_FIZZ, (int) ((random.nextFloat() - random.nextFloat()) * 800) + 2600);
+        this.getLevel().addLevelEvent(pos.add(0.5, 0.5, 0.5), LevelEventPacket.Event.SOUND_FIZZ, (int) ((random.nextFloat() - random.nextFloat()) * 800) + 2600);
 
         for (int i = 0; i < 8; ++i) {
             this.getLevel().addParticle(new SmokeParticle(pos.add(Math.random(), 1.2, Math.random())));

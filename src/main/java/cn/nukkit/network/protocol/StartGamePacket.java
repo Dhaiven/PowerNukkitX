@@ -24,12 +24,6 @@ import java.util.UUID;
 @ToString
 public class StartGamePacket extends DataPacket {
 
-    public static final int GAME_PUBLISH_SETTING_NO_MULTI_PLAY = 0;
-    public static final int GAME_PUBLISH_SETTING_INVITE_ONLY = 1;
-    public static final int GAME_PUBLISH_SETTING_FRIENDS_ONLY = 2;
-    public static final int GAME_PUBLISH_SETTING_FRIENDS_OF_FRIENDS = 3;
-    public static final int GAME_PUBLISH_SETTING_PUBLIC = 4;
-
     @Override
     public int pid() {
         return ProtocolInfo.START_GAME_PACKET;
@@ -62,8 +56,8 @@ public class StartGamePacket extends DataPacket {
     public boolean hasConfirmedPlatformLockedContent = false;
     public boolean multiplayerGame = true;
     public boolean broadcastToLAN = true;
-    public int xblBroadcastIntent = GAME_PUBLISH_SETTING_PUBLIC;
-    public int platformBroadcastIntent = GAME_PUBLISH_SETTING_PUBLIC;
+    public PublishSettings xblBroadcastIntent = PublishSettings.PUBLIC;
+    public PublishSettings platformBroadcastIntent = PublishSettings.PUBLIC;
     public boolean commandsEnabled;
     public boolean isTexturePacksRequired = false;
 
@@ -146,7 +140,6 @@ public class StartGamePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeEntityUniqueId(this.entityUniqueId);
         byteBuf.writeEntityRuntimeId(this.entityRuntimeId);
         byteBuf.writeVarInt(this.playerGamemode);
@@ -175,8 +168,8 @@ public class StartGamePacket extends DataPacket {
         byteBuf.writeBoolean(this.hasConfirmedPlatformLockedContent);
         byteBuf.writeBoolean(this.multiplayerGame);
         byteBuf.writeBoolean(this.broadcastToLAN);
-        byteBuf.writeVarInt(this.xblBroadcastIntent);
-        byteBuf.writeVarInt(this.platformBroadcastIntent);
+        byteBuf.writeVarInt(this.xblBroadcastIntent.ordinal());
+        byteBuf.writeVarInt(this.platformBroadcastIntent.ordinal());
         byteBuf.writeBoolean(this.commandsEnabled);
         byteBuf.writeBoolean(this.isTexturePacksRequired);
         byteBuf.writeGameRules(this.gameRules);
@@ -264,6 +257,14 @@ public class StartGamePacket extends DataPacket {
         byteBuf.writeBoolean(this.clientSideGenerationEnabled);
         byteBuf.writeBoolean(this.blockNetworkIdsHashed); // blockIdsAreHashed
         byteBuf.writeBoolean(this.isSoundsServerAuthoritative); // serverAuthSounds
+    }
+
+    public enum PublishSettings {
+        NO_MULTI_PLAY,
+        INVITE_ONLY,
+        FRIENDS_ONLY,
+        FRIENDS_OF_FRIENDS,
+        PUBLIC;
     }
 
     public void handle(PacketHandler handler) {

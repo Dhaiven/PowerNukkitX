@@ -4,16 +4,14 @@ import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.network.protocol.types.EduSharedUriResource;
 import lombok.ToString;
 
-
 @ToString
 public class EduUriResourcePacket extends DataPacket {
 
     public EduSharedUriResource eduSharedUriResource;
 
-
     @Override
     public int pid() {
-        return  ProtocolInfo.EDU_URI_RESOURCE_PACKET;
+        return ProtocolInfo.EDU_URI_RESOURCE_PACKET;
     }
 
     @Override
@@ -25,7 +23,6 @@ public class EduUriResourcePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(eduSharedUriResource.buttonName());
         byteBuf.writeString(eduSharedUriResource.linkUri());
     }

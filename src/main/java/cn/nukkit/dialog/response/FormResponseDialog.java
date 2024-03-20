@@ -17,7 +17,7 @@ public class FormResponseDialog {
     private int skinType;
 
     public FormResponseDialog(NPCRequestPacket packet, FormWindowDialog dialog) {
-        this.entityRuntimeId = packet.getRequestedEntityRuntimeId();
+        this.entityRuntimeId = packet.getEntityRuntimeId();
         this.data = packet.getData();
         try {
             this.clickedButton = dialog.getButtons().get(packet.getSkinType());

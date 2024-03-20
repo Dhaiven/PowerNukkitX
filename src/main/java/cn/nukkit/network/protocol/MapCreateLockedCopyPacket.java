@@ -20,7 +20,6 @@ public class MapCreateLockedCopyPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeVarLong(this.originalMapId);
         byteBuf.writeVarLong(this.newMapId);
     }

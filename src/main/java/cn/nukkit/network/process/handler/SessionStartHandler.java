@@ -7,6 +7,7 @@ import cn.nukkit.network.protocol.NetworkSettingsPacket;
 import cn.nukkit.network.protocol.PlayStatusPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.network.protocol.RequestNetworkSettingsPacket;
+import cn.nukkit.network.protocol.Status;
 import cn.nukkit.network.protocol.types.PacketCompressionAlgorithm;
 
 public class SessionStartHandler extends BedrockSessionPacketHandler {
@@ -18,7 +19,7 @@ public class SessionStartHandler extends BedrockSessionPacketHandler {
     public void handle(RequestNetworkSettingsPacket pk) {
         int protocol = pk.protocolVersion;
         if (protocol != ProtocolInfo.CURRENT_PROTOCOL) {
-            session.sendPlayStatus(protocol < ProtocolInfo.CURRENT_PROTOCOL ? PlayStatusPacket.LOGIN_FAILED_CLIENT : PlayStatusPacket.LOGIN_FAILED_SERVER, true);
+            session.sendPlayStatus(protocol < ProtocolInfo.CURRENT_PROTOCOL ? Status.LOGIN_FAILED_CLIENT : Status.LOGIN_FAILED_SERVER, true);
             var message = protocol < ProtocolInfo.CURRENT_PROTOCOL ? "disconnectionScreen.outdatedClient" : "disconnectionScreen.outdatedServer";
             session.close(message);
             return;
