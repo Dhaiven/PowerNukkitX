@@ -6,8 +6,8 @@ import lombok.ToString;
 @ToString
 public class PacketViolationWarningPacket extends DataPacket {
 
-    public PacketViolationType type;
-    public PacketViolationSeverity severity;
+    public Type type;
+    public Severity severity;
     public int packetId;
     public String context;
 
@@ -18,8 +18,8 @@ public class PacketViolationWarningPacket extends DataPacket {
 
     @Override
     public void decode(HandleByteBuf byteBuf) {
-        this.type = PacketViolationType.values()[byteBuf.readVarInt() + 1];
-        this.severity = PacketViolationSeverity.values()[byteBuf.readVarInt()];
+        this.type = Type.values()[byteBuf.readVarInt() + 1];
+        this.severity = Severity.values()[byteBuf.readVarInt()];
         this.packetId = byteBuf.readVarInt();
         this.context = byteBuf.readString();
     }
@@ -32,12 +32,12 @@ public class PacketViolationWarningPacket extends DataPacket {
         byteBuf.writeString(this.context);
     }
 
-    public enum PacketViolationType {
+    public enum Type {
         UNKNOWN,
         MALFORMED_PACKET
     }
 
-    public enum PacketViolationSeverity {
+    public enum Severity {
         UNKNOWN,
         WARNING,
         FINAL_WARNING,

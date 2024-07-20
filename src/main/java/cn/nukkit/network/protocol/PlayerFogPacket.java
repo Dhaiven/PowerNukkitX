@@ -9,7 +9,6 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @ToString
 public class PlayerFogPacket extends DataPacket {
 
@@ -39,8 +38,7 @@ public class PlayerFogPacket extends DataPacket {
      * @param identifier 这个迷雾的命名空间id
      * @param userProvidedId 用户指定的特征id
      */
-    public record Fog(Identifier identifier, String userProvidedId){
-
+    public record Fog(Identifier identifier, String userProvidedId) {
     }
 
     public void handle(PacketHandler handler) {

@@ -43,7 +43,7 @@ public class EnchantInventory extends ContainerInventory implements BlockEntityI
         if (index == 0) {
             if (before.isNull()) {
                 for (final Player viewer : this.getViewers()) {
-                    List<PlayerEnchantOptionsPacket.EnchantOptionData> options = EnchantmentHelper.getEnchantOptions(this.getHolder(), this.getFirst(), viewer.getEnchantmentSeed());
+                    List<PlayerEnchantOptionsPacket.Data> options = EnchantmentHelper.getEnchantOptions(this.getHolder(), this.getFirst(), viewer.getEnchantmentSeed());
                     PlayerEnchantOptionsRequestEvent event = new PlayerEnchantOptionsRequestEvent(viewer, this, options);
                     if (!event.isCancelled() && !event.getOptions().isEmpty()) {
                         PlayerEnchantOptionsPacket pk = new PlayerEnchantOptionsPacket();

@@ -23,7 +23,6 @@ public class RemoveEntityPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-
         byteBuf.writeEntityUniqueId(this.eid);
     }
 

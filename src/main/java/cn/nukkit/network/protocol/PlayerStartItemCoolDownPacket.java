@@ -1,9 +1,13 @@
 package cn.nukkit.network.protocol;
 
-
 import cn.nukkit.network.connection.util.HandleByteBuf;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class PlayerStartItemCoolDownPacket extends DataPacket {
+
     private String itemCategory;
     private int coolDownDuration;
 
@@ -22,22 +26,6 @@ public class PlayerStartItemCoolDownPacket extends DataPacket {
     public void encode(HandleByteBuf byteBuf) {
         byteBuf.writeString(itemCategory);
         byteBuf.writeVarInt(coolDownDuration);
-    }
-
-    public String getItemCategory() {
-        return itemCategory;
-    }
-
-    public void setItemCategory(String itemCategory) {
-        this.itemCategory = itemCategory;
-    }
-
-    public int getCoolDownDuration() {
-        return coolDownDuration;
-    }
-
-    public void setCoolDownDuration(int coolDownDuration) {
-        this.coolDownDuration = coolDownDuration;
     }
 
     public void handle(PacketHandler handler) {

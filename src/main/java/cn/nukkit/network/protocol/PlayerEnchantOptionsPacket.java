@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 @ToString
 public class PlayerEnchantOptionsPacket extends DataPacket {
 
-    public static final ConcurrentHashMap<Integer, EnchantOptionData> RECIPE_MAP = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Integer, Data> RECIPE_MAP = new ConcurrentHashMap<>();
     public static final int ENCH_RECIPEID = 100000;
-    public List<EnchantOptionData> options = new ArrayList<>();
+    public List<Data> options = new ArrayList<>();
     private static final AtomicInteger ENCH_RECIPE_NETID = new AtomicInteger(ENCH_RECIPEID);
 
     @Override
@@ -30,9 +29,8 @@ public class PlayerEnchantOptionsPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeUnsignedVarInt(this.options.size());
-        for (EnchantOptionData option : this.options) {
+        for (Data option : this.options) {
             byteBuf.writeVarInt(option.minLevel());
             byteBuf.writeInt(0);
             byteBuf.writeUnsignedVarInt(option.enchantments.size());
@@ -49,9 +47,7 @@ public class PlayerEnchantOptionsPacket extends DataPacket {
         }
     }
 
-    public record EnchantOptionData(
-            int minLevel, String enchantName, List<Enchantment> enchantments
-    ) {
+    public record Data(int minLevel, String enchantName, List<Enchantment> enchantments) {
     }
 
     public void handle(PacketHandler handler) {

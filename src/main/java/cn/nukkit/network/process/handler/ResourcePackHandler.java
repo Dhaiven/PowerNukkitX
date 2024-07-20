@@ -25,8 +25,8 @@ public class ResourcePackHandler extends BedrockSessionPacketHandler {
     public void handle(ResourcePackClientResponsePacket pk) {
         var server = session.getServer();
         switch (pk.responseStatus) {
-            case ResourcePackClientResponsePacket.STATUS_REFUSED -> this.session.close("disconnectionScreen.noReason");
-            case ResourcePackClientResponsePacket.STATUS_SEND_PACKS -> {
+            case REFUSED -> this.session.close("disconnectionScreen.noReason");
+            case SEND_PACKS -> {
                 for (ResourcePackClientResponsePacket.Entry entry : pk.packEntries) {
                     ResourcePack resourcePack = server.getResourcePackManager().getPackById(entry.uuid());
                     if (resourcePack == null) {
@@ -44,7 +44,7 @@ public class ResourcePackHandler extends BedrockSessionPacketHandler {
                     session.sendPacket(dataInfoPacket);
                 }
             }
-            case ResourcePackClientResponsePacket.STATUS_HAVE_ALL_PACKS -> {
+            case HAVE_ALL_PACKS -> {
                 ResourcePackStackPacket stackPacket = new ResourcePackStackPacket();
                 stackPacket.mustAccept = server.getForceResources() && !server.getForceResourcesAllowOwnPacks();
                 stackPacket.resourcePackStack = server.getResourcePackManager().getResourceStack();
@@ -68,7 +68,7 @@ public class ResourcePackHandler extends BedrockSessionPacketHandler {
                 );
                 session.sendPacket(stackPacket);
             }
-            case ResourcePackClientResponsePacket.STATUS_COMPLETED ->
+            case COMPLETED ->
                     this.session.getMachine().fire(SessionState.PRE_SPAWN);
         }
     }

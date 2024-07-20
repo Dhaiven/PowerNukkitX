@@ -3,7 +3,6 @@ package cn.nukkit.network.protocol;
 import cn.nukkit.network.connection.util.HandleByteBuf;
 import cn.nukkit.network.protocol.types.CommandOriginData;
 import cn.nukkit.network.protocol.types.CommandOutputMessage;
-import cn.nukkit.network.protocol.types.CommandOutputType;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.ToString;
 
@@ -14,7 +13,7 @@ public class CommandOutputPacket extends DataPacket {
 
     public final List<CommandOutputMessage> messages = new ObjectArrayList<>();
     public CommandOriginData commandOriginData;
-    public CommandOutputType type;
+    public Type type;
     public int successCount;
     public String data;
 
@@ -49,9 +48,17 @@ public class CommandOutputPacket extends DataPacket {
                 byteBuf.writeString(param);
             }
         }
-        if (this.type == CommandOutputType.DATA_SET) {
+        if (this.type == Type.DATA_SET) {
             byteBuf.writeString(this.data);// unknown
         }
+    }
+
+    public enum Type {
+        NONE,
+        LAST_OUTPUT,
+        SILENT,
+        ALL_OUTPUT,
+        DATA_SET
     }
 
     public void handle(PacketHandler handler) {

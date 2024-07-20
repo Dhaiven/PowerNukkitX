@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public final class EnchantmentHelper {
     private static final int MAX_BOOKSHELF_COUNT = 15;
 
-    public static List<PlayerEnchantOptionsPacket.EnchantOptionData> getEnchantOptions(Position tablePos, Item input, int seed) {
+    public static List<PlayerEnchantOptionsPacket.Data> getEnchantOptions(Position tablePos, Item input, int seed) {
         if (input == null || input.hasEnchantments()) {
             return Collections.emptyList();
         }
@@ -75,7 +75,7 @@ public final class EnchantmentHelper {
         return bookshelfCount;
     }
 
-    private static PlayerEnchantOptionsPacket.EnchantOptionData createEnchantOption(NukkitRandom random, Item inputItem, int requiredXpLevel) {
+    private static PlayerEnchantOptionsPacket.Data createEnchantOption(NukkitRandom random, Item inputItem, int requiredXpLevel) {
         int enchantingPower = requiredXpLevel;
 
         int enchantability = inputItem.getEnchantAbility();
@@ -111,7 +111,7 @@ public final class EnchantmentHelper {
                 enchantingPower /= 2;
             }
         }
-        return new PlayerEnchantOptionsPacket.EnchantOptionData(requiredXpLevel, getRandomOptionName(random), resultEnchantments);
+        return new PlayerEnchantOptionsPacket.Data(requiredXpLevel, getRandomOptionName(random), resultEnchantments);
     }
 
     private static List<Enchantment> getAvailableEnchantments(int enchantingPower, Item item) {

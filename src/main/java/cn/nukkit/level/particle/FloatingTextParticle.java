@@ -132,7 +132,7 @@ public class FloatingTextParticle extends Particle {
             };
             PlayerListPacket playerAdd = new PlayerListPacket();
             playerAdd.entries = entry;
-            playerAdd.type = PlayerListPacket.TYPE_ADD;
+            playerAdd.type = PlayerListPacket.Type.ADD;
             packets.add(playerAdd);
 
             AddPlayerPacket pk = new AddPlayerPacket();
@@ -154,7 +154,7 @@ public class FloatingTextParticle extends Particle {
 
             PlayerListPacket playerRemove = new PlayerListPacket();
             playerRemove.entries = entry;
-            playerRemove.type = PlayerListPacket.TYPE_REMOVE;
+            playerRemove.type = PlayerListPacket.Type.REMOVE;
             packets.add(playerRemove);
         }
 

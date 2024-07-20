@@ -14,7 +14,6 @@ public class RemoveVolumeEntityPacket extends DataPacket {
      */
     private int dimension;
 
-
     public RemoveVolumeEntityPacket() {
         // Does nothing
     }

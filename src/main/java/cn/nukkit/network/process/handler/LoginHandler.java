@@ -6,7 +6,6 @@ import cn.nukkit.network.connection.BedrockSession;
 import cn.nukkit.network.connection.util.EncryptionUtils;
 import cn.nukkit.network.process.SessionState;
 import cn.nukkit.network.protocol.LoginPacket;
-import cn.nukkit.network.protocol.PlayStatusPacket;
 import cn.nukkit.network.protocol.ServerToClientHandshakePacket;
 import cn.nukkit.network.protocol.Status;
 import cn.nukkit.player.info.PlayerInfo;

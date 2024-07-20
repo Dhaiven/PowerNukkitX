@@ -13,10 +13,7 @@ import java.util.UUID;
 @ToString
 public class PlayerListPacket extends DataPacket {
 
-    public static final byte TYPE_ADD = 0;
-    public static final byte TYPE_REMOVE = 1;
-
-    public byte type;
+    public Type type;
     public Entry[] entries = Entry.EMPTY_ARRAY;
 
     @Override
@@ -26,11 +23,10 @@ public class PlayerListPacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
-        byteBuf.writeByte(this.type);
+        byteBuf.writeByte(this.type.ordinal());
         byteBuf.writeUnsignedVarInt(this.entries.length);
 
-        if (this.type == TYPE_ADD) {
+        if (this.type == Type.ADD) {
             for (Entry entry : this.entries) {
                 byteBuf.writeUUID(entry.uuid);
 
@@ -93,6 +89,11 @@ public class PlayerListPacket extends DataPacket {
             this.trustedSkin = skin.isTrusted();
             this.xboxUserId = xboxUserId == null ? "" : xboxUserId;
         }
+    }
+
+    public enum Type {
+        ADD,
+        REMOVE;
     }
 
     public void handle(PacketHandler handler) {

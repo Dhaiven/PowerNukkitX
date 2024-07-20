@@ -18,8 +18,6 @@ import java.io.IOException;
 /**
  * @author joserobjr
  */
-
-
 @ToString
 @NoArgsConstructor(onConstructor = @__())
 public class PositionTrackingDBServerBroadcastPacket extends DataPacket {
@@ -138,14 +136,8 @@ public class PositionTrackingDBServerBroadcastPacket extends DataPacket {
     }
 
     public enum Action {
-
-
         UPDATE,
-
-
         DESTROY,
-
-
         NOT_FOUND
     }
 

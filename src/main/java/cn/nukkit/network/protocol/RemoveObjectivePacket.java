@@ -1,6 +1,5 @@
 package cn.nukkit.network.protocol;
 
-
 import cn.nukkit.network.connection.util.HandleByteBuf;
 
 public class RemoveObjectivePacket extends DataPacket {
@@ -19,7 +18,6 @@ public class RemoveObjectivePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        
         byteBuf.writeString(this.objectiveName);
     }
 

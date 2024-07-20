@@ -8,17 +8,12 @@ import java.util.UUID;
 @ToString
 public class ResourcePackClientResponsePacket extends DataPacket {
 
-    public static final byte STATUS_REFUSED = 1;
-    public static final byte STATUS_SEND_PACKS = 2;
-    public static final byte STATUS_HAVE_ALL_PACKS = 3;
-    public static final byte STATUS_COMPLETED = 4;
-
-    public byte responseStatus;
+    public Status responseStatus;
     public Entry[] packEntries;
 
     @Override
     public void decode(HandleByteBuf byteBuf) {
-        this.responseStatus = (byte) byteBuf.readByte();
+        this.responseStatus = Status.values()[byteBuf.readByte() - 1];
         this.packEntries = new Entry[byteBuf.readShortLE()];
         for (int i = 0; i < this.packEntries.length; i++) {
             String[] entry = byteBuf.readString().split("_");
@@ -28,7 +23,7 @@ public class ResourcePackClientResponsePacket extends DataPacket {
 
     @Override
     public void encode(HandleByteBuf byteBuf) {
-        byteBuf.writeByte(this.responseStatus);
+        byteBuf.writeByte(this.responseStatus.ordinal() + 1);
         byteBuf.writeShortLE(this.packEntries.length);
         for (Entry entry : this.packEntries) {
             byteBuf.writeString(entry.uuid.toString() + '_' + entry.version);
@@ -42,6 +37,13 @@ public class ResourcePackClientResponsePacket extends DataPacket {
 
     public record Entry (UUID uuid, String version) {
 
+    }
+
+    public enum Status {
+        REFUSED,
+        SEND_PACKS,
+        HAVE_ALL_PACKS,
+        COMPLETED
     }
 
     public void handle(PacketHandler handler) {

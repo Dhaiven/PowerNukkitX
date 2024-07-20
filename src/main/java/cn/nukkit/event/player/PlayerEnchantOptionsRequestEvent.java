@@ -12,9 +12,9 @@ public class PlayerEnchantOptionsRequestEvent extends PlayerEvent implements Can
     private static final HandlerList handlers = new HandlerList();
 
     private EnchantInventory table;
-    private List<PlayerEnchantOptionsPacket.EnchantOptionData> options;
+    private List<PlayerEnchantOptionsPacket.Data> options;
 
-    public PlayerEnchantOptionsRequestEvent(Player player, EnchantInventory table, List<PlayerEnchantOptionsPacket.EnchantOptionData> options) {
+    public PlayerEnchantOptionsRequestEvent(Player player, EnchantInventory table, List<PlayerEnchantOptionsPacket.Data> options) {
         this.player = player;
         this.table = table;
         this.options = options;
@@ -28,11 +28,11 @@ public class PlayerEnchantOptionsRequestEvent extends PlayerEvent implements Can
         return table;
     }
 
-    public void setOptions(List<PlayerEnchantOptionsPacket.EnchantOptionData> options) {
+    public void setOptions(List<PlayerEnchantOptionsPacket.Data> options) {
         this.options = options;
     }
 
-    public List<PlayerEnchantOptionsPacket.EnchantOptionData> getOptions() {
+    public List<PlayerEnchantOptionsPacket.Data> getOptions() {
         return options;
     }
 }

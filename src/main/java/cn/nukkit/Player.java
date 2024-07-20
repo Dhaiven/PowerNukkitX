@@ -1193,9 +1193,6 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             this.server.saveOfflinePlayerData(this.uuid, nbt, true);
         }
 
-        this.sendPlayStatus(Status.LOGIN_SUCCESS);
-        this.server.onPlayerLogin(this);
-
         ListTag<DoubleTag> posList = nbt.getList("Pos", DoubleTag.class);
 
         super.init(this.level.getChunk((int) posList.get(0).data >> 4, (int) posList.get(2).data >> 4, true), nbt);
@@ -3020,7 +3017,7 @@ public class Player extends EntityHuman implements CommandSender, ChunkLoader, I
             var pk = new CommandOutputPacket();
             pk.messages.addAll(container.getMessages());
             pk.commandOriginData = new CommandOriginData(CommandOriginData.Origin.PLAYER, this.getUniqueId(), "", null);//Only players can effect
-            pk.type = CommandOutputType.ALL_OUTPUT;//Useless
+            pk.type = CommandOutputPacket.Type.ALL_OUTPUT;//Useless
             pk.successCount = container.getSuccessCount();//Useless,maybe used for server-client interaction
             this.dataPacket(pk);
         }

@@ -15,8 +15,8 @@ import java.util.List;
 public class EnchantmentTest {
     @Test
     void testEnchantmentHelper(Level level) {
-        List<PlayerEnchantOptionsPacket.EnchantOptionData> enchantOptions1 = EnchantmentHelper.getEnchantOptions(new Position(0, 0, 0, level), Item.get(ItemID.DIAMOND_SWORD), 114514);
-        List<PlayerEnchantOptionsPacket.EnchantOptionData> enchantOptions2 = EnchantmentHelper.getEnchantOptions(new Position(0, 0, 0, level), Item.get(ItemID.DIAMOND_SWORD), 114514);
+        List<PlayerEnchantOptionsPacket.Data> enchantOptions1 = EnchantmentHelper.getEnchantOptions(new Position(0, 0, 0, level), Item.get(ItemID.DIAMOND_SWORD), 114514);
+        List<PlayerEnchantOptionsPacket.Data> enchantOptions2 = EnchantmentHelper.getEnchantOptions(new Position(0, 0, 0, level), Item.get(ItemID.DIAMOND_SWORD), 114514);
         Assertions.assertEquals(enchantOptions1, enchantOptions2);
     }
 }

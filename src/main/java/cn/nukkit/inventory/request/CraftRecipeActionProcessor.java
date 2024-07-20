@@ -33,8 +33,8 @@ public class CraftRecipeActionProcessor implements ItemStackRequestActionProcess
         //handle ench recipe
         if (action.getRecipeNetworkId() >= PlayerEnchantOptionsPacket.ENCH_RECIPEID) {
             EnchantInventory inventory = (EnchantInventory) player.getTopWindow().get();
-            PlayerEnchantOptionsPacket.EnchantOptionData enchantOptionData = PlayerEnchantOptionsPacket.RECIPE_MAP.get(action.getRecipeNetworkId());
-            if (enchantOptionData == null) {
+            PlayerEnchantOptionsPacket.Data Data = PlayerEnchantOptionsPacket.RECIPE_MAP.get(action.getRecipeNetworkId());
+            if (Data == null) {
                 log.error("cant find enchant recipe from netId " + action.getRecipeNetworkId());
                 return context.error();
             }
@@ -44,7 +44,7 @@ public class CraftRecipeActionProcessor implements ItemStackRequestActionProcess
                 return context.error();
             }
             Item item = first.clone().autoAssignStackNetworkId();
-            List<Enchantment> enchantments = enchantOptionData.enchantments();
+            List<Enchantment> enchantments = Data.enchantments();
             item.addEnchantment(enchantments.toArray(Enchantment.EMPTY_ARRAY));
             player.getCreativeOutputInventory().setItem(item);
             PlayerEnchantOptionsPacket.RECIPE_MAP.remove(action.getRecipeNetworkId());
