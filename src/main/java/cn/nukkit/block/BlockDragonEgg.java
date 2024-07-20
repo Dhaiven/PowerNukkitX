@@ -97,7 +97,7 @@ public class BlockDragonEgg extends BlockFallable {
                 pk.x = this.getFloorX();
                 pk.y = this.getFloorY();
                 pk.z = this.getFloorZ();
-                this.getLevel().addChunkPacket(this.getFloorX() >> 4, this.getFloorZ() >> 4, pk);
+                this.getLevel().addChunkPacket(getChunkX(), getChunkZ(), pk);
                 this.getLevel().setBlock(this, get(AIR), true);
                 this.getLevel().setBlock(to, this, true);
                 return;

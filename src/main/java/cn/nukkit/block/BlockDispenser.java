@@ -196,7 +196,6 @@ public class BlockDispenser extends BlockSolid implements RedstoneComponent, Fac
 
     public void dispense() {
         InventoryHolder blockEntity = getBlockEntity();
-
         if (blockEntity == null) {
             return;
         }
@@ -216,6 +215,17 @@ public class BlockDispenser extends BlockSolid implements RedstoneComponent, Fac
             }
         }
 
+        if (target == null) {
+            this.level.addSound(this, Sound.RANDOM_CLICK, 1.0f, 1.2f);
+            getBlockEntity().setDirty();
+            return;
+        }
+
+        DispenseBehavior behavior = getDispenseBehavior(target);
+        if (!(behavior instanceof DropperDispenseBehavior)
+                && !(behavior instanceof FlintAndSteelDispenseBehavior))
+            this.level.addSound(this, Sound.RANDOM_CLICK, 1.0f, 1.0f);
+
         LevelEventPacket pk = new LevelEventPacket();
 
         BlockFace facing = getBlockFace();
@@ -223,25 +233,14 @@ public class BlockDispenser extends BlockSolid implements RedstoneComponent, Fac
         pk.x = 0.5f + facing.getXOffset() * 0.7f;
         pk.y = 0.5f + facing.getYOffset() * 0.7f;
         pk.z = 0.5f + facing.getZOffset() * 0.7f;
-
-        if (target == null) {
-            this.level.addSound(this, Sound.RANDOM_CLICK, 1.0f, 1.2f);
-            getBlockEntity().setDirty();
-            return;
-        } else {
-            if (!(getDispenseBehavior(target) instanceof DropperDispenseBehavior)
-                    && !(getDispenseBehavior(target) instanceof FlintAndSteelDispenseBehavior))
-                this.level.addSound(this, Sound.RANDOM_CLICK, 1.0f, 1.0f);
-        }
-
         pk.evid = LevelEventPacket.EVENT_PARTICLE_SHOOT;
         pk.data = 7;
+
         this.level.addChunkPacket(getChunkX(), getChunkZ(), pk);
 
         Item origin = target;
         target = target.clone();
-
-        DispenseBehavior behavior = getDispenseBehavior(target);
+        
         Item result = behavior.dispense(this, facing, target);
 
         target.count--;

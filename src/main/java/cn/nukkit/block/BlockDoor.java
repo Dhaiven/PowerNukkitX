@@ -146,11 +146,8 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
 
     private void onRedstoneUpdate() {
         if ((this.isOpen() != this.isGettingPower()) && !this.getManualOverride()) {
-            if (this.isOpen() != this.isGettingPower()) {
-                level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, this.isOpen() ? 15 : 0, this.isOpen() ? 0 : 15));
-
-                this.setOpen(null, this.isGettingPower());
-            }
+            level.getServer().getPluginManager().callEvent(new BlockRedstoneEvent(this, this.isOpen() ? 15 : 0, this.isOpen() ? 0 : 15));
+            this.setOpen(null, this.isGettingPower());
         } else if (this.getManualOverride() && (this.isGettingPower() == this.isOpen())) {
             this.setManualOverride(false);
         }
@@ -262,13 +259,13 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
     public boolean onBreak(Item item) {
         this.setManualOverride(false);
         if (isTop()) {
-            Block down = this.down();
-            if (down.getId().equals(this.getId()) && !down.getPropertyValue(CommonBlockProperties.UPPER_BLOCK_BIT)) {
+            Block down = down();
+            if (down.getId().equals(this.getId()) && !((BlockDoor) down).isTop()) {
                 level.setBlock(down, Block.get(AIR), true);
             }
         } else {
-            Block up = this.up();
-            if (up.getId().equals(this.getId()) && up.getPropertyValue(CommonBlockProperties.UPPER_BLOCK_BIT)) {
+            Block up = up();
+            if (up.getId().equals(this.getId()) && ((BlockDoor) up).isTop()) {
                 level.setBlock(up, Block.get(BlockID.AIR), true);
             }
         }
@@ -330,20 +327,18 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
 
         player = event.getPlayer();
 
-        Block down;
-        Block up;
+        BlockDoor down = this;
+        BlockDoor up = this;
         if (this.isTop()) {
-            down = down();
-            up = this;
+            down = (BlockDoor) down();
         } else {
-            down = this;
-            up = up();
+            up = (BlockDoor) up();
         }
 
-        up.setPropertyValue(CommonBlockProperties.OPEN_BIT, open);
+        up.setOpen(open);
         up.level.setBlock(up, up, true, true);
 
-        down.setPropertyValue(CommonBlockProperties.OPEN_BIT, open);
+        down.setOpen(open);
         down.level.setBlock(down, down, true, true);
 
         if (player != null) {
@@ -353,7 +348,7 @@ public abstract class BlockDoor extends BlockTransparent implements RedstoneComp
         playOpenCloseSound();
 
         var source = this.clone().add(0.5, 0.5, 0.5);
-        VibrationEvent vibrationEvent = open ? new VibrationEvent(player != null ? player : this, source, VibrationType.BLOCK_OPEN) : new VibrationEvent(player != null ? player : this, source, VibrationType.BLOCK_CLOSE);
+        VibrationEvent vibrationEvent = new VibrationEvent(player != null ? player : this, source, open ? VibrationType.BLOCK_OPEN : VibrationType.BLOCK_CLOSE);
         this.level.getVibrationManager().callVibrationEvent(vibrationEvent);
         return true;
     }
